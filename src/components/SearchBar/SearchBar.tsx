@@ -1,65 +1,113 @@
-import React from 'react';
-import { View, TextInput, TouchableOpacity,StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
+import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import Voice from '@react-native-community/voice';
+import Feather from 'react-native-vector-icons/Feather';
+const SpeechtoText = () => {
 
-type InputTextProps={
-  placeholder:string;
-  errorMessage?: string;
-  onChangeText?:(text:string)=>void;
-  onChange?:(e:any)=>void;
-  value: string; 
-};
+  const [result, setResult] = useState('')
+  const [isLoading, setLoading] = useState(false)
+  useEffect(() => {
+    Voice.onSpeechStart = onSpeechStartHandler;
+    Voice.onSpeechEnd = onSpeechEndHandler;
+    Voice.onSpeechResults = onSpeechResultsHandler;
 
-const SearchBar:React.FC<InputTextProps>=(props)=>{
-    return (
-     <View style={styles.container}>
-        <View style={styles.inputContainer}>
-            <TextInput
-            value={props.value}
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    }
+  }, [])
+
+  const onSpeechStartHandler = (e) => {
+    console.log("start handler==>>>", e)
+  }
+  const onSpeechEndHandler = (e) => {
+    setLoading(false)
+    console.log("stop handler", e)
+  }
+
+  const onSpeechResultsHandler = (e) => {
+    let text = e.value[0]
+    setResult(text)
+    console.log("speech result handler", e)
+  }
+
+  const startRecording = async () => {
+    setLoading(true)
+    try {
+      await Voice.start('en-Us')
+    } catch (error) {
+      console.log("error raised", error)
+    }
+  }
+
+  const stopRecording = async () => {
+    setLoading(false)
+    try {
+      await Voice.stop()
+    } catch (error) {
+      console.log("error raised", error)
+    }
+  }
+  
+
+  return (
+    <View style={styles.container}>
+      <SafeAreaView>
+        <View style={styles.textInputStyle}>
+        <Feather name="search"size={20}/>
+          <TextInput
+            value={result}
+            placeholder="Search..."
+            style={{ flex: 1 }}
+            onChangeText={text => setResult(text)}
+          />
+          {isLoading ? <ActivityIndicator size="large" color="red" />
+
+            :
             
-            onChangeText={props.onChangeText}
-            onChange={props.onChange}
-            style={[styles.input]}
-            placeholder={props.placeholder}            
-            />
-      </View>
-      <View style={styles.searchIcon}>
-        <TouchableOpacity onPress={()=>console.log('search')}>
-            <Icon
-            name="search-outline"
-            size={23}
-            color="#000"
-            />
-        </TouchableOpacity>
+            <TouchableOpacity
+              onPress={startRecording}
+            >
+              <Image
+                source={{ uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/microphone.png' }}
+                style={{ width: 25, height: 25 }}
+                
+              />
+            </TouchableOpacity>}
+           {/* <TouchableOpacity
+          style={{
+            // alignSelf: 'center',
+            // marginTop: 24,
+            backgroundColor: 'red',
+            padding: 8,
+            borderRadius: 20
+          }}
+          onPress={stopRecording}
+        >
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Stop</Text>
+        </TouchableOpacity> */}
+        </View>
 
-      </View>
-   </View>
-    );
+        
+      </SafeAreaView>
+    </View>
+  );
 };
-const styles=StyleSheet.create({
-    container:{
-        flexDirection:'row',
-    },
-    inputContainer:{
-        zIndex:1,
-        position:"relative",
-        width:'100%',
-    },
-    input:{
-        height:45,
-        backgroundColor:'#ff',
-        paddingHorizontal:20,
-        borderRadius:26,
-        marginBottom:10,
-    },
-    searchIcon:{
-      zIndex:6,
-      position:'absolute',
-      right:20,
-      top:12,
-    },
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    
+  },
+  textInputStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    height: 48,
+    // borderRadius: 20,
+    paddingHorizontal: 10,
+    shadowOffset: { width: 0, height: 1 }
+  }
 });
 
-
-
-export default SearchBar;
+export default SpeechtoText;

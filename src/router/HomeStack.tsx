@@ -7,8 +7,11 @@ import RatingScreen from '../screens/RatingScreen';
 import Navigation from '../navigation';
 import { Text, SafeAreaView,View,TextInput } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { SearchBar } from 'react-native-screens';
+// import { SearchBar } from 'react-native-screens';
 // import { View } from 'react-native-gesture-handler';
+// import SpeechtoText from '../SpeechtoText';
+import SearchBar from '../components/SearchBar';
+
 
 const Stack = createStackNavigator();
 
@@ -21,17 +24,21 @@ const HeaderComponent = ({
     setSearchValue
     }:HeaderComponentProps) => {
     return(
-       <SafeAreaView style={{backgroundColor:'#22e3dd'}}>
+       <SafeAreaView style={{backgroundColor:'orange'}}>
         <View style={{margin:10,
-            padding:5,
+            // padding:5,
             backgroundColor:'white',
             flexDirection:'row',
             alignItems:'center',}}>
-            <Feather name="search"size={20}/>
+            {/* <Feather name="search"size={20}/>
             <TextInput style={{height:40,marginLeft:10}}
             placeholder="Search.."
             value={searchValue}
-            onChangeText={setSearchValue}/>
+            onChangeText={setSearchValue}/> */}
+            <SearchBar/>
+        
+
+           
         </View>
 
        </SafeAreaView>
