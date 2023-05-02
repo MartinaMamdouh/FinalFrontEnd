@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import { View, Text ,Image ,StyleSheet,useWindowDimensions,ScrollView} from 'react-native';
-import Logo from '../../../assets/images/logo.jpg';
+import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSigninButtons from '../../components/SocialSigninButtons';
@@ -43,7 +43,7 @@ return(
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.root}>
     <Text> </Text>
-    <Image source={Logo} styles={[styles.logo,{height:height*0.3}]} 
+    <Image source={Logo} styles={[styles.logo,{height:10},{width: 10}]} 
     resizeMode="contain"/>
 
     <CustomInput placeholder="Username" value={username}
@@ -78,9 +78,10 @@ root:{
     padding:10,
 },
 logo: {
+    
 
     width:'70%',
-    maxWidth:300,
+    maxWidth:100,
     height:'70%',
 },
 

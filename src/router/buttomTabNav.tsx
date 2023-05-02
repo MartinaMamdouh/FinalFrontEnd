@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import Entypo from 'react-native-vector-icons/Entypo';
 import HomeStack from './HomeStack';
+import ProfileStack from './ProfileStack';
 import WishlistScreen from '../screens/WishlistScreen';
 import ProfileScreen from '../screens/ProfileScreen'
 import RatingScreen from '../screens/RatingScreen';
@@ -26,7 +27,7 @@ const  ButtomTabNav =()=>{
                 }}
                
                 />
-                <Tab.Screen component={ProfileScreen} name ='Profile'
+                <Tab.Screen component={ProfileStack} name ='Profile'
                     options= {{
                         tabBarIcon:({color})=>(
                         <Entypo name="user" color={color} size ={25}/>

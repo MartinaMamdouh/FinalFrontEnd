@@ -52,9 +52,9 @@ const ProfileScreen = () => {
   }
 
   const onHistoryPressed=()=>{
-    // go to History
+  navigation.navigate('My History');
 }
-const onFavoritesPressed=()=>{
+const onWishlistPressed=()=>{
   navigation.navigate('WishlistScreen');}
 
   return (
@@ -70,8 +70,8 @@ const onFavoritesPressed=()=>{
          />
       
 
-      <CustomButton text ="My Favorites" 
-          onPress={onFavoritesPressed}
+      <CustomButton text ="My Wishlist" 
+          onPress={onWishlistPressed}
             bgColor="#E7EAF4"
             fgColor="#4765A9"
             />
