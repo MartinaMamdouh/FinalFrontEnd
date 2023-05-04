@@ -29,6 +29,29 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
 
   },
+
+  headline: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+  },
+  headlineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headlineText: {
+    fontSize: 32,
+    letterSpacing: 2,
+    
+  },
+  headlineTextBold: {
+    fontWeight: 'bold',
+    marginLeft: 5,
+  },
+
+
 });
 
 
@@ -60,8 +83,9 @@ const onWishlistPressed=()=>{
   return (
     <View style={styles.container}>
 
-<Text style={styles.headline}>
-    My Profile
+<Text style={[styles.headline,{textAlign: 'center'}]}>
+    <Text style={[styles.headlineText, styles.headlineTextBold]}>MY PROFILE</Text>
+  
 </Text>
 
       <Image
