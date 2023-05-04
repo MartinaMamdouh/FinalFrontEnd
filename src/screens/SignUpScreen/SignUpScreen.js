@@ -9,29 +9,40 @@ import { Formik} from 'formik';
 import * as Yup from 'yup';
 
 const SignupSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(4, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('Username is required'),
+  name: Yup.string()
+    .min(4, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Username is required'),
     
-    email: Yup.string()
-        .email('Invalid email')
-        .required('Enter your email address'),
-    password:Yup.string()
-    .min(8)
-    .required('Enter your new password.')
+  email: Yup.string()
+    .email('Invalid email')
+    .required('Enter your email address'),
+
+  password: Yup.string()
+    .min(8, 'Must be at least 8 characters long')
     .matches(
+      /(?=.*?[A-Z])/,
+      'Must have at least one uppercase letter',
+    )
+    .matches(
+      /(?=.*?[a-z])/,
+      'Must have at least one lowercase letter',
+    )
+    .matches(
+      /(?=.*?[0-9])/,
+      'Must have at least one digit',
+    )
+    .matches(
+      /(?=.*?[#?!@$%^&*-])/,
+      'Must have at least one special character (!@#$%^&*)',
+    )
+    .required('Enter your new password.'),
 
-        '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-        'Must be at least 8 characters long,at least one uppercase letter,at least one lowercase letter,at least one digit,at least one special character (!@#$%^&*)',
-    ),
-    confirmPassword:Yup.string().min(8)
-    .oneOf([Yup.ref('password')],'Your Passwords donot match')
-    .required('Confirm password is required')
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Your passwords do not match')
+    .required('Confirm password is required'),
+});
 
-
-
-  });
 
 
 const SignUpScreen = () => {
@@ -83,45 +94,56 @@ onSubmit={values=>Alert.alert(JSON.stringify(values))}
     <View style={styles.root}>
     <Text style={styles.title}>Create an Account</Text>
 
-
-    <CustomInput
+<View style={styles.container}> 
+    <TextInput 
   placeholder="Username "
   value={values.name}
   onChangeText={handleChange('name')}
   onBlur={()=> setFieldTouched('name')}
 />
-{errors.name && <Text style={styles.errorTxt}>{errors.name}</Text>}
+{ touched.name && errors.name && (<Text style={styles.errorTxt}>{errors.name}</Text>)}
+</View>
 
-
-
-    <CustomInput 
+<View  style={styles.container}>
+    <TextInput 
     placeholder="Email"  
     onChangeText={handleChange('email')}
     value={values.email}
-    
+    onBlur={()=> setFieldTouched('email')}
+
      />   
-{errors.email && <Text style={styles.errorTxt}>{errors.email}</Text>}
+{touched.email && errors.email && (<Text style={styles.errorTxt}>{errors.email}</Text>)}
+
+</View>
 
 
+<View  style={styles.container}>
 
-    <CustomInput 
+    <TextInput  
     placeholder="password" 
     value={values.password} 
     secureTextEntry={true}
     onChangeText={handleChange('password')}
+    onBlur={()=> setFieldTouched('password')}
+
     />
-{errors.password && <Text style={styles.errorTxt}>{errors.password}</Text>}
+{touched.password && errors.password && (<Text style={styles.errorTxt}>{errors.password}</Text>)}
+
+</View>
 
 
+<View  style={styles.container}>
 
-
-<CustomInput 
+<TextInput 
      placeholder="Confirm password" 
      value={values.confirmPassword} 
      secureTextEntry={true}
      onChangeText={handleChange('confirmPassword')}
+     onBlur={()=> setFieldTouched('confirmPassword')}
+
      />
-{errors.confirmPassword && <Text style={styles.errorTxt}>{errors.confirmPassword}</Text>}
+{touched.confirmPassword && errors.confirmPassword && (<Text style={styles.errorTxt}>{errors.confirmPassword}</Text>)}
+</View>
 
 {/* <CustomButton text="Register" onPress={onRegisterPressed}/> */}
 
@@ -162,7 +184,16 @@ root:{
     alignItems:'center',
     padding:20,
 },
+container:{
 
+  backgroundColor:'#FFFFFF',
+  width:'100%',
+  borderColor:'#e8e8e8',
+  borderEndWidth:1,
+  borderRadius:5,
+  paddingHorizontal:10,
+  marginVertical:5,
+},
 title:{
 
 fontSize:24,
