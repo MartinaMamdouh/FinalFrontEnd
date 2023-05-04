@@ -66,7 +66,7 @@ const HomeStack =()=>{
 
             {/* product Details */}
             <Stack.Screen component={ProductScreen} name="ProductDetails"/>
-     
+            <Stack.Screen name="RatingScreen" component={RatingScreen} />
         </Stack.Navigator>
        
     );
