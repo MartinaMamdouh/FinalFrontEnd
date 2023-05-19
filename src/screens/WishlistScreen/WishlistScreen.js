@@ -1,36 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, useWindowDimensions,FlatList } from 'react-native';
+import products from '../../data/products';
 import product from '../../data/product';
+import ProductItem from '../../components/ProductItem';
 import ImageCarousel from '../../components/ImageCarousel';
 import Favorite from '../../components/Favorite/Favorite';
+import { getStateFromPath } from '@react-navigation/native';
 
-const WishlistScreen = () => {
+const WishlistScreen = ({item}) => {
 
     const Img = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/mouse1.jpg';
     const heartEmpty='https://www.citypng.com/public/uploads/preview/-51610329431xv3s3v3d9v.png';
     const heartFill='https://www.pngitem.com/pimgs/m/307-3070057_red-heart-outline-png-transparent-png.png';
+    
     return (
-        <View >
-            <Text style={styles.container}>My Wishlist</Text>
-            <View style={styles.root}>
-
-                <Image style={styles.image} source={{ uri: Img }} />
-                <View style={styles.rightContainer}>
-                    <Text style={styles.title} numberOfLines={3}>
-                        {product.title}
-                    </Text>
-                    <Text style={styles.price}>
-                        from ${product.price.toFixed(2)}
-                        {product.oldPrice && (
-                            <Text style={styles.oldPrice}> ${product.oldPrice.toFixed(2)}</Text>
-                        )}
-                    </Text>
-                    <Favorite/>
-
-                </View>
-
-            </View>
+         <View>
+        
+        <Text style={styles.container}>My Wishlist</Text>
+        <View style={styles.root}>
+         <Text>{item}</Text>
+      {/* ))} */}
+        {/* <FlatList
+            
+            data={item}
+            renderItem={({ item }) => <ProductItem item={item} />}
+            // keyExtractor={({id}) =>id}
+            // mafeesh scroll indicator
+           // showsVerticalScrollIndicator={false}
+         /> */}
         </View>
+  
+       </View>
+
     );
 };
 const styles = StyleSheet.create({

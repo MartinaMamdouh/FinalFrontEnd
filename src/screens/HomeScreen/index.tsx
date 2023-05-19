@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import products from '../../data/products';
+import Favorite from '../../components/Favorite/Favorite';
 import SearchBar from '../../components/SearchBar';
 import { NavigationContainer } from '@react-navigation/native';
 // import  FontAwesome  from '@fortawesome/react-fontawesome'

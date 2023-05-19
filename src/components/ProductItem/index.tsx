@@ -66,7 +66,8 @@ return (
       </Text>
       
       </View>
-      <Favorite />
+      <Favorite item={item} />
+      
   </Pressable>
 
 
