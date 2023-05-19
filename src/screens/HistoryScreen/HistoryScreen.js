@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
 import product from '../../data/product';
 const HistoryScreen = () => {
+    const [productInfo, setProductInfo] = useState([]);
 
     const Img = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/mouse1.jpg';
     return (
