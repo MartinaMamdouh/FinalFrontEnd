@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image,ScrollView} from 'react-native';
 import connection from '../../router/connection';
 
-
 const HistoryScreen = () => {
     const [productInfo, setProductInfo] = useState([]);
     const [showMessage, setShowMessage] = useState(false);
@@ -43,7 +42,7 @@ const HistoryScreen = () => {
         
     }, []);
     useEffect(() => {
-        // Step 4: Show "history empty" message after 10 seconds if productInfo is still empty
+        //Show "history empty" message after 10 seconds if productInfo is still empty
         if (productInfo.length === 0) {
           const timer = setTimeout(() => {
             setShowMessage(true);
