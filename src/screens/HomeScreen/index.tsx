@@ -1,25 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import products from '../../data/products';
 import SearchBar from '../../components/SearchBar';
 import { NavigationContainer } from '@react-navigation/native';
-// import  FontAwesome  from '@fortawesome/react-fontawesome'
-// import AntDesign from 'react-native-vector-icons/AntDesign';
-const HomeScreen = ({searchValue}:{searchValue:string}) => {
+import connection from '../../router/connection';
+import Button from '../../components/Button/Button';
+
+
+  
+const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
+
+  
    const [term, setTerm] = useState('');
-   console.log(searchValue); 
+   
+   const [products, setProducts] = useState([]);
+   const [page,setPage]=useState(1)
+   useEffect(() => {
+      connection.get('/products').then(response => {
+        console.log(response.data);
+        setProducts(response.data);
+      }).catch(error => {
+        console.error(error);
+      });
+    }, []);
+
+  
+
+  // console.log(searchValue); 
+   
    return (
       <View style={styles.page}>
+        
          {/* <SearchBar placeholder='Search' value='' /> */}
          {/* <Text>{term}</Text> */}
          {/* Render product component */}
          {/* data is array and flatlist will display components for each item in that array 
              custom components for each item  */}
          <FlatList
-            data={products}
+            data={products} ListEmptyComponent={()=><Text style={{fontSize:40,fontWeight:"bold",
+            color:"black",textAlign:'center'}}>No Data</Text>}
             renderItem={({ item }) => <ProductItem item={item} />}
             // keyExtractor={({id}) =>id}
+
             // mafeesh scroll indicator
             showsVerticalScrollIndicator={false}
          />
@@ -81,4 +104,4 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
    },
 });
-export default HomeScreen; 
+export default HomeScreen_API; 

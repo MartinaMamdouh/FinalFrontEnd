@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Voice from '@react-native-community/voice';
 import Feather from 'react-native-vector-icons/Feather';
+import connection from '../../router/connection';
 const SpeechtoText = () => {
 
   const [result, setResult] = useState('')
@@ -47,7 +48,19 @@ const SpeechtoText = () => {
       console.log("error raised", error)
     }
   }
-  
+  const handleSubmit = async () => {
+    try {
+      const response = connection.post('/products', {
+        search_key: result
+      }).then(response => {
+        console.log(response.data);
+        setResult(response.data);
+      })
+      
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -58,7 +71,7 @@ const SpeechtoText = () => {
             value={result}
             placeholder="Search..."
             style={{ flex: 1 }}
-            onChangeText={text => setResult(text)}
+            onChangeText={value => setResult(value)}
           />
           {isLoading ? <ActivityIndicator size="large" color="red" />
 

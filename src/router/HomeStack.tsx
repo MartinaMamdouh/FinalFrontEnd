@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from '../screens/HomeScreen';
+//import HomeScreen from '../screens/HomeScreen';
 import ProductScreen from '../screens/ProductScreen/ProductScreen';
 import RatingScreen from '../screens/RatingScreen';
 import Navigation from '../navigation';
@@ -10,8 +10,9 @@ import Feather from 'react-native-vector-icons/Feather';
 // import { SearchBar } from 'react-native-screens';
 // import { View } from 'react-native-gesture-handler';
 // import SpeechtoText from '../SpeechtoText';
+import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
-
+import connection from './connection';
 
 const Stack = createStackNavigator();
 
@@ -36,7 +37,7 @@ const HeaderComponent = ({
             value={searchValue}
             onChangeText={setSearchValue}/> */}
             <SearchBar/>
-        
+                
 
            
         </View>
@@ -47,6 +48,7 @@ const HeaderComponent = ({
 };
 const HomeStack =()=>{
     const[searchValue, setSearchValue]=useState('');
+   
     return(
       
         // <Stack.Navigator screenOptions={{headerShown:false}}>
@@ -56,7 +58,9 @@ const HomeStack =()=>{
             <HeaderComponent 
             searchValue={searchValue} 
             setSearchValue={setSearchValue}
-            /> ),
+            />
+             ),
+
         }}>
        
             <Stack.Screen name="HomeScreen"
@@ -66,7 +70,7 @@ const HomeStack =()=>{
 
             {/* product Details */}
             <Stack.Screen component={ProductScreen} name="ProductDetails"/>
-     
+            <Stack.Screen name="RatingScreen" component={RatingScreen} />
         </Stack.Navigator>
        
     );

@@ -12,6 +12,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ProductScreen from '../screens/ProductScreen';
 import RatingScreen from '../screens/RatingScreen';
 import WishlistScreen from '../screens/WishlistScreen';
+import HistoryScreen from '../screens/HistoryScreen';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -35,7 +37,7 @@ return (
     <Stack.Screen name="ProductScreen" component={ProductScreen} />
     <Stack.Screen name="RatingScreen" component={RatingScreen} />
     <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
-
+    <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
 
     </Stack.Navigator>
 

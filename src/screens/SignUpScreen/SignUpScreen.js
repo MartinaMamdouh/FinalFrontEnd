@@ -1,10 +1,48 @@
 import React,{useState} from 'react';
-import { View, Text ,StyleSheet,useWindowDimensions,ScrollView} from 'react-native';
+import { View, Text ,TextInput,StyleSheet,useWindowDimensions,ScrollView, TouchableOpacity, Alert} from 'react-native';
 
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSigninButtons from '../../components/SocialSigninButtons';
 import { useNavigation } from '@react-navigation/native';
+import { Formik} from 'formik';
+import * as Yup from 'yup';
+
+const SignupSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(4, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Username is required'),
+    
+  email: Yup.string()
+    .email('Invalid email')
+    .required('Enter your email address'),
+
+  password: Yup.string()
+    .min(8, 'Must be at least 8 characters long')
+    .matches(
+      /(?=.*?[A-Z])/,
+      'Must have at least one uppercase letter',
+    )
+    .matches(
+      /(?=.*?[a-z])/,
+      'Must have at least one lowercase letter',
+    )
+    .matches(
+      /(?=.*?[0-9])/,
+      'Must have at least one digit',
+    )
+    .matches(
+      /(?=.*?[#?!@$%^&*-])/,
+      'Must have at least one special character (!@#$%^&*)',
+    )
+    .required('Enter your new password.'),
+
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Your passwords do not match')
+    .required('Confirm password is required'),
+});
+
 
 
 const SignUpScreen = () => {
@@ -37,25 +75,77 @@ const onPrivacyPressed=()=>{
 
 
 return(
+<Formik initialValues={{
+name:'',
+email:'',
+password:'',
+confirmPassword:'',
 
+
+}}
+
+validationSchema={SignupSchema}
+onSubmit={values=>Alert.alert(JSON.stringify(values))}
+>
+    {({values,errors,touched,handleChange,setFieldTouched,isValid,handleSubmit})=>(
+
+    
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.root}>
     <Text style={styles.title}>Create an Account</Text>
 
+<View style={styles.container}> 
+    <TextInput 
+  placeholder="Username "
+  value={values.name}
+  onChangeText={handleChange('name')}
+  onBlur={()=> setFieldTouched('name')}
+/>
+{ touched.name && errors.name && (<Text style={styles.errorTxt}>{errors.name}</Text>)}
+</View>
 
-    <CustomInput placeholder="Username" value={username}
-     setValue={setUsername}/>   
+<View  style={styles.container}>
+    <TextInput 
+    placeholder="Email"  
+    onChangeText={handleChange('email')}
+    value={values.email}
+    onBlur={()=> setFieldTouched('email')}
 
-    <CustomInput placeholder="Email" value={email}
-     setValue={setEmail}/>   
+     />   
+{touched.email && errors.email && (<Text style={styles.errorTxt}>{errors.email}</Text>)}
 
-    <CustomInput placeholder="password" 
-    value={password} setValue={setPassword}  secureTextEntry={true}/>
+</View>
 
-<CustomInput placeholder="Repeat password" 
-    value={passwordRepeat} setValue={setPasswordRepeat}  secureTextEntry={true}/>
 
-<CustomButton text="Register" onPress={onRegisterPressed}/>
+<View  style={styles.container}>
+
+    <TextInput  
+    placeholder="password" 
+    value={values.password} 
+    secureTextEntry={true}
+    onChangeText={handleChange('password')}
+    onBlur={()=> setFieldTouched('password')}
+
+    />
+{touched.password && errors.password && (<Text style={styles.errorTxt}>{errors.password}</Text>)}
+
+</View>
+
+
+<View  style={styles.container}>
+
+<TextInput 
+     placeholder="Confirm password" 
+     value={values.confirmPassword} 
+     secureTextEntry={true}
+     onChangeText={handleChange('confirmPassword')}
+     onBlur={()=> setFieldTouched('confirmPassword')}
+
+     />
+{touched.confirmPassword && errors.confirmPassword && (<Text style={styles.errorTxt}>{errors.confirmPassword}</Text>)}
+</View>
+
+{/* <CustomButton text="Register" onPress={onRegisterPressed}/> */}
 
 <Text style={styles.text}>
      By registering , you confirm that you accept our {''}
@@ -64,15 +154,26 @@ return(
 
 </Text>
 
-<SocialSigninButtons/>
 
-<CustomButton text="Have an account? Sign in" 
-onPress={onSigninPressed} 
-type="TERTIARY"/>
+
+<TouchableOpacity
+onPress={handleSubmit}
+disabled={!isValid}
+style={[styles.submitBtn,{backgroundColor: isValid ? '#395B64' :'#A5C9CA'},
+
+]}> 
+
+<Text style={styles.submitBtnTxt}>Submit</Text>
+</TouchableOpacity>
+
+
+<SocialSigninButtons/>
 
 
     </View>
     </ScrollView>
+    )}
+    </Formik>
 );
 
 };
@@ -83,7 +184,16 @@ root:{
     alignItems:'center',
     padding:20,
 },
+container:{
 
+  backgroundColor:'#FFFFFF',
+  width:'100%',
+  borderColor:'#e8e8e8',
+  borderEndWidth:1,
+  borderRadius:5,
+  paddingHorizontal:10,
+  marginVertical:5,
+},
 title:{
 
 fontSize:24,
@@ -105,7 +215,24 @@ color:'#FDB075',
 
 },
 
+errorTxt :{
+    color: '#FF0000',
+    
+  },
+  submitBtn:{
+    padding:10,
+    borderRadius:15,
+    justifyContent:'center',
 
+  },
+  submitBtnTxt:{
+    color:'#fff',
+    textAlign:'center',
+    fontSize:18,
+    fontWeight:'700',
+
+  },
+  
 });
 
 export default SignUpScreen;
