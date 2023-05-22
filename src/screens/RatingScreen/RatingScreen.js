@@ -10,6 +10,9 @@ const RatingScreen = () => {
     const starImgFilled = 'https://raw.githubusercontent.com/tranhonghan/images/main/star_filled.png'
     const starImgEmpty = 'https://raw.githubusercontent.com/tranhonghan/images/main/star_corner.png'
     const CustomRatingBar = () => {
+
+    
+
         return (
             <View style={styles.RatingBar}>
             
@@ -36,6 +39,15 @@ const RatingScreen = () => {
     }
     return (
         <SafeAreaView style={styles.container}>
+            <Text style={styles.title}>About us:</Text>
+                <Text style={styles.aboutStyle}>
+                Welcome to PriceSmart! {"\n"}We are thrilled to have you here and hope you find our service helpful in making informed purchasing decisions.{"\n"}
+                PriceSmart creates a user-friendly platform that allows you to easily compare prices from multiple online stores, saving you time and money.{"\n"}
+                We are passionate about providing our users with accurate, up-to-date information so that they can make informed purchasing decisions.{"\n"}
+            At PriceSmart, we are dedicated to providing our users with a smooth, efficient, and cost-effective experience. {"\n"}Our goal is to help you save money, time, and hassle by providing you with the tools and information you need to make a wise decision.
+Thank you for choosing PriceSmart.{"\n"} We look forward to serving you and helping you find the best prices online!
+            </Text>
+            
             <Text style={styles.textStyle}> Please Rate Us </Text>
             <CustomRatingBar/>
             <Text style={styles.textStyle}>
@@ -60,6 +72,14 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize:23,
         marginTop:20
+    },
+    aboutStyle:{
+        color:"black",
+        fontSize:14,
+    },
+    title:{
+        color:"black",
+        fontSize:25
     },
     RatingBar:{
         justifyContent:'center',

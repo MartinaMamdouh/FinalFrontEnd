@@ -41,7 +41,7 @@ const  ButtomTabNav =()=>{
                         ),
                     }}
                 />
-                <Tab.Screen component={HomeScreen} name ='more'
+                <Tab.Screen component={RatingScreen} name ='more'
                   options= {{
                     tabBarIcon:({color})=>(
                     <Entypo name="menu" color={color} size ={25}/>
