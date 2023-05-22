@@ -15,7 +15,7 @@ const Favorite = ({ item }) => {
     const [favorite, setFavorite] = useState([])
     const baseURL = 'http://localhost:3000/api/v1/products/';
     const params = {
-        product_id: item.id
+        product_id: item
     }
     const headers = {
         'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxfQ.7xGXdq5PJHMYyvqCCV0hwA2lCCde9LrUZkyFTX2Bc0s',
