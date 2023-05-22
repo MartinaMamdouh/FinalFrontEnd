@@ -1,11 +1,20 @@
+<<<<<<< HEAD
 import React from 'react';
 import { View, Text, Image, Pressable, SafeAreaView } from 'react-native';
+=======
+import React, { useEffect } from 'react';
+import { View, Text, Image, Pressable,Linking,SafeAreaView } from 'react-native';
+>>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
 import styles from './styles';
 import Favorite from '../Favorite';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Button from '../Button/Button';
 import HomeButton from '../HomeButton/HomeButton';
 import { useNavigation } from '@react-navigation/native';
+<<<<<<< HEAD
+=======
+import connection from '../../router/connection';
+>>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
 
 //INTERFACE FOR HOW OUR OB JECT LOOKS
 //? for optional properties
@@ -28,7 +37,22 @@ const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
   const onPress = () => {
     console.warn('item pressed');
+<<<<<<< HEAD
     navigation.navigate('ProductDetails', { id: item.id });
+=======
+    
+    connection.post('/histories', {product_id: item.id})
+    .then(response => console.log(response))
+    .catch(error => console.log(error))
+  
+
+    navigation.navigate('ProductDetails', { id: item.id });
+  }
+
+  const handlePress = () => {
+    const url = item.link;
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+>>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
   }
   //const item= props.item;
   const { item } = props;
@@ -65,7 +89,11 @@ const ProductItem = (props: ProductItemProps) => {
         <Favorite />
       </Pressable>
       <View style={styles.Container}>
+<<<<<<< HEAD
         <Text style={[styles.leftContainer,styles.price]}>Amazon:  {item.price} EGP</Text>
+=======
+        <Text style={[styles.leftContainer,styles.price]}>{item.source.charAt(0).toUpperCase()+ item.source.slice(1)}:  {item.price} EGP</Text>
+>>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
 
         {/* if the item has an old price display it if condition using java script\
           {item.oldPrice && (<Text style={styles.oldPrice}> EGP {item.oldPrice}</Text>
@@ -75,9 +103,15 @@ const ProductItem = (props: ProductItemProps) => {
 
 
         {/* <Text style={[styles.rightContainer,styles.price]}></Text> */}
+<<<<<<< HEAD
         <HomeButton text=" Amazon "
           onPress={onPress}></HomeButton>
 
+=======
+
+        <HomeButton text=" Shop now "
+          onPress={handlePress}></HomeButton>
+>>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
       </View>
       <View>
       
