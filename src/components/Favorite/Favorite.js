@@ -28,7 +28,7 @@ const Favorite = ({ item }) => {
             const productIds = response.data.map((row) => row.product_id);
             console.log(productIds);
             setFavorite(productIds);
-            console.log(favorite);
+             console.log(favorite);
         })
             .catch(error => { console.error(error); });
     }, []);

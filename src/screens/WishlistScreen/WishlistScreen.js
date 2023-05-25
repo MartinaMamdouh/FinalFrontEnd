@@ -8,11 +8,8 @@ import Favorite from '../../components/Favorite/Favorite';
 import { getStateFromPath } from '@react-navigation/native';
 import connection from '../../router/connection';
 
-const WishlistScreen = ({ item }) => {
-
-    const Img = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/mouse1.jpg';
-    const heartEmpty = 'https://www.citypng.com/public/uploads/preview/-51610329431xv3s3v3d9v.png';
-    const heartFill = 'https://www.pngitem.com/pimgs/m/307-3070057_red-heart-outline-png-transparent-png.png';
+const WishlistScreen = () => {
+    
     const [productInfo, setProductInfo] = useState([]);
     //   Get product IDs from history table
     useEffect(() => {
@@ -43,8 +40,11 @@ const WishlistScreen = ({ item }) => {
     }, []);
 
     return (
+        // <View>
+       
        
         <ScrollView>
+        <Text style={styles.container}>My WishlistScreen: </Text>
             {productInfo.map((product) => (
 
                 <View style={styles.root} key={product.id}>
@@ -66,7 +66,7 @@ const WishlistScreen = ({ item }) => {
 
             ))}
         </ScrollView>
-           
+        // </View>
         
     );
 };
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
          flexDirection: 'row',
     },
     container: {
-
+       
         marginBottom: 20,
         marginLeft: 40,
         marginTop: 20,
