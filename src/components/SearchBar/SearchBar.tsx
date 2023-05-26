@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Voice from '@react-native-community/voice';
 import Feather from 'react-native-vector-icons/Feather';
-const SpeechtoText = () => {
+import debounce from 'lodash/debounce';
+const SearchBar = ({ onResult }) => {
 
-  const [result, setResult] = useState('')
-  const [isLoading, setLoading] = useState(false)
+  const [result, setResult] = useState('');
+  const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
@@ -17,37 +18,46 @@ const SpeechtoText = () => {
   }, [])
 
   const onSpeechStartHandler = (e) => {
-    console.log("start handler==>>>", e)
+    console.log("start handler==>>>", e);
+    setResult(''); // Reset the text input value
   }
   const onSpeechEndHandler = (e) => {
     setLoading(false)
-    console.log("stop handler", e)
+    console.log("stop handler", e);
   }
 
   const onSpeechResultsHandler = (e) => {
-    let text = e.value[0]
-    setResult(text)
-    console.log("speech result handler", e)
+    let text = e.value[0];
+    setResult(text);
+    onResult(text);
+    console.log("speech result handler", e);
   }
 
   const startRecording = async () => {
-    setLoading(true)
+    setLoading(true);
+    setResult(''); // Reset the text input value
     try {
       await Voice.start('en-Us')
     } catch (error) {
-      console.log("error raised", error)
+      console.log("error raised", error);
     }
   }
 
   const stopRecording = async () => {
-    setLoading(false)
+    setLoading(false);
     try {
-      await Voice.stop()
+      await Voice.stop();
     } catch (error) {
-      console.log("error raised", error)
+      console.log("error raised", error);
     }
   }
-  
+  // console.log('result:', result); 
+  const handleTextSubmit = (text) => {
+    setResult(text);
+    onResult(text);
+    setResult('');
+  }
+  const debouncedHandleTextSubmit = debounce(handleTextSubmit, 500); // Delay execution of handleTextSubmit by 500ms
 
   return (
     <View style={styles.container}>
@@ -58,7 +68,10 @@ const SpeechtoText = () => {
             value={result}
             placeholder="Search..."
             style={{ flex: 1 }}
-            onChangeText={text => setResult(text)}
+            onChangeText={text => setResult(text)} 
+            // onSubmitEditing={(event) => handleTextSubmit(event.nativeEvent.text)}
+            onSubmitEditing={(event) => debouncedHandleTextSubmit(event.nativeEvent.text)} // Use debounced handleTextSubmit function
+          
           />
           {isLoading ? <ActivityIndicator size="large" color="red" />
 
@@ -110,4 +123,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SpeechtoText;
+export default SearchBar;
