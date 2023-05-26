@@ -47,15 +47,15 @@ const ButtomTabNav = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo name="heart" color={color} size={25} />
                     ),
-                }}
+                }}              
             />
             
             <Tab.Screen component={RatingScreen} name='more'
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Entypo name="menu" color={color} size={25} />
-                    ),
-                }}
+                    ),                   
+                }}               
             />
 {/* <CustomButton text="My Wishlist"
                 //  onPress={() => navigation.navigate('WishlistScreen')}
@@ -63,7 +63,7 @@ const ButtomTabNav = () => {
                 fgColor="#4765A9"
             /> */}
         </Tab.Navigator>
-
+        
 
     );
 };

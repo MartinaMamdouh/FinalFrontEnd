@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image ,Linking} from 'react-native';
 import product from '../../data/product';
 import { useRoute } from '@react-navigation/native';
 import QuantitySelector from '../../components/QuantitySelector';
@@ -32,8 +32,8 @@ const ProductScreen = (props) => {
     // console.warn("sign in");
 
     //validate user first
-    () => { console.console.warn('Buy Now'); }
-    navigation.navigate('RatingScreen');
+    const url = product.link;
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
 
   // const route = useRoute();
@@ -65,12 +65,12 @@ const ProductScreen = (props) => {
       {/* add to wishlist */}
       <Favorite style={styles.heart} item={product.id} />
       {/* Button */}
-      <CustomButton text=" amazon "
+      <CustomButton text={product.source}
         onPress={onbuypressed} style={styles.button} />
-      <CustomButton text="jumia"
+      {/* <CustomButton text="jumia"
         onPress={onbuypressed} />
       <CustomButton text="noon"
-        onPress={onbuypressed} />
+        onPress={onbuypressed} /> */}
 
       {/* quantity selector */}
       {/* <QuantitySelector quantity={quantity} setQuantity={setQuantity}/> */}
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     // padding:30,
     // backgroundColor:'grey',
     flex:2,
-    height: 150,
+    height: 200,
     resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
     //  width:150,
     //  height:150,

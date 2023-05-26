@@ -29,7 +29,7 @@ const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-    console.warn('item pressed');
+    // console.warn('item pressed');
     
     connection.post('/histories', {product_id: item.id})
     .then(response => console.log(response))
