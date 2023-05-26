@@ -55,7 +55,8 @@ const HomeStack =()=>{
             </Stack.Screen>
             
             {/* product Details */}
-            <Stack.Screen component={ProductScreen} name="ProductDetails"/>
+            <Stack.Screen component={ProductScreen} name='ProductScreen'/>
+            {/* <ProductScreen item={}/> */}
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
         
             {/* <Stack.Screen name="AfterSearchScreen" >

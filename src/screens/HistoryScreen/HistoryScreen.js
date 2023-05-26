@@ -74,6 +74,7 @@ const HistoryScreen = () => {
             </View>
              </ScrollView>   
     );
+
 };
 
 const styles = StyleSheet.create({

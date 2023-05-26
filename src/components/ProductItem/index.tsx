@@ -27,6 +27,7 @@ interface ProductItemProps {
 //props: receive function properties 
 const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
+
   const onPress = () => {
     console.warn('item pressed');
     
@@ -35,7 +36,7 @@ const ProductItem = (props: ProductItemProps) => {
     .catch(error => console.log(error))
   
 
-    navigation.navigate('ProductDetails', { id: item.id });
+    navigation.navigate('ProductScreen', { myid: item.id });
   }
 
   const handlePress = () => {
@@ -74,7 +75,7 @@ const ProductItem = (props: ProductItemProps) => {
 
           </View>
         </View>
-        <Favorite />
+        <Favorite item={item.id}/>
       </Pressable>
       <View style={styles.Container}>
         <Text style={[styles.leftContainer,styles.price]}>{item.source.charAt(0).toUpperCase()+ item.source.slice(1)}:  {item.price} EGP</Text>
