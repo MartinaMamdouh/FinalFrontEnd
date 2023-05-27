@@ -1,56 +1,101 @@
-import React, { useState,useEffect } from 'react';
-import { View, StyleSheet, FlatList, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, FlatList, Text, ScrollView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
+import CustomButton from '../../components/CustomButton';
+
 import products from '../../data/products';
 import Favorite from '../../components/Favorite/Favorite';
 import SearchBar from '../../components/SearchBar';
 import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
-import Button from '../../components/Button/Button';
 
+const HomeScreen_API = ({ searchValue }: { searchValue: string }) => {
+  const [sortBy, setSortBy] = useState(''); 
+  const [term, setTerm] = useState('');
+  const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  
-const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await connection.get('/products');
+        let sortedProducts = response.data;
 
-  
-   const [term, setTerm] = useState('');
-   
-   const [products, setProducts] = useState([]);
-   const [page,setPage]=useState(1)
-   useEffect(() => {
-      connection.get('/products').then(response => {
-        console.log(response.data);
-        setProducts(response.data);
-      }).catch(error => {
+        if (sortBy === 'price_asc') {
+          sortedProducts = sortedProducts.sort((a, b) => a.price - b.price);
+        } else if (sortBy === 'price_desc') {
+          sortedProducts = sortedProducts.sort((a, b) => b.price - a.price);
+        } else if (sortBy === 'rating_asc') {
+          sortedProducts = sortedProducts.sort((a, b) => a.rating - b.rating);
+        } else if (sortBy === 'rating_desc') {
+          sortedProducts = sortedProducts.sort((a, b) => b.rating - a.rating);
+        }
+
+        setProducts(sortedProducts);
+      } catch (error) {
         console.error(error);
-      });
-    }, []);
+      }
+    };
 
-  
+    fetchData();
+  }, [sortBy]);
 
-  // console.log(searchValue); 
-   
-   return (
-      <View style={styles.page}>
-        
-         {/* <SearchBar placeholder='Search' value='' /> */}
-         {/* <Text>{term}</Text> */}
-         {/* Render product component */}
-         {/* data is array and flatlist will display components for each item in that array 
-             custom components for each item  */}
-         <FlatList
-            data={products} ListEmptyComponent={()=><Text style={{fontSize:40,fontWeight:"bold",
-            color:"black",textAlign:'center'}}>No Data</Text>}
-            renderItem={({ item }) => <ProductItem item={item} />}
-            // keyExtractor={({id}) =>id}
+  const handleSortBy = (sortOption) => {
+    setSortBy(sortOption);
+    setIsDropdownOpen(false);
+  };
 
-            // mafeesh scroll indicator
-            showsVerticalScrollIndicator={false}
-         />
-         {/* <TabNav/> */}
-      </View>
-      
-   );
+  const isSortActive = (sortOption) => {
+    return sortBy === sortOption;
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  return (
+    <View style={styles.page}>
+      <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
+        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || 'Select an option'}</Text>
+        <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      {isDropdownOpen && (
+        <ScrollView style={styles.dropdownContainer}>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_asc')}
+          >
+            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_desc')}
+          >
+            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_asc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_desc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+      <FlatList
+        data={products}
+        ListEmptyComponent={() => <Text style={{ fontSize: 40, fontWeight: 'bold', color: 'black', textAlign: 'center' }}>No Data</Text>}
+        renderItem={({ item }) => <ProductItem item={item} />}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -104,5 +149,47 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
    },
+   
+  sortButtonsContainer: {
+   flexDirection: 'row',
+   justifyContent: 'space-around',
+   paddingVertical: 10,
+   borderBottomWidth: 1,
+   borderBottomColor: '#ccc',
+ },
+ sortButton: {
+   paddingHorizontal: 10,
+   paddingVertical: 5,
+   borderRadius: 5,
+   borderWidth: 1,
+   borderColor: '#ccc',
+ },
+ activeSortButton: {
+   backgroundColor: '#ccc',
+ },
+ sortButtonText: {
+   fontSize: 14,
+ },
+ 
+ dropdownButton: {
+   flexDirection: 'row',
+   alignItems: 'center',
+   justifyContent: 'center',
+   paddingVertical: 10,
+   backgroundColor: '#e0e0e0',
+   marginBottom: 10,
+ },
+ dropdownButtonText: {
+   fontSize: 16,
+   fontWeight: 'bold',
+   marginRight: 10,
+ },
+ dropdownButtonArrow: {
+   fontSize: 18,
+ },
+ dropdownContainer: {
+   backgroundColor: '#e0e0e0',
+   maxHeight: 150,
+ },
 });
 export default HomeScreen_API; 
