@@ -42,7 +42,7 @@ const HistoryScreen = () => {
         
     }, []);
     useEffect(() => {
-        //Show "no history" message after 10 seconds if productInfo is still empty
+        //Show "history empty" message after 10 seconds if productInfo is still empty
         if (productInfo.length === 0) {
           const timer = setTimeout(() => {
             setShowMessage(true);

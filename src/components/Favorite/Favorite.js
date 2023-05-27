@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text, Pressable } from 'react-native';
-import axios from "axios";
-//import AsyncStorage from '@react-native-community/async-storage'
-import products from '../../data/products';
-import ProductItem from '../ProductItem';
-import WishlistScreen from '../../screens/WishlistScreen';
-import { it } from 'node:test';
-import { faV } from '@fortawesome/free-solid-svg-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import connection from '../../router/connection';
+
 const Favorite = ({ item }) => {
 
     const heartEmpty = 'https://www.citypng.com/public/uploads/preview/-51610329431xv3s3v3d9v.png';
@@ -22,7 +17,7 @@ const Favorite = ({ item }) => {
         'Content-Type': 'application/json'
     }
 
-    useEffect(() => {
+    const fetchData=useCallback(() => {
         connection.get('/favorites').then(response => {
             // console.log(response.data);
             const productIds = response.data.map((row) => row.product_id);
@@ -32,6 +27,7 @@ const Favorite = ({ item }) => {
         })
             .catch(error => { console.error(error); });
     }, []);
+    useFocusEffect(fetchData);
     const toggleWishlist = async () => {
         //console.warn(item.id);
 

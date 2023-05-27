@@ -47,7 +47,7 @@ const ButtomTabNav = () => {
                     tabBarIcon: ({ color }) => (
                         <Entypo name="heart" color={color} size={25} />
                     ),
-                }}              
+                }}           
             />
             
             <Tab.Screen component={RatingScreen} name='more'

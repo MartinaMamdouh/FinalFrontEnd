@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect ,useCallback} from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import products from '../../data/products';
@@ -7,7 +7,7 @@ import SearchBar from '../../components/SearchBar';
 import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
 import Button from '../../components/Button/Button';
-
+import { useFocusEffect } from '@react-navigation/native';
 
   
 const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
@@ -17,7 +17,8 @@ const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
    
    const [products, setProducts] = useState([]);
    const [page,setPage]=useState(1)
-   useEffect(() => {
+   
+   const fetchData=useCallback(() => {
       connection.get('/products').then(response => {
         console.log(response.data);
         setProducts(response.data);
@@ -25,7 +26,7 @@ const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
         console.error(error);
       });
     }, []);
-
+    useFocusEffect(fetchData);
   
 
   // console.log(searchValue); 
