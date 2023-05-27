@@ -20,14 +20,12 @@
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/stack": "^6.3.16",
     "@types/react-native": "^0.70.6",
-<<<<<<< HEAD
-=======
     "axios": "^1.4.0",
->>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
     "formik": "^2.2.9",
     "react-dom": "^18.2.0",
     "react-native": "0.68.2",
     "react-native-audio-record": "^0.2.2",
+    "react-native-dots-pagination": "^0.3.0",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-permissions": "^3.8.0",
     "react-native-safe-area-context": "^4.4.1",

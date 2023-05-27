@@ -14,6 +14,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
 import connection from './connection';
 
+
 const Stack = createStackNavigator();
 
 interface HeaderComponentProps{

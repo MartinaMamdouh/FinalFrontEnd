@@ -1,41 +1,3 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
-import product from '../../data/product';
-const HistoryScreen = () => {
-
-    const Img = 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/products/mouse1.jpg';
-    return (
-        <View >
-            {/* <Text style={styles.container}>My History</Text> */}
-            <View style={styles.root}>
-
-                <Image style={styles.image} source={{ uri: Img }} />
-                <View style={styles.rightContainer}>
-                    <Text style={styles.title} numberOfLines={3}>
-                        {product.title}
-                    </Text>
-                    
-                  
-
-                </View>
-
-            </View>
-        </View>
-    );
-};
-const styles = StyleSheet.create({
-    // container: {
-
-    //     marginBottom: 20,
-    //     marginLeft: 130,
-    //     marginTop: 20,
-    //     color:'#FE8113',
-    //     fontSize: 30,
-    //     fontWeight: 'bold',
-
-    // },
-=======
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image,ScrollView} from 'react-native';
 import connection from '../../router/connection';
@@ -115,7 +77,6 @@ const HistoryScreen = () => {
 };
 
 const styles = StyleSheet.create({
->>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
     root: {
         flexDirection: 'row',
         borderWidth: 1,
@@ -124,11 +85,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginVertical: 5,
         padding:10,
-<<<<<<< HEAD
-        marginTop: 20,
-=======
         marginTop: 8,
->>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
         marginLeft:10,
         marginRight:10,
     },
@@ -146,8 +103,6 @@ const styles = StyleSheet.create({
         // flex: 2,
 
     },
-<<<<<<< HEAD
-=======
     empty:{
         fontSize: 40,
         fontWeight: "normal",
@@ -155,15 +110,10 @@ const styles = StyleSheet.create({
         marginLeft:110,
         marginRight:10,
     },
->>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
     rightContainer: {
         flex: 6,
     },
 
 
 })
-<<<<<<< HEAD
 export default HistoryScreen;
-=======
-export default HistoryScreen;
->>>>>>> 0a0b655cd1afbd44e9a3ee80d51f1c25dde1b711
