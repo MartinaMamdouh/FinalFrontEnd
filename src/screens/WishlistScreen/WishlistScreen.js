@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, useWindowDimensions, FlatList } from 'react-native';
-import products from '../../data/products';
-import product from '../../data/product';
-import ProductItem from '../../components/ProductItem';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import ImageCarousel from '../../components/ImageCarousel';
 import Favorite from '../../components/Favorite/Favorite';
-import { getStateFromPath } from '@react-navigation/native';
 import connection from '../../router/connection';
+import { useFocusEffect } from '@react-navigation/native';
 
 const WishlistScreen = () => {
-    
+
     const [productInfo, setProductInfo] = useState([]);
-    //   Get product IDs from history table
-    useEffect(() => {
+    // const [forceUpdate, setForceUpdate] = useState(false);
+
+    const fetchData = useCallback(() => {
         connection.get('/favorites')
             .then((response) => {
                 const productIds = response.data.map((row) => row.product_id);
@@ -38,13 +36,11 @@ const WishlistScreen = () => {
             });
 
     }, []);
+    useFocusEffect(fetchData);
 
     return (
-        // <View>
-       
-       
         <ScrollView>
-        <Text style={styles.container}>My WishlistScreen: </Text>
+            <Text style={styles.container}>My WishlistScreen: </Text>
             {productInfo.map((product) => (
 
                 <View style={styles.root} key={product.id}>
@@ -54,12 +50,12 @@ const WishlistScreen = () => {
                             {product.name}
                         </Text>
                         <View style={styles.raw}>
-                        <Text style={styles.price} numberOfLines={3}>
-                            {product.price} EGP
-                        </Text>
-                        <Text style={styles.heart} >
-                            <Favorite item={product.id} />
-                        </Text>
+                            <Text style={styles.price} numberOfLines={3}>
+                                {product.price} EGP
+                            </Text>
+                            <Text style={styles.heart} >
+                                <Favorite item={product.id} />
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -67,15 +63,16 @@ const WishlistScreen = () => {
             ))}
         </ScrollView>
         // </View>
-        
+
     );
 };
+
 const styles = StyleSheet.create({
-    raw:{
-         flexDirection: 'row',
+    raw: {
+        flexDirection: 'row',
     },
     container: {
-       
+
         marginBottom: 20,
         marginLeft: 40,
         marginTop: 20,
@@ -115,7 +112,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'orange',
         marginLeft: 10,
-        marginTop:7,
+        marginTop: 7,
     },
     oldPrice: {
         fontSize: 12,
