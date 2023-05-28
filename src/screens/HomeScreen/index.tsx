@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React, { useState,useEffect ,useCallback} from 'react';
-import { View, StyleSheet, FlatList, Text } from 'react-native';
-=======
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
->>>>>>> c9404525a4e6c5b71e78a71c0c982fb6289629df
 import ProductItem from '../../components/ProductItem';
 import products from '../../data/products';
 import Favorite from '../../components/Favorite/Favorite';
@@ -12,9 +7,6 @@ import SearchBar from '../../components/SearchBar';
 import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
 import Button from '../../components/Button/Button';
-<<<<<<< HEAD
-import { useFocusEffect } from '@react-navigation/native';
-=======
 import product from '../../data/product';
 import Pagination from '../../components/Pagination';
 
@@ -23,7 +15,6 @@ import Pagination from '../../components/Pagination';
 //       item={item.id.slice(item.id.length - 5)}
 //    // Pass other necessary props for your ProductItem component
 //    />
->>>>>>> c9404525a4e6c5b71e78a71c0c982fb6289629df
 
 
 const HomeScreen_API = () => {
@@ -33,14 +24,6 @@ const HomeScreen_API = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
-<<<<<<< HEAD
-   const [page,setPage]=useState(1)
-   
-   const fetchData=useCallback(() => {
-      connection.get('/products').then(response => {
-        console.log(response.data);
-        setProducts(response.data);
-=======
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
@@ -84,15 +67,9 @@ const HomeScreen_API = () => {
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
          setLoading(false)
->>>>>>> c9404525a4e6c5b71e78a71c0c982fb6289629df
       }).catch(error => {
          console.error(error);
       });
-<<<<<<< HEAD
-    }, []);
-    useFocusEffect(fetchData);
-  
-=======
 
    }, [currentPage]);
 
@@ -117,7 +94,6 @@ const HomeScreen_API = () => {
       }
    };
 
->>>>>>> c9404525a4e6c5b71e78a71c0c982fb6289629df
 
    return (
       <View style={styles.page}>
