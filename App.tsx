@@ -23,6 +23,8 @@ import ProductScreen from './src/screens/ProductScreen';
 import WishlistScreen from './src/screens/WishlistScreen/WishlistScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen'
+import Pagination from './src/components/Pagination';
+
 
 const App=() => {
   const isDarkMode = useColorScheme()==='dark';
@@ -37,7 +39,7 @@ const App=() => {
   return (
      <View style={backgroundStyle}>
         <StatusBar barStyle={isDarkMode?'light-content':'dark-content'}/>
-       
+           {/* <Pagination/> */}
             <Router/>
             {/* <NavigationContainer>
                <Navigation/>

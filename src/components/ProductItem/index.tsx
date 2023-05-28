@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, Pressable,Linking,SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, Pressable, Linking, SafeAreaView } from 'react-native';
 import styles from './styles';
 import Favorite from '../Favorite';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -19,22 +19,33 @@ interface ProductItemProps {
     rating: number;
     reviews_count: number;
     price: number;
-    link:string,
-    source:string,
+    link: string,
+    source: string,
 
   }
 }
+
 //props: receive function properties 
 const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
 
   const onPress = () => {
+<<<<<<< HEAD
     // console.warn('item pressed');
     
     connection.post('/histories', {product_id: item.id})
     .then(response => console.log(response))
     .catch(error => console.log(error))
   
+=======
+    console.warn('item pressed');
+    //.navigate('ProductDetails', { id: item.id });
+
+    connection.post('/histories', { product_id: item.id })
+      .then(response => console.log(response))
+      .catch(error => console.log(error))
+
+>>>>>>> c9404525a4e6c5b71e78a71c0c982fb6289629df
 
     navigation.navigate('ProductScreen', { myid: item.id });
   }
@@ -78,7 +89,7 @@ const ProductItem = (props: ProductItemProps) => {
         <Favorite item={item.id}/>
       </Pressable>
       <View style={styles.Container}>
-        <Text style={[styles.leftContainer,styles.price]}>{item.source.charAt(0).toUpperCase()+ item.source.slice(1)}:  {item.price} EGP</Text>
+        <Text style={[styles.leftContainer, styles.price]}>{item.source.charAt(0).toUpperCase() + item.source.slice(1)}:  {item.price} EGP</Text>
 
         {/* if the item has an old price display it if condition using java script\
           {item.oldPrice && (<Text style={styles.oldPrice}> EGP {item.oldPrice}</Text>
@@ -93,7 +104,7 @@ const ProductItem = (props: ProductItemProps) => {
           onPress={handlePress}></HomeButton>
       </View>
       <View>
-      
+
       </View>
       {/* <View style={styles.Container}>
         <Text style={[styles.Container, styles.price]}>Jumia : EGP {item.price}</Text>
