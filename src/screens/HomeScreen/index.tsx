@@ -54,7 +54,7 @@ const HomeScreen_API = () => {
    };
 
 
-
+   
    useEffect(() => {
       setLoading(true)
 
@@ -229,15 +229,18 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginVertical: 10,
+      // marginVertical: 10,
+      marginTop: 5,
       position: 'relative',
       zIndex: 1,
    },
    button: {
       backgroundColor: 'orange',
       padding: 10,
-      marginHorizontal: 3,
+      marginHorizontal: 145,
+      borderRadius: 10,
    },
+
 
 });
 export default HomeScreen_API; 

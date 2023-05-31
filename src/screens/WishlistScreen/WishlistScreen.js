@@ -40,7 +40,7 @@ const WishlistScreen = () => {
 
     return (
         <ScrollView>
-            <Text style={styles.container}>My WishlistScreen: </Text>
+            <Text style={styles.container}>My Wishlist: </Text>
             {productInfo.map((product) => (
 
                 <View style={styles.root} key={product.id}>

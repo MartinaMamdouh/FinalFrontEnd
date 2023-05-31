@@ -30,14 +30,6 @@ const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-<<<<<<< HEAD
-    // console.warn('item pressed');
-    
-    connection.post('/histories', {product_id: item.id})
-    .then(response => console.log(response))
-    .catch(error => console.log(error))
-  
-=======
     console.warn('item pressed');
     //.navigate('ProductDetails', { id: item.id });
 
@@ -45,7 +37,6 @@ const ProductItem = (props: ProductItemProps) => {
       .then(response => console.log(response))
       .catch(error => console.log(error))
 
->>>>>>> c9404525a4e6c5b71e78a71c0c982fb6289629df
 
     navigation.navigate('ProductScreen', { myid: item.id });
   }

@@ -53,18 +53,18 @@ const HomeStack =()=>{
             header: ()=> (
             <HeaderComponent setSearchValue={setSearchValue} /> ),
         }}>
-            <Stack.Screen name="HomeScreen" >
+            {/* <Stack.Screen name="HomeScreen" >
             {()=><HomeScreen searchValue={searchValue}/>}
-            </Stack.Screen>
-            
+            </Stack.Screen> */}
             {/* product Details */}
+            <Stack.Screen component={HomeScreen} name='HomeScreen'/>
             <Stack.Screen component={ProductScreen} name='ProductScreen'/>
             {/* <ProductScreen item={}/> */}
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
         
-            {/* <Stack.Screen name="AfterSearchScreen" >
+            <Stack.Screen name="AfterSearchScreen" >
             {()=><AfterSearchScreen searchValue={searchValue}/>}
-            </Stack.Screen> */}
+            </Stack.Screen>
 
             </Stack.Navigator>
        
