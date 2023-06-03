@@ -1,11 +1,44 @@
 import React,{useState} from 'react';
-import { View, Text ,Image ,StyleSheet,useWindowDimensions,ScrollView} from 'react-native';
+import { View, Text,TextInput ,Image ,StyleSheet,useWindowDimensions,ScrollView,Alert} from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSigninButtons from '../../components/SocialSigninButtons';
 import { useNavigation } from '@react-navigation/native';
 import { Button ,TouchableOpacity} from 'react-native';
+import { Formik} from 'formik';
+import * as Yup from 'yup';
+
+const SignupSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(4, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Username is required'),
+    
+ 
+
+  password: Yup.string()
+    .min(8, 'Must be at least 8 characters long')
+    .matches(
+      /(?=.*?[A-Z])/,
+      'Must have at least one uppercase letter',
+    )
+    .matches(
+      /(?=.*?[a-z])/,
+      'Must have at least one lowercase letter',
+    )
+    .matches(
+      /(?=.*?[0-9])/,
+      'Must have at least one digit',
+    )
+    .matches(
+      /(?=.*?[#?!@$%^&*-])/,
+      'Must have at least one special character (!@#$%^&*)',
+    )
+    .required('Enter your new password.'),
+
+  
+});
 
 
 const SigninScreen = () => {
@@ -15,14 +48,14 @@ const SigninScreen = () => {
     const {height}= useWindowDimensions();
     const navigation=useNavigation();
     
-    const onSignInPressed=()=>{
+    /*const onSignInPressed=()=>{
        // console.warn("sign in");
 
         //validate user first
 
     navigation.navigate('Profilelog');
 }
-
+*/
 
 const onForgotPasswordPressed=()=>{
     
@@ -40,6 +73,16 @@ const onSignUpPressed=()=>{
 
 
 return(
+<Formik initialValues={{
+name:'',
+password:'',
+}}
+
+validationSchema={SignupSchema}
+onSubmit={values=>Alert.alert(JSON.stringify(values))}
+
+>
+{({values,errors,touched,handleChange,setFieldTouched,isValid,handleSubmit})=>(
 
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.root}>
@@ -47,19 +90,46 @@ return(
     <Image source={Logo} styles={[styles.logo,{height:10},{width: 10}]} 
     resizeMode="contain"/>
 
-    <CustomInput placeholder="Username" value={username}
-     setValue={setUsername}/>
-    <CustomInput placeholder="Password" 
-    value={password} setValue={setPassword}  secureTextEntry={true}/>
+    
+<View style={styles.container}> 
+    <TextInput 
+  placeholder="Username "
+  value={values.name}
+  onChangeText={handleChange('name')}
+  onBlur={()=> setFieldTouched('name')}
+/>
+{ touched.name && errors.name && (<Text style={styles.errorTxt}>{errors.name}</Text>)}
+</View>
+
+
+    
+<View  style={styles.container}>
+
+<TextInput  
+placeholder="password" 
+value={values.password} 
+secureTextEntry={true}
+onChangeText={handleChange('password')}
+onBlur={()=> setFieldTouched('password')}
+
+/>
+{touched.password && errors.password && (<Text style={styles.errorTxt}>{errors.password}</Text>)}
+
+</View>
+
+
 
 {/* <Button title="Sign in !" onPress={onSignInPressed}/> */}
 
-<TouchableOpacity 
-  style={styles.container_PRIMARY}
-  onPress={onSignInPressed}
+<TouchableOpacity
+onPress={handleSubmit}
+  disabled={!isValid}
+  style={[styles.container_PRIMARY, { backgroundColor: isValid ? '#FF6F00' : '#A5C9CA' }]}
 >
-  <Text style={styles.style3}>Sign in !</Text>
+  <Text style={styles.style3}>Sign in!</Text>
 </TouchableOpacity>
+
+
 
 
 <TouchableOpacity 
@@ -86,7 +156,10 @@ return(
 <SocialSigninButtons/>
 
     </View>
+    
     </ScrollView>
+     )}
+     </Formik>
 );
 
 };
@@ -96,6 +169,10 @@ root:{
 
     alignItems:'center',
     padding:10,
+},
+errorTxt :{
+  color: '#FF0000',
+  
 },
 logo: {
     
