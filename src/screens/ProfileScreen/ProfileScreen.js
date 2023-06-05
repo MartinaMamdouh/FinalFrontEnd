@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Image, StyleSheet ,Text} from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 50,
     height: 50,
-    
+
     alignSelf: 'center'
   },
   logo: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     height: 58,
   },
   headline: {
-    textAlign: 'center', 
+    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 25,
     marginBottom: 10,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   headlineText: {
     fontSize: 32,
     letterSpacing: 2,
-    
+
   },
   headlineTextBold: {
     fontWeight: 'bold',
@@ -60,69 +60,70 @@ const ProfileScreen = () => {
 
 
 
-    const navigation=useNavigation();
+  const navigation = useNavigation();
 
-    const onLogoutPressed=()=>{
-        // console.warn("sign in");
-    
-         //validate user first
-    
-     navigation.navigate('SignIn');
-    }
-    
-    const onNotificationsPressed=()=>{
-      // go to notifications
+  const onLogoutPressed = () => {
+    // console.warn("sign in");
+
+    //validate user first
+
+    navigation.navigate('SignIn');
   }
 
-  const onHistoryPressed=()=>{
-  navigation.navigate('My History');
-}
-const onWishlistPressed=()=>{
-  navigation.navigate('WishlistScreen');}
+  const onNotificationsPressed = () => {
+    // go to notifications
+  }
+
+  const onHistoryPressed = () => {
+    navigation.navigate('My History');
+  }
+  const onWishlistPressed = () => {
+    navigation.navigate('WishlistScreen');
+  }
 
   return (
     <View style={styles.container}>
 
-<Text style={[styles.headline,{textAlign: 'center'}]}>
-    <Text style={[styles.headlineText, styles.headlineTextBold]}>MY PROFILE</Text>
-  
-</Text>
+      <Text style={[styles.headline, { textAlign: 'center' }]}>
+        <Text style={[styles.headlineText, styles.headlineTextBold]}>MY PROFILE</Text>
+
+      </Text>
 
       <Image
         style={styles.tinyLogo}
         source={require('../profile.png')}
-         />
-      
-
-      <CustomButton text ="My Wishlist" 
-          onPress={onWishlistPressed}
-            bgColor="#E7EAF4"
-            fgColor="#4765A9"
-            />
+      />
 
 
-        <CustomButton text ="My History"
+      <CustomButton text="My Wishlist"
+        onPress={onWishlistPressed}
+        bgColor="#E7EAF4"
+        fgColor="#4765A9"
+      />
+
+
+      <CustomButton text="My History"
         onPress={onHistoryPressed}
-         bgColor="#E7EAF4"
-         fgColor="#4765A9"
-        />
+        bgColor="#E7EAF4"
+        fgColor="#4765A9"
+      />
 
 
-        <CustomButton text ="My Notifications"
+      <CustomButton text="My Notifications"
         onPress={onNotificationsPressed}
         bgColor="#E7EAF4"
         fgColor="#4765A9"
-        />
-        <CustomButton text ="Logout"
+      />
+      <CustomButton text="Logout"
         onPress={onLogoutPressed}
         bgColor="#FAE9EA"
-          fgColor="#DD4D44"
-        />
+        fgColor="#DD4D44"
+      />
 
 
 
-      
-      
+
+
     </View>
   );
 }

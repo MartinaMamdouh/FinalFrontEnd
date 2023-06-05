@@ -12,19 +12,19 @@ import Feather from 'react-native-vector-icons/Feather';
 // import SpeechtoText from '../SpeechtoText';
 import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
-import connection from './connection';
+import AfterSearchScreen from '../screens/AfterSearchScreen';
 
 
 const Stack = createStackNavigator();
 
-interface HeaderComponentProps{
-    searchValue:string,
-    setSearchValue: () =>void;
-}
-const HeaderComponent = ({
-    searchValue,
-    setSearchValue
-    }:HeaderComponentProps) => {
+const HeaderComponent = ({setSearchValue}) => {
+        // const [searchText, setSearchText] = useState('');
+        const handleSearchResult = (result: string) => {
+            console.log('Search result:', result);
+            // setSearchText(result);
+            setSearchValue(result);
+            // do something with the search result, such as filtering data or updating state
+          }
     return(
        <SafeAreaView style={{backgroundColor:'orange'}}>
         <View style={{margin:10,
@@ -32,14 +32,8 @@ const HeaderComponent = ({
             backgroundColor:'white',
             flexDirection:'row',
             alignItems:'center',}}>
-            {/* <Feather name="search"size={20}/>
-            <TextInput style={{height:40,marginLeft:10}}
-            placeholder="Search.."
-            value={searchValue}
-            onChangeText={setSearchValue}/> */}
-            <SearchBar/>
-                
-
+            
+            <SearchBar onResult={handleSearchResult} />
            
         </View>
 
@@ -47,6 +41,7 @@ const HeaderComponent = ({
       
     );
 };
+
 const HomeStack =()=>{
     const[searchValue, setSearchValue]=useState('');
    
@@ -56,23 +51,22 @@ const HomeStack =()=>{
         
         <Stack.Navigator screenOptions={{
             header: ()=> (
-            <HeaderComponent 
-            searchValue={searchValue} 
-            setSearchValue={setSearchValue}
-            />
-             ),
-
+            <HeaderComponent setSearchValue={setSearchValue} /> ),
         }}>
-       
-            <Stack.Screen name="HomeScreen"
-            options={{title:'Home'}}>
+            {/* <Stack.Screen name="HomeScreen" >
             {()=><HomeScreen searchValue={searchValue}/>}
+            </Stack.Screen> */}
+            {/* product Details */}
+            <Stack.Screen component={HomeScreen} name='HomeScreen'/>
+            <Stack.Screen component={ProductScreen} name='ProductScreen'/>
+            {/* <ProductScreen item={}/> */}
+            <Stack.Screen name="RatingScreen" component={RatingScreen} />
+        
+            <Stack.Screen name="AfterSearchScreen" >
+            {()=><AfterSearchScreen searchValue={searchValue}/>}
             </Stack.Screen>
 
-            {/* product Details */}
-            <Stack.Screen component={ProductScreen} name="ProductDetails"/>
-            <Stack.Screen name="RatingScreen" component={RatingScreen} />
-        </Stack.Navigator>
+            </Stack.Navigator>
        
     );
 };

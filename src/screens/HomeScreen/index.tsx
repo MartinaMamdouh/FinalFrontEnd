@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import products from '../../data/products';
+import Favorite from '../../components/Favorite/Favorite';
 import SearchBar from '../../components/SearchBar';
 import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
@@ -53,7 +54,7 @@ const HomeScreen_API = () => {
    };
 
 
-
+   
    useEffect(() => {
       setLoading(true)
 
@@ -245,14 +246,16 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginVertical: 10,
+      // marginVertical: 10,
+      marginTop: 5,
       position: 'relative',
       zIndex: 1,
    },
    button: {
       backgroundColor: 'orange',
       padding: 10,
-      marginHorizontal: 3,
+      marginHorizontal: 145,
+      borderRadius: 10,
    },
    footer: {
       // Add any desired styles for the footer, for example:
@@ -260,6 +263,7 @@ const styles = StyleSheet.create({
       padding: 10,
       marginBottom: 10,
    },
+
 
 
 });
