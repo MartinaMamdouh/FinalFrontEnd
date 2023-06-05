@@ -14,46 +14,21 @@ import HomeButton from '../../components/HomeButton/HomeButton';
 const ProductScreen = (props) => {
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
-  //const product=useState([]);
   useEffect(() => {
-    // connection.get(`/products?id=${myid}`).then(response => {
-    //   const productInfo = response.data;
-    // })
     connection.get(`/products`).then(response => {
       setProduct(response.data.find(item => item.id === myid));
-      //console.log("productinfo=", product);
-
     })
       .catch(error => { console.error(error); });
   }, []);
   const navigation = useNavigation();
 
   const onbuypressed = () => {
-    // console.warn("sign in");
-
     //validate user first
     const url = product.link;
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
 
-  // const route = useRoute();
-  // console.log(route.params);
-
-
   return (
-    // <ScrollView>
-
-
-    //     <View style={styles.root} >
-    //       <Text> product screen </Text>
-    //       <Text >{product.id}</Text>
-    //       {/* <Text>{`Product for id ${myid}`}</Text> */}
-    //       <Text style={styles.price}></Text>
-    //     </View>
-
-    // </ScrollView>
-
-
     <ScrollView style={styles.root}>
       {/* <Text> product screen </Text> */}
       <Text style={styles.description}>{product.name}</Text>
@@ -67,13 +42,6 @@ const ProductScreen = (props) => {
       {/* Button */}
       <CustomButton text={product.source}
         onPress={onbuypressed} style={styles.button} />
-      {/* <CustomButton text="jumia"
-        onPress={onbuypressed} />
-      <CustomButton text="noon"
-        onPress={onbuypressed} /> */}
-
-      {/* quantity selector */}
-      {/* <QuantitySelector quantity={quantity} setQuantity={setQuantity}/> */}
     </ScrollView>
 
 

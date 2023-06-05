@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import ImageCarousel from '../../components/ImageCarousel';
 import Favorite from '../../components/Favorite/Favorite';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const WishlistScreen = () => {
 
@@ -37,32 +38,41 @@ const WishlistScreen = () => {
 
     }, []);
     useFocusEffect(fetchData);
+    const navigation = useNavigation();
+    const onPress = ({ item }) => {
+        connection.post('/histories', {product_id: item.id})
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+        navigation.navigate('ProductScreen', { myid: item });
+    }
 
     return (
         <ScrollView>
             <Text style={styles.container}>My WishlistScreen: </Text>
             {productInfo.map((product) => (
+                <Pressable onPress={() => onPress(product.id)} >
+                    <View style={styles.root} key={product.id}>
 
-                <View style={styles.root} key={product.id}>
-                    <Image style={styles.image} source={{ uri: product.image }} />
-                    <View style={styles.rightContainer}>
-                        <Text style={styles.title} numberOfLines={3}>
-                            {product.name}
-                        </Text>
-                        <View style={styles.raw}>
-                            <Text style={styles.price} numberOfLines={3}>
-                                {product.price} EGP
+                        <Image style={styles.image} source={{ uri: product.image }} />
+                        <View style={styles.rightContainer}>
+                            <Text style={styles.title} numberOfLines={3}>
+                                {product.name}
                             </Text>
-                            <Text style={styles.heart} >
-                                <Favorite item={product.id} />
-                            </Text>
+                            <View style={styles.raw}>
+                                <Text style={styles.price} numberOfLines={3}>
+                                    {product.price} EGP
+                                </Text>
+                                <Text style={styles.heart} >
+                                    <Favorite item={product.id} />
+                                </Text>
+                            </View>
                         </View>
                     </View>
-                </View>
+                </Pressable>
 
             ))}
         </ScrollView>
-        // </View>
+
 
     );
 };
