@@ -1,138 +1,101 @@
-import React, { useState,useEffect ,useCallback} from 'react';
-import { View, StyleSheet, FlatList, Text ,TouchableOpacity,ScrollView} from 'react-native';
+import React, { useState, useEffect ,useCallback} from 'react';
+import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
-import products from '../../data/products';
-import Favorite from '../../components/Favorite/Favorite';
-import SearchBar from '../../components/SearchBar';
-import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
-import Button from '../../components/Button/Button';
 import { useFocusEffect } from '@react-navigation/native';
 
-  
-const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
+const HomeScreen_API = () => {
 
-  const [sortBy, setSortBy] = useState(''); 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-
-   const [term, setTerm] = useState('');
-   
+   const [currentPage, setCurrentPage] = useState(1);
+   const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
-   const [page,setPage]=useState(1)
-   
-   const fetchData = useCallback(() => {
-    const fetchSortedData = async () => {
-      try {
-        const response = await connection.get('/products');
-        let sortedProducts = response.data;
-  
-        if (sortBy === 'price_asc') {
-          sortedProducts = sortedProducts.sort((a, b) => a.price - b.price);
-        } else if (sortBy === 'price_desc') {
-          sortedProducts = sortedProducts.sort((a, b) => b.price - a.price);
-        } else if (sortBy === 'rating_asc') {
-          sortedProducts = sortedProducts.sort((a, b) => a.rating - b.rating);
-        } else if (sortBy === 'rating_desc') {
-          sortedProducts = sortedProducts.sort((a, b) => b.rating - a.rating);
-        }
-  
-        setProducts(sortedProducts);
-      } catch (error) {
-        console.error(error);
+   const [maxPageLimit, setMaxPageLimit] = useState(5);
+   const [minPageLimit, setMinPageLimit] = useState(0);
+   const [totalPages, setTotalPages] = useState(0);
+
+   let pageNumberLimit = 10;
+
+   const onPrevClick = () => {
+      if ((currentPage - 1) % pageNumberLimit === 0) {
+         setMaxPageLimit(maxPageLimit - pageNumberLimit);
+         setMinPageLimit(minPageLimit - pageNumberLimit);
       }
-    };
-  
-    connection
-      .get('/products')
-      .then(response => {
-        console.log(response.data);
-        setProducts(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      })
-      .finally(() => {
-        fetchSortedData();
-      });
-  }, [sortBy]);
-  
-  useFocusEffect(fetchData);
+      setCurrentPage((prev) => prev - 1);
+   };
+
+   const onNextClick = () => {
+      if (currentPage + 1 > maxPageLimit) {
+         setMaxPageLimit(maxPageLimit + pageNumberLimit);
+         setMinPageLimit(minPageLimit + pageNumberLimit);
+      }
+      setCurrentPage((prev) => prev + 1);
+   };
 
 
-
-    const handleSortBy = (sortOption) => {
-      setSortBy(sortOption);
-      setIsDropdownOpen(false);
-    };
-  
-    const isSortActive = (sortOption) => {
-      return sortBy === sortOption;
-    };
-  
-    const toggleDropdown = () => {
-      setIsDropdownOpen(!isDropdownOpen);
-    };
-  // console.log(searchValue); 
    
+   const fetchData= useCallback(() => {
+      setLoading(true)
+
+      connection.get('/products',{
+         params: {
+           page: currentPage,
+           per_page: 10,
+         },}).then(response => {
+         console.log(response.data);
+         setProducts(response.data);
+         setTotalPages(response.data.totalPages);
+         setLoading(false)
+      }).catch(error => {
+         console.error(error);
+      });
+
+   }, [currentPage]);
+   useFocusEffect(fetchData);
+
+   const loadMoreItems = () => {
+      setLoading(true);
+      if (currentPage * 10 < totalPages * 10) {
+         // Fetch more data and update the state
+         // ...
+         setCurrentPage(currentPage + 1);
+         setLoading(false);
+      }
+   };
+
+
    return (
       <View style={styles.page}>
-        
-         {/* <SearchBar placeholder='Search' value='' /> */}
-         {/* <Text>{term}</Text> */}
-         {/* Render product component */}
-         {/* data is array and flatlist will display components for each item in that array 
-             custom components for each item  */}
-
-
-<TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || 'Select an option'}</Text>
-        <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
-      </TouchableOpacity>
-      {isDropdownOpen && (
-        <ScrollView style={styles.dropdownContainer}>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_asc')}
-          >
-            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_desc')}
-          >
-            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_asc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_desc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      )}
-
-
-
-
+         <View style={styles.pageContent}>
          <FlatList
-            data={products} ListEmptyComponent={()=><Text style={{fontSize:40,fontWeight:"bold",
-            color:"black",textAlign:'center'}}>No Data</Text>}
+            data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
-            // keyExtractor={({id}) =>id}
-
+            keyExtractor={({ id }) => id}
+            onEndReached={loadMoreItems}
+            onEndReachedThreshold={0.5}
             // mafeesh scroll indicator
             showsVerticalScrollIndicator={false}
          />
-         {/* <TabNav/> */}
+
+         <View style={styles.pageNumbers}>
+            <TouchableOpacity
+               style={styles.button}
+               onPress={onPrevClick}
+               disabled={currentPage === 1}
+            >
+               <Text>Prev</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+               style={styles.button}
+               onPress={onNextClick}
+               disabled={currentPage === totalPages}
+            >
+               <Text>Next</Text>
+            </TouchableOpacity>
+         </View>
       </View>
-      
+      </View>
+
+
    );
 };
 
@@ -141,6 +104,12 @@ const styles = StyleSheet.create({
       // width:'100%',
       //flex:1,
       padding: 10,
+   },
+   pageContent: {
+     // position: 'absolute',
+      zIndex:0,
+      width: '100%',
+      height: '100%',
    },
    root: {
       flexDirection: 'row',//one row and different columns 
@@ -167,7 +136,7 @@ const styles = StyleSheet.create({
       height: 150,
       resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
       // width:150,
-      // height:150,
+      // height:150, 
    },
    rightContainer: {
       padding: 10,// blank distance between text and image 
@@ -187,39 +156,51 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
    },
-   sortButton: {
-     paddingHorizontal: 10,
-     paddingVertical: 5,
-     borderRadius: 5,
-     borderWidth: 1,
-     borderColor: '#ccc',
+   loadingcontainer: {
+      flex: 10,
+      justifyContent: 'center',
    },
- activeSortButton: {
-  backgroundColor: '#ccc',
-},
-sortButtonText: {
-  fontSize: 14,
-},
+   loadinghorizontal: {
+      flexDirection: 'column',
+      marginHorizontal: 30,
 
-dropdownButton: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingVertical: 10,
-  backgroundColor: '#e0e0e0',
-  marginBottom: 10,
-},
-dropdownButtonText: {
-  fontSize: 16,
-  fontWeight: 'bold',
-  marginRight: 10,
-},
-dropdownButtonArrow: {
-  fontSize: 18,
-},
-dropdownContainer: {
-  backgroundColor: '#e0e0e0',
-  maxHeight: 150,
-},
+      padding: 10,
+   },
+
+   //////pagination 
+   container: {
+      flex: 1,
+      backgroundColor: '#fff',
+   },
+   mainData: {
+      flex: 1,
+      padding: 10,
+   },
+   item: {
+      backgroundColor: '#f9c2ff',
+      padding: 20,
+      marginVertical: 8,
+      marginHorizontal: 16,
+   },
+   pagetitle: {
+      fontSize: 16,
+   },
+   pageNumbers: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      // marginVertical: 10,
+      marginTop: 5,
+      position: 'relative',
+      zIndex: 1,
+   },
+   button: {
+      backgroundColor: 'orange',
+      padding: 10,
+      marginHorizontal: 145,
+      borderRadius: 10,
+   },
+
+
 });
 export default HomeScreen_API; 

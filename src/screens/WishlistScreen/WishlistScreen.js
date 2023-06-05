@@ -40,7 +40,7 @@ const WishlistScreen = () => {
     useFocusEffect(fetchData);
     const navigation = useNavigation();
     const onPress = ({ item }) => {
-        connection.post('/histories', {product_id: item.id})
+        connection.post('/histories', {product_id: item})
         .then(response => console.log(response))
         .catch(error => console.log(error))
         navigation.navigate('ProductScreen', { myid: item });
@@ -48,7 +48,7 @@ const WishlistScreen = () => {
 
     return (
         <ScrollView>
-            <Text style={styles.container}>My WishlistScreen: </Text>
+            <Text style={styles.container}>My Wishlist: </Text>
             {productInfo.map((product) => (
                 <Pressable onPress={() => onPress(product.id)} >
                     <View style={styles.root} key={product.id}>

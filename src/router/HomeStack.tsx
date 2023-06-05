@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from '../screens/HomeScreen';
+//import HomeScreen from '../screens/HomeScreen';
 import ProductScreen from '../screens/ProductScreen/ProductScreen';
 import RatingScreen from '../screens/RatingScreen';
 import Navigation from '../navigation';
@@ -9,6 +9,8 @@ import { Text, SafeAreaView,View,TextInput } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 // import { SearchBar } from 'react-native-screens';
 // import { View } from 'react-native-gesture-handler';
+// import SpeechtoText from '../SpeechtoText';
+import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
 import AfterSearchScreen from '../screens/AfterSearchScreen';
 
@@ -42,6 +44,7 @@ const HeaderComponent = ({setSearchValue}) => {
 
 const HomeStack =()=>{
     const[searchValue, setSearchValue]=useState('');
+   
     return(
       
         // <Stack.Navigator screenOptions={{headerShown:false}}>
@@ -50,18 +53,18 @@ const HomeStack =()=>{
             header: ()=> (
             <HeaderComponent setSearchValue={setSearchValue} /> ),
         }}>
-            <Stack.Screen name="HomeScreen" >
+            {/* <Stack.Screen name="HomeScreen" >
             {()=><HomeScreen searchValue={searchValue}/>}
-            </Stack.Screen>
-            
+            </Stack.Screen> */}
             {/* product Details */}
+            <Stack.Screen component={HomeScreen} name='HomeScreen'/>
             <Stack.Screen component={ProductScreen} name='ProductScreen'/>
             {/* <ProductScreen item={}/> */}
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
         
-            {/* <Stack.Screen name="AfterSearchScreen" >
+            <Stack.Screen name="AfterSearchScreen" >
             {()=><AfterSearchScreen searchValue={searchValue}/>}
-            </Stack.Screen> */}
+            </Stack.Screen>
 
             </Stack.Navigator>
        
