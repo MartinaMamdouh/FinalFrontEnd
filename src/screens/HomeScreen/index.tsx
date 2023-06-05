@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useCallback} from 'react';
-import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
@@ -12,7 +12,8 @@ const HomeScreen_API = () => {
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
    const [totalPages, setTotalPages] = useState(0);
-
+   const [sortBy, setSortBy] = useState(''); 
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    let pageNumberLimit = 10;
 
    const onPrevClick = () => {
@@ -44,11 +45,24 @@ const HomeScreen_API = () => {
          console.log(response.data);
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
-         setLoading(false)
+         setLoading(false);
+         let sortedProducts = response.data;
+
+         if (sortBy === 'price_asc') {
+           sortedProducts = sortedProducts.sort((a, b) => a.price - b.price);
+         } else if (sortBy === 'price_desc') {
+           sortedProducts = sortedProducts.sort((a, b) => b.price - a.price);
+         } else if (sortBy === 'rating_asc') {
+           sortedProducts = sortedProducts.sort((a, b) => a.rating - b.rating);
+         } else if (sortBy === 'rating_desc') {
+           sortedProducts = sortedProducts.sort((a, b) => b.rating - a.rating);
+         }
+ 
+         setProducts(sortedProducts);
       }).catch(error => {
          console.error(error);
       });
-
+      
    }, [currentPage]);
    useFocusEffect(fetchData);
 
@@ -61,11 +75,56 @@ const HomeScreen_API = () => {
          setLoading(false);
       }
    };
+   const handleSortBy = (sortOption) => {
+      setSortBy(sortOption);
+      setIsDropdownOpen(false);
+    };
 
+    const isSortActive = (sortOption) => {
+      return sortBy === sortOption;
+    };
+
+    const toggleDropdown = () => {
+      setIsDropdownOpen(!isDropdownOpen);
+    };
 
    return (
       <View style={styles.page}>
          <View style={styles.pageContent}>
+         <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
+        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || 'Select an option'}</Text>
+        <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      {isDropdownOpen && (
+        <ScrollView style={styles.dropdownContainer}>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_asc')}
+          >
+            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_desc')}
+          >
+            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_asc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_desc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+         
+            
          <FlatList
             data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
@@ -201,6 +260,40 @@ const styles = StyleSheet.create({
       borderRadius: 10,
    },
 
+//sort
+sortButton: {
+   paddingHorizontal: 10,
+   paddingVertical: 5,
+   borderRadius: 5,
+   borderWidth: 1,
+   borderColor: '#ccc',
+ },
+activeSortButton: {
+backgroundColor: '#ccc',
+},
+sortButtonText: {
+fontSize: 14,
+},
 
+dropdownButton: {
+flexDirection: 'row',
+alignItems: 'center',
+justifyContent: 'center',
+paddingVertical: 10,
+backgroundColor: '#e0e0e0',
+marginBottom: 10,
+},
+dropdownButtonText: {
+fontSize: 16,
+fontWeight: 'bold',
+marginRight: 10,
+},
+dropdownButtonArrow: {
+fontSize: 18,
+},
+dropdownContainer: {
+backgroundColor: '#e0e0e0',
+maxHeight: 150,
+},
 });
 export default HomeScreen_API; 
