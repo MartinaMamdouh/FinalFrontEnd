@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
 import Button from '../../components/Button/Button';
 import product from '../../data/product';
-import Pagination from '../../components/Pagination';
+
 
 // const renderItem = ({ item }) => (
 //    <ProductItem
@@ -57,11 +57,12 @@ const HomeScreen_API = () => {
    useEffect(() => {
       setLoading(true)
 
-      connection.get('/products',{
+      connection.get('/products', {
          params: {
-           page: currentPage,
-           per_page: 10,
-         },}).then(response => {
+            page: currentPage,
+            per_page: 10,
+         },
+      }).then(response => {
          console.log(response.data);
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
@@ -75,14 +76,14 @@ const HomeScreen_API = () => {
 
 
 
-   //  if(loading && products.length===0){
-   //    // const timer = setTimeout(() => {}, 1000);
+   if (loading && products.length === 0) {
+      //    // const timer = setTimeout(() => {}, 1000);
 
-   //     return <View style={[styles.loadingcontainer,styles.loadinghorizontal]}>
-   //             <ActivityIndicator size="large"/>
-   //             </View>
+      return <View style={[styles.loadingcontainer, styles.loadinghorizontal]}>
+         <ActivityIndicator size="large" />
+      </View>
 
-   //  }
+   }
    const loadMoreItems = () => {
       setLoading(true);
       if (currentPage * 10 < totalPages * 10) {
@@ -92,6 +93,20 @@ const HomeScreen_API = () => {
          setLoading(false);
       }
    };
+   const renderFooter = () => {
+      if (currentPage === totalPages) {
+        return (
+          <View style={styles.footer}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', textAlign: 'center' }}>
+              End of Results
+            </Text>
+          </View>
+        );
+      } else {
+        return null;
+      }
+    };
+    
 
 
    return (
@@ -105,32 +120,34 @@ const HomeScreen_API = () => {
          {/* <Text style={{fontSize:40,fontWeight:"bold", 
             color:"black",textAlign:'center'}}>Loading...</Text> */}
          <View style={styles.pageContent}>
-         <FlatList
-            data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
-            renderItem={({ item }) => <ProductItem item={item} />}
-            keyExtractor={({ id }) => id}
-            onEndReached={loadMoreItems}
-            onEndReachedThreshold={0.5}
-            // mafeesh scroll indicator
-            showsVerticalScrollIndicator={false}
-         />
+            <FlatList
+               data={products}
+               renderItem={({ item }) => <ProductItem item={item} />}
+               keyExtractor={({ id }) => id}
+               onEndReached={loadMoreItems}
+               onEndReachedThreshold={0.5}
+               // mafeesh scroll indicator
+               showsVerticalScrollIndicator={false}
+               ListFooterComponent={renderFooter}
+            />
 
-         <View style={styles.pageNumbers}>
-            <TouchableOpacity
-               style={styles.button}
-               onPress={onPrevClick}
-               disabled={currentPage === 1}
-            >
-               <Text>Prev</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-               style={styles.button}
-               onPress={onNextClick}
-               disabled={currentPage === totalPages}
-            >
-               <Text>Next</Text>
-            </TouchableOpacity>
-         </View>
+            <View style={styles.pageNumbers}>
+               <TouchableOpacity
+                  style={styles.button}
+                  onPress={onPrevClick}
+                  disabled={currentPage === 1}
+               >
+                  <Text>Prev</Text>
+               </TouchableOpacity>
+               <TouchableOpacity
+                  style={styles.button}
+                  onPress={onNextClick}
+                  disabled={currentPage === totalPages}
+               >
+                  <Text>Next</Text>
+               </TouchableOpacity>
+            </View>
+           
       </View>
       </View>
 
@@ -145,8 +162,8 @@ const styles = StyleSheet.create({
       padding: 10,
    },
    pageContent: {
-     // position: 'absolute',
-      zIndex:0,
+      // position: 'absolute',
+      zIndex: 0,
       width: '100%',
       height: '100%',
    },
@@ -237,6 +254,13 @@ const styles = StyleSheet.create({
       padding: 10,
       marginHorizontal: 3,
    },
+   footer: {
+      // Add any desired styles for the footer, for example:
+      backgroundColor: '#f8f9fa',
+      padding: 10,
+      marginBottom: 10,
+   },
+
 
 });
 export default HomeScreen_API; 
