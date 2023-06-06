@@ -13,18 +13,18 @@ import Feather from 'react-native-vector-icons/Feather';
 import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
 import AfterSearchScreen from '../screens/AfterSearchScreen';
-
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
 const HeaderComponent = ({setSearchValue}) => {
-        // const [searchText, setSearchText] = useState('');
+        const navigation = useNavigation();
         const handleSearchResult = (result: string) => {
             console.log('Search result:', result);
-            // setSearchText(result);
             setSearchValue(result);
             // do something with the search result, such as filtering data or updating state
-          }
+            navigation.navigate('AfterSearchScreen',{ searchValue: result });
+        }
     return(
        <SafeAreaView style={{backgroundColor:'#009999'}}>
         <View style={{margin:10,
@@ -44,27 +44,29 @@ const HeaderComponent = ({setSearchValue}) => {
 
 const HomeStack =()=>{
     const[searchValue, setSearchValue]=useState('');
-   
+    const navigation = useNavigation();
+    
     return(
       
         // <Stack.Navigator screenOptions={{headerShown:false}}>
         
-        <Stack.Navigator screenOptions={{
+        <Stack.Navigator 
+        // initialRouteName="HomeScreen"
+         screenOptions={{
+
             header: ()=> (
             <HeaderComponent setSearchValue={setSearchValue} /> ),
         }}>
-            {/* <Stack.Screen name="HomeScreen" >
-            {()=><HomeScreen searchValue={searchValue}/>}
-            </Stack.Screen> */}
+        
             {/* product Details */}
             <Stack.Screen component={HomeScreen} name='HomeScreen'/>
             <Stack.Screen component={ProductScreen} name='ProductScreen'/>
             {/* <ProductScreen item={}/> */}
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
-        
-            <Stack.Screen name="AfterSearchScreen" >
-            {()=><AfterSearchScreen searchValue={searchValue}/>}
-            </Stack.Screen>
+            
+             {searchValue ? (
+            <Stack.Screen name="AfterSearchScreen" component={AfterSearchScreen} />
+            ) : null}
 
             </Stack.Navigator>
        
