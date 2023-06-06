@@ -26,7 +26,7 @@ const HeaderComponent = ({setSearchValue}) => {
             // do something with the search result, such as filtering data or updating state
           }
     return(
-       <SafeAreaView style={{backgroundColor:'orange'}}>
+       <SafeAreaView style={{backgroundColor:'#009999'}}>
         <View style={{margin:10,
             // padding:5,
             backgroundColor:'white',

@@ -2,11 +2,11 @@ import React, { useState, useEffect,useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text, Pressable } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import connection from '../../router/connection';
+import heartFill from '../../../assets/images/filled-heart.png';
+import heartEmpty from '../../../assets/images/unfilled-heart.png';
 
 const Favorite = ({ item }) => {
-
-    const heartEmpty = 'https://www.citypng.com/public/uploads/preview/-51610329431xv3s3v3d9v.png';
-    const heartFill = 'https://www.pngitem.com/pimgs/m/307-3070057_red-heart-outline-png-transparent-png.png';
+  
     const [favorite, setFavorite] = useState([])
     const baseURL = 'http://localhost:3000/api/v1/products/';
     const params = {
@@ -60,10 +60,7 @@ const Favorite = ({ item }) => {
             <Pressable onPress={toggleWishlist}>
                 <Image
                     style={styles.heartImg}
-                    source={
-                        favorite.includes(item) ? { uri: heartFill } : { uri: heartEmpty }
-                    }
-
+                    source={favorite.includes(item) ? heartFill : heartEmpty}
                 />
             </Pressable>
 
@@ -80,6 +77,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     heartImg: {
+        marginRight:4,
         width: 40,
         height: 40,
         resizeMode: 'cover',

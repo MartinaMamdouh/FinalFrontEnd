@@ -114,24 +114,27 @@ const HomeScreen_API = () => {
             onEndReachedThreshold={0.5}
             // mafeesh scroll indicator
             showsVerticalScrollIndicator={false}
-         />
 
-         <View style={styles.pageNumbers}>
-            <TouchableOpacity
-               style={styles.button}
-               onPress={onPrevClick}
-               disabled={currentPage === 1}
-            >
-               <Text>Prev</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-               style={styles.button}
-               onPress={onNextClick}
-               disabled={currentPage === totalPages}
-            >
-               <Text>Next</Text>
-            </TouchableOpacity>
-         </View>
+            ListFooterComponent={() => (
+               <View style={styles.pageNumbers}>
+                  <TouchableOpacity
+                     style={styles.button}
+                     onPress={onPrevClick}
+                     disabled={currentPage === 1}
+                  >
+                     <Text style= {styles.text}>Prev</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     style={styles.button}
+                     onPress={onNextClick}
+                     disabled={currentPage === totalPages}
+                  >
+                     <Text style= {styles.text}>Next</Text>
+                  </TouchableOpacity>
+               </View>
+                 )}
+         />
+         
       </View>
       </View>
 
@@ -167,7 +170,6 @@ const styles = StyleSheet.create({
    starImgStyle: {
       margin: 2,
       width: 20,
-
       height: 20,
       resizeMode: 'cover',
    },
@@ -182,11 +184,6 @@ const styles = StyleSheet.create({
       padding: 10,// blank distance between text and image 
       // width:'100%',
       flex: 3,
-   },
-   oldPrice: {
-      fontSize: 12,
-      fontWeight: 'bold',
-      textDecorationLine: 'line-through',
    },
    title: {
       fontSize: 18,
@@ -203,7 +200,6 @@ const styles = StyleSheet.create({
    loadinghorizontal: {
       flexDirection: 'column',
       marginHorizontal: 30,
-
       padding: 10,
    },
 
@@ -229,17 +225,21 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      // marginVertical: 10,
       marginTop: 5,
-      position: 'relative',
       zIndex: 1,
    },
    button: {
-      backgroundColor: 'orange',
-      padding: 10,
+      backgroundColor: '#b2d8d8',
+      padding: 8,
       marginHorizontal: 145,
       borderRadius: 10,
+      borderWidth: 1,
+      borderColor:"#008080",
    },
+   text: {
+      color:"#008080",
+      fontSize: 15,
+   }
 
 
 });

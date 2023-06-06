@@ -105,13 +105,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     lineHeight: 20,
     fontWeight: 'bold',
+    fontSize: 16,
   },
   heart: {
     marginLeft: 100,
   },
   button: {
     marginBottom: 100,
-    color: 'orange',
+    color: '#008080',
   }
 });
 export default ProductScreen;
