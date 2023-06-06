@@ -92,7 +92,7 @@ const HomeScreen_API = () => {
       <View style={styles.page}>
          <View style={styles.pageContent}>
          <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || 'Select an option'}</Text>
+        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
         <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
       </TouchableOpacity>
       {isDropdownOpen && (
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
    text: {
       color:"#008080",
       fontSize: 15,
-   }
+   },
 
 //sort
 sortButton: {
@@ -282,6 +282,7 @@ justifyContent: 'center',
 paddingVertical: 10,
 backgroundColor: '#e0e0e0',
 marginBottom: 10,
+marginRight:260,
 },
 dropdownButtonText: {
 fontSize: 16,
