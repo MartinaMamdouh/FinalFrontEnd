@@ -45,12 +45,8 @@ const ProductItem = (props: ProductItemProps) => {
     const url = item.link;
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
-  //const item= props.item;
   const { item } = props;
-  // const starImgFilled= 'https://github.com/tranhonghan/images/blob/main/star_filled.png?raw=true'
-  // const starImgCorner='https://github.com/tranhonghan/images/blob/main/star_corner.png?raw=true'
-
-
+ 
   return (
     <View style={styles.random}>
       <Pressable onPress={onPress} style={styles.root}>
@@ -77,44 +73,16 @@ const ProductItem = (props: ProductItemProps) => {
 
           </View>
         </View>
-        <Favorite item={item.id}/>
+        <Favorite item={item.id} />
       </Pressable>
       <View style={styles.Container}>
         <Text style={[styles.leftContainer, styles.price]}>{item.source.charAt(0).toUpperCase() + item.source.slice(1)}:  {item.price} EGP</Text>
-
-        {/* if the item has an old price display it if condition using java script\
-          {item.oldPrice && (<Text style={styles.oldPrice}> EGP {item.oldPrice}</Text>
-          )}
-         */}
-        {/* <View style={styles.buttonContainer}> */}
-
-
-        {/* <Text style={[styles.rightContainer,styles.price]}></Text> */}
-
         <HomeButton text=" Shop now "
           onPress={handlePress}></HomeButton>
       </View>
       <View>
-
       </View>
-      {/* <View style={styles.Container}>
-        <Text style={[styles.Container, styles.price]}>Jumia : EGP {item.price}</Text>
-        <HomeButton text="  Jumia  "
-          onPress={onPress}></HomeButton>
-      </View> */}
-      {/* </View> */}
-      {/* <View style={styles.Container}>
-        <Text style={[styles.Container, styles.price]}>Noon : EGP {item.price}</Text>
-        <HomeButton text=" Noon "
-          onPress={onPress}></HomeButton>
-      </View> */}
-
     </View >
-
-
-
-
-
   );
 };
 
