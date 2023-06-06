@@ -13,6 +13,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
 import AfterSearchScreen from '../screens/AfterSearchScreen';
+import Button from '../components/Button/Button';
 
 
 const Stack = createStackNavigator();
@@ -32,11 +33,16 @@ const HeaderComponent = ({setSearchValue}) => {
             backgroundColor:'white',
             flexDirection:'row',
             alignItems:'center',}}>
-            
             <SearchBar onResult={handleSearchResult} />
-           
-        </View>
+            
 
+        </View>
+       {/* <View>
+      
+       <Feather name="filter" size={30} color="grey"/>
+       <Text>Filter</Text>
+      
+       </View> */}
        </SafeAreaView>
       
     );

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Image, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator, Pressable } from 'react-native';
 import Voice from '@react-native-community/voice';
 import Feather from 'react-native-vector-icons/Feather';
+import { useNavigation} from '@react-navigation/native';
+import ProductScreen from '../../screens/ProductScreen/ProductScreen';
+import HomeStack from '../../router/HomeStack';
 import debounce from 'lodash/debounce';
 const SearchBar = ({ onResult }) => {
 
   const [result, setResult] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const navigation=useNavigation();
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
@@ -58,12 +62,14 @@ const SearchBar = ({ onResult }) => {
     setResult('');
   }
   const debouncedHandleTextSubmit = debounce(handleTextSubmit, 500); // Delay execution of handleTextSubmit by 500ms
-
+ 
   return (
     <View style={styles.container}>
       <SafeAreaView>
         <View style={styles.textInputStyle}>
-        <Feather name="search"size={20}/>
+         
+          <Feather name="search"size={25}/>
+         
           <TextInput
             value={result}
             placeholder="Search..."
@@ -102,6 +108,7 @@ const SearchBar = ({ onResult }) => {
 
         
       </SafeAreaView>
+      
     </View>
   );
 };

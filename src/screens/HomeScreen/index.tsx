@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
       // marginVertical: 10,
       marginTop: 5,
       position: 'relative',
-      zIndex: 1,
+      zIndex:1,
    },
    button: {
       backgroundColor: 'orange',
