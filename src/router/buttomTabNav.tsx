@@ -23,8 +23,8 @@ const ButtomTabNav = () => {
         <Tab.Navigator
             screenOptions={{
                 tabBarShowLabel: false,
-                tabBarInactiveTintColor: '#ffbd7d',
-                tabBarActiveTintColor: '#e47911',
+                tabBarInactiveTintColor: '#b2d8d8',
+                tabBarActiveTintColor: '#006666',
                 headerShown: false
             }}>
             <Tab.Screen component={HomeStack} name='Home'

@@ -16,14 +16,14 @@ const HomeButton = ({ text, onPress, containerStyles }: ButtonProps) => {
 }
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: '#e47911',
+    backgroundColor: '#008080',
     marginVertical: 2,
     marginHorizontal: 10,
     height: 35,
     width: 150,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#a15e1b',
+    borderColor: '#006666',
     flexDirection: 'row',
     alignItems: 'center',
     //alignContent: 'space-around',
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+    color: "white",
 
   },
 })
