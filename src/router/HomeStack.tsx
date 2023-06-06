@@ -61,7 +61,7 @@ const HomeStack =()=>{
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
             
              {searchValue ? (
-            <Stack.Screen name="AfterSearchScreen" component={AfterSearchScreen} />
+            <Stack.Screen name="AfterSearchScreen" component={AfterSearchScreen} options={{ headerShown: false }} />
             ) : null}
 
             </Stack.Navigator>

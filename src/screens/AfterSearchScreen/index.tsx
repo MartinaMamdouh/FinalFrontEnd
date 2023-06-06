@@ -3,10 +3,13 @@ import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,S
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
-  
+import Feather from 'react-native-vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
+
 const AfterSearchScreen = ({route}) => {
+   const navigation = useNavigation();
    const { searchValue } = route.params;
-   console.log("Im in the other page"+searchValue)
+   
 //  
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
@@ -90,11 +93,24 @@ const AfterSearchScreen = ({route}) => {
       setIsDropdownOpen(!isDropdownOpen);
     };
 
+    
+
    return (
       <View style={styles.page}>
+        
+         <View style={styles.newheader}>
+         <Feather
+            name="arrow-left"
+            size={25}
+            color="white"
+            onPress={() => navigation.navigate('HomeScreen')}
+          />
+          <Text style={styles.headerText}>{searchValue}</Text>
+         </View>
+         
          <View style={styles.pageContent}>
          <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownButtonText}>Sort Byy: {sortBy || ''}</Text>
+        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
         <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
       </TouchableOpacity>
       {isDropdownOpen && (
@@ -155,6 +171,7 @@ const AfterSearchScreen = ({route}) => {
                </View>
                  )}
          />
+               
          
       </View>
       </View>
@@ -164,89 +181,37 @@ const AfterSearchScreen = ({route}) => {
 };
 
 const styles = StyleSheet.create({
-   page: {
-      // width:'100%',
-      //flex:1,
-      padding: 10,
+   newheader:{
+      backgroundColor:"#009999",
+      height:55,
+       alignItems: 'center',
+       flexDirection: 'row',
    },
+
+   headerText:{
+      color:'white',
+      fontSize:20,
+      marginLeft:10,
+      },
+
+   page: {
+      flex:1, 
+   },
+
    pageContent: {
-     // position: 'absolute',
       zIndex:0,
       width: '100%',
       height: '100%',
-   },
-   root: {
-      flexDirection: 'row',//one row and different columns 
-      borderWidth: 1,
-      borderColor: '#d1d1d1',
-      borderRadius: 10,// to make border sharper
-      backgroundColor: '#fff',
-      width: '100%',
-   },
-   ratingContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginVertical: 5,
-   },
-   starImgStyle: {
-      margin: 2,
-      width: 20,
-      height: 20,
-      resizeMode: 'cover',
-   },
-   image: {
-      flex: 2,
-      height: 150,
-      resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
-      // width:150,
-      // height:150, 
-   },
-   rightContainer: {
-      padding: 10,// blank distance between text and image 
-      // width:'100%',
-      flex: 3,
-   },
-   title: {
-      fontSize: 18,
-      fontWeight: 'bold',
-   },
-   price: {
-      fontSize: 18,
-      fontWeight: 'bold',
-   },
-   loadingcontainer: {
-      flex: 10,
-      justifyContent: 'center',
-   },
-   loadinghorizontal: {
-      flexDirection: 'column',
-      marginHorizontal: 30,
       padding: 10,
    },
 
    //////pagination 
-   container: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
-   mainData: {
-      flex: 1,
-      padding: 10,
-   },
-   item: {
-      backgroundColor: '#f9c2ff',
-      padding: 20,
-      marginVertical: 8,
-      marginHorizontal: 16,
-   },
-   pagetitle: {
-      fontSize: 16,
-   },
    pageNumbers: {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 5,
+      marginBottom:55,
       zIndex: 1,
    },
    button: {
@@ -283,7 +248,7 @@ alignItems: 'center',
 justifyContent: 'center',
 paddingVertical: 10,
 backgroundColor: '#e0e0e0',
-marginBottom: 10,
+marginBottom: 5,
 marginRight:260,
 },
 dropdownButtonText: {
