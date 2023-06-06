@@ -30,7 +30,7 @@ const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-    console.warn('item pressed');
+    // console.warn('item pressed');
     //.navigate('ProductDetails', { id: item.id });
 
     connection.post('/histories', { product_id: item.id })
@@ -46,7 +46,7 @@ const ProductItem = (props: ProductItemProps) => {
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
   const { item } = props;
- 
+
   return (
     <View style={styles.random}>
       <Pressable onPress={onPress} style={styles.root}>

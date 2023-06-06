@@ -42,7 +42,6 @@ const HomeScreen_API = () => {
            page: currentPage,
            per_page: 10,
          },}).then(response => {
-         console.log(response.data);
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
          setLoading(false);
