@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image ,Linking} from 'react-native';
-import product from '../../data/product';
-import { useRoute } from '@react-navigation/native';
-import QuantitySelector from '../../components/QuantitySelector';
-import Button from '../../components/Button/Button';
-import ImageCarousel from '../../components/ImageCarousel';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Linking } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import connection from '../../router/connection';
-import HomeButton from '../../components/HomeButton/HomeButton';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProductScreen = (props) => {
+
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
-  useEffect(() => {
+  const fetchData = useCallback(() => {
+   
     connection.get(`/products`).then(response => {
       setProduct(response.data.find(item => item.id === myid));
     })
       .catch(error => { console.error(error); });
   }, []);
+  useFocusEffect(fetchData);
+
   const navigation = useNavigation();
 
   const onbuypressed = () => {
@@ -60,15 +59,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    
+
     // padding:30,
     // backgroundColor:'grey',
-    flex:2,
+    flex: 2,
     height: 200,
     resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
     //  width:150,
     //  height:150,
- },
+  },
   description: {
     marginVertical: 10,
     lineHeight: 20,

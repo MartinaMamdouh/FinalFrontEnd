@@ -21,9 +21,9 @@ const Favorite = ({ item }) => {
         connection.get('/favorites').then(response => {
             // console.log(response.data);
             const productIds = response.data.map((row) => row.product_id);
-            console.log(productIds);
+           // console.log(productIds);
             setFavorite(productIds);
-             console.log(favorite);
+            // console.log(favorite);
         })
             .catch(error => { console.error(error); });
     }, []);
@@ -33,25 +33,19 @@ const Favorite = ({ item }) => {
 
         if (favorite.includes(item)) {
             setFavorite(favorite.filter(id => id !== item));
-            console.log("favorite items removed", item)
+            //console.log("favorite items removed", item)
             connection.post('/favorites/destroy', params).then(response => { console.log(response.data); })
                 .catch(error => { console.error(error); });
         } else {
 
             setFavorite([...favorite, item]);
-            console.log("favorite items added", item);
+            //console.log("favorite items added", item);
             connection.post('/favorites', params).then(response => { console.log(response.data); })
                 .catch(error => { console.error(error); });
-
-
-            //   <WishlistScreen item={item}/>
-
         }
 
     };
-    //   useEffect(() => {
-    //     AsyncStorage.setItem('wishlist', JSON.stringify(favorite));
-    //   }, [favorite]);
+
     return (
 
         <View style={styles.heartBar}>

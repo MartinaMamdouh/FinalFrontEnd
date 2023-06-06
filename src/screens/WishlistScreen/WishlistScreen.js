@@ -39,11 +39,11 @@ const WishlistScreen = () => {
     }, []);
     useFocusEffect(fetchData);
     const navigation = useNavigation();
-    const onPress = ({ item }) => {
-        connection.post('/histories', {product_id: item})
+    const onPress = ( itemID ) => {
+        connection.post('/histories', {product_id: itemID})
         .then(response => console.log(response))
         .catch(error => console.log(error))
-        navigation.navigate('ProductScreen', { myid: item });
+         navigation.navigate('ProductScreen', { myid: itemID });
     }
 
     return (
