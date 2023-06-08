@@ -10,7 +10,8 @@ const AfterSearchScreen = ({route}) => {
    const navigation = useNavigation();
    const { searchValue } = route.params;
    
-//  
+  
+// //  
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
@@ -20,6 +21,8 @@ const AfterSearchScreen = ({route}) => {
    const [sortBy, setSortBy] = useState(''); 
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    let pageNumberLimit = 10;
+
+   const [postCompleted, setPostCompleted] = useState(false);
 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
@@ -36,19 +39,29 @@ const AfterSearchScreen = ({route}) => {
       }
       setCurrentPage((prev) => prev + 1);
    };
+   // console.log(postCompleted)
+   useEffect(() => {
+      console.log("search vallll"+searchValue);
+      connection.post('/products', { search_key: searchValue })
+      .then(response => {console.log(response)
+                         setPostCompleted(true); })
+      .catch(error => {console.log("in database")
+                        setPostCompleted(true);});
+   }, [searchValue]);
 
-
-   
-   const fetchData= useCallback(() => {
+  
+   useEffect(() => {
+      if (postCompleted) {
       setLoading(true)
-
+console.log("hna")
       connection.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
+           'filter[name_i_cont]': searchValue,
          },}).then(response => {
-         console.log(response.data);
          setProducts(response.data);
+         console.log("gowa el get")
          setTotalPages(response.data.totalPages);
          setLoading(false);
          let sortedProducts = response.data;
@@ -64,12 +77,28 @@ const AfterSearchScreen = ({route}) => {
          }
  
          setProducts(sortedProducts);
+      
+         
+         const amazonProducts = response.data.filter(product => product.source === 'amazon');
+         const newProducts = response.data.map(product => {
+         if (product.source !== 'amazon') {
+            const randomProduct = amazonProducts[Math.floor(Math.random() * amazonProducts.length)];
+            return { ...product, img_url: randomProduct.img_url };
+         }
+         return product;
+          });
+         setProducts(newProducts);
+      
       }).catch(error => {
          console.error(error);
       });
-      
-   }, [currentPage]);
-   useFocusEffect(fetchData);
+      // setPostCompleted(false);
+   }
+   }, [currentPage,postCompleted]);
+
+
+
+
 
    const loadMoreItems = () => {
       setLoading(true);
@@ -93,8 +122,6 @@ const AfterSearchScreen = ({route}) => {
       setIsDropdownOpen(!isDropdownOpen);
     };
 
-    
-
    return (
       <View style={styles.page}>
         
@@ -107,7 +134,7 @@ const AfterSearchScreen = ({route}) => {
           />
           <Text style={styles.headerText}>{searchValue}</Text>
          </View>
-         
+        
          <View style={styles.pageContent}>
          <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
         <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
@@ -140,10 +167,10 @@ const AfterSearchScreen = ({route}) => {
             <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
           </TouchableOpacity>
         </ScrollView>
-      )}
+      )} 
          
             
-         <FlatList
+       <FlatList
             data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
             keyExtractor={({ id }) => id}
@@ -170,7 +197,7 @@ const AfterSearchScreen = ({route}) => {
                   </TouchableOpacity>
                </View>
                  )}
-         />
+         /> 
                
          
       </View>
