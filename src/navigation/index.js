@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text} from 'react-native'
+import { View, Text } from 'react-native'
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SigninScreen from '../screens/SigninScreen';
@@ -13,36 +13,30 @@ import ProductScreen from '../screens/ProductScreen';
 import RatingScreen from '../screens/RatingScreen';
 import WishlistScreen from '../screens/WishlistScreen';
 import HistoryScreen from '../screens/HistoryScreen';
-
-
+import FaceIDScreen from '../screens/FaceIDScreen';
 
 const Stack = createNativeStackNavigator();
 
-const Navigation =()=>{
+const Navigation = () => {
 
-return (
+    return (
 
-    <NavigationContainer>
-
-    <Stack.Navigator >
-
-    <Stack.Screen name="SignIn" component={SigninScreen} />
-    <Stack.Screen name="Signup" component={SignUpScreen} />
-
-    <Stack.Screen name="forgotpassword" component={ForgotPasswordScreen} />
-
-    <Stack.Screen name="newpassword" component={NewPasswordScreen} />
-    <Stack.Screen name="Home" component={HomeScreen} />
-    <Stack.Screen name="Profile" component={ProfileScreen} />
-    <Stack.Screen name="ProductScreen" component={ProductScreen} />
-    <Stack.Screen name="RatingScreen" component={RatingScreen} />
-    <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
-    <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
-
-    </Stack.Navigator>
-
-    </NavigationContainer>
-);
+        <NavigationContainer>
+            <Stack.Navigator >
+                <Stack.Screen name="SignIn" component={SigninScreen} />
+                <Stack.Screen name="Signup" component={SignUpScreen} />
+                <Stack.Screen name="forgotpassword" component={ForgotPasswordScreen} />
+                <Stack.Screen name="faceID" component={FaceIDScreen} />
+                <Stack.Screen name="newpassword" component={NewPasswordScreen} />
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen name="ProductScreen" component={ProductScreen} />
+                <Stack.Screen name="RatingScreen" component={RatingScreen} />
+                <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
+                <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 
 
 };

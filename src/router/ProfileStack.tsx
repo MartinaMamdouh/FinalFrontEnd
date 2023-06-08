@@ -9,24 +9,24 @@ import RatingScreen from '../screens/RatingScreen';
 import WishlistScreen from '../screens/WishlistScreen';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import FaceIDScreen from '../screens/FaceIDScreen';
 
 const Stack = createStackNavigator();
 
 const ProfileStack = () => {
-    return(
-    <Stack.Navigator>
-        <Stack.Screen name="Profilelog" component={ProfileScreen} />
-    <Stack.Screen name="SignIn" component={SigninScreen} />
-    <Stack.Screen name="Signup" component={SignUpScreen} />
-
-    <Stack.Screen name="forgotpassword" component={ForgotPasswordScreen} />
-
-    <Stack.Screen name="newpassword" component={NewPasswordScreen} />
-    <Stack.Screen name="RatingScreen" component={RatingScreen} />
-   <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
-   <Stack.Screen name="My History" component={HistoryScreen} />
-   </Stack.Navigator>
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Profilelog" component={ProfileScreen} />
+            <Stack.Screen name="SignIn" component={SigninScreen} />
+            <Stack.Screen name="Signup" component={SignUpScreen} />
+            <Stack.Screen name="forgotpassword" component={ForgotPasswordScreen} />
+            <Stack.Screen name="faceID" component={FaceIDScreen} />
+            <Stack.Screen name="newpassword" component={NewPasswordScreen} />
+            <Stack.Screen name="RatingScreen" component={RatingScreen} />
+            <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
+            <Stack.Screen name="My History" component={HistoryScreen} />
+        </Stack.Navigator>
     );
 };
- 
+
 export default ProfileStack;
