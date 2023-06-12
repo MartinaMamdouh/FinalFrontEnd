@@ -1,65 +1,62 @@
 import React from 'react';
-import {View,Text,StyleSheet,Pressable} from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-const CustomButton =({onPress,text,type="PRIMARY",bgColor,fgColor})=>{
+const CustomButton = ({ onPress, text, type = "PRIMARY", bgColor, fgColor }) => {
 
-return (
+  return (
 
-    <Pressable onPress={onPress} 
-    style={[styles.container,styles[`container_${type}`],
-    bgColor ? {backgroundColor:bgColor}:{},
-    ]}>
-    <Text style={[styles.text,styles[`text_${type}`],
-    fgColor ? {color :fgColor} : {},
+    <Pressable onPress={onPress}
+      style={[styles.container, styles[`container_${type}`],
+      bgColor ? { backgroundColor: bgColor } : {},
+      ]}>
+      <Text style={[styles.text, styles[`text_${type}`],
+      fgColor ? { color: fgColor } : {},
 
-]}>{text}</Text>
+      ]}>{text}</Text>
 
     </Pressable>
-);
+  );
 
-    
+
 };
 
 
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
 
-    container_PRIMARY:{
+  container_PRIMARY: {
 
-        padding:10,
-        // width:'100%',
-        borderRadius:5,
-        marginVertical:7,
-        alignItems:'center'
-    },
+    padding: 10,
+    // width:'100%',
+    borderRadius: 5,
+    marginVertical: 7,
+    alignItems: 'center'
+  },
 
-    container:{
-        backgroundColor:'orange',
+  container: {
+    backgroundColor: '#29a3a3',  
+
+  },
+
+  container_SECONDARY: {
+    borderColor: '#008CBA',
+    borderWidth: 1,
+    padding: 1,
+
+    backgroundColor: 'black'
+
+  },
 
 
-    },
+  container_TERTIARY: {
+    backgroundColor: 'black',
+    marginVertical: 15,
 
-    container_SECONDARY:{
-        borderColor:'#008CBA',
-        borderWidth:1,
-        padding:1,
-        
-        backgroundColor:'black'
+  },
 
-    },
-
-
-    container_TERTIARY:{
-        backgroundColor:'black',
-        marginVertical:15,
-
-    },
-
-    text:{
-
-        fontweight:'bold',
-        color:'black',
-        fontSize:20,
-    },
+  text: {
+    color: '#d6f5f5',
+    fontSize: 20,
+  },
 
 });
 

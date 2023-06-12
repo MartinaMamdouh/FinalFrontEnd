@@ -1,13 +1,19 @@
-import React, { useState, useEffect ,useCallback} from 'react';
+import React, { useState,useEffect ,useCallback, useContext} from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
+// import { UserAuthContext } from '../../context/UserAuthContext';
 
 const HomeScreen_API = () => {
 
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
+//   const {userData} = useContext(UserAuthContext)
+// console.log(userData);
+  
+   const [term, setTerm] = useState('');
+   
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);

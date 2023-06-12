@@ -1,9 +1,9 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
-import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import { UserAuthContext } from '../../context/UserAuthContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,28 +12,16 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 50,
     height: 50,
-
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   logo: {
     width: 66,
     height: 58,
   },
   headline: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 25,
-    marginBottom: 10,
-    width: 200,
-    backgroundColor: 'white',
-    alignSelf: 'center',
-
-  },
-
-  headline: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#1f7a7a',
     marginBottom: 20,
   },
   headlineContainer: {
@@ -44,82 +32,64 @@ const styles = StyleSheet.create({
   headlineText: {
     fontSize: 32,
     letterSpacing: 2,
-
   },
   headlineTextBold: {
     fontWeight: 'bold',
     marginLeft: 5,
   },
-
-
 });
 
-
-
 const ProfileScreen = () => {
-
-
-
   const navigation = useNavigation();
 
-  const onLogoutPressed = () => {
-    navigation.navigate('SignIn');
-  }
+  const { logOut } = useContext(UserAuthContext);
 
-  const onNotificationsPressed = () => {
-    // go to notifications
-  }
+  const onLogoutPressed = () => {
+    logOut();
+    navigation.navigate('SignIn');
+  };
 
   const onHistoryPressed = () => {
     navigation.navigate('My History');
-  }
+  };
   const onWishlistPressed = () => {
     navigation.navigate('WishlistScreen');
-  }
+  };
+
+  const buttons = [
+    {
+      text: 'My Wishlist',
+      onPress: onWishlistPressed,
+    },
+    {
+      text: 'My History',
+      onPress: onHistoryPressed,
+    },
+    {
+      text: 'Logout',
+      onPress: onLogoutPressed,
+    },
+  ];
 
   return (
     <View style={styles.container}>
-
       <Text style={[styles.headline, { textAlign: 'center' }]}>
-        <Text style={[styles.headlineText, styles.headlineTextBold]}>MY PROFILE</Text>
-
+        <Text style={[styles.headlineText, styles.headlineTextBold]}>
+          MY PROFILE
+        </Text>
       </Text>
 
-      <Image
-        style={styles.tinyLogo}
-        source={require('../profile.png')}
-      />
+      <Image style={styles.tinyLogo} source={require('../profile.png')} />
 
-
-      <CustomButton text="My Wishlist"
-        onPress={onWishlistPressed}
-        bgColor="#E7EAF4"
-        fgColor="#4765A9"
-      />
-
-
-      <CustomButton text="My History"
-        onPress={onHistoryPressed}
-        bgColor="#E7EAF4"
-        fgColor="#4765A9"
-      />
-
-
-      <CustomButton text="My Notifications"
-        onPress={onNotificationsPressed}
-        bgColor="#E7EAF4"
-        fgColor="#4765A9"
-      />
-      <CustomButton text="Logout"
-        onPress={onLogoutPressed}
-        bgColor="#FAE9EA"
-        fgColor="#DD4D44"
-      />
-
-
-
-
-
+      {buttons.map((button) => (
+        <CustomButton
+          text={button.text}
+          onPress={button.onPress}
+          bgColor="#c2f0f0"
+          fgColor="#1e7b7b"
+          
+        />
+      ))}
     </View>
   );
 }

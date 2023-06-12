@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 const ProfileStack = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Profilelog" component={ProfileScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="SignIn" component={SigninScreen} />
             <Stack.Screen name="Signup" component={SignUpScreen} />
             <Stack.Screen name="forgotpassword" component={ForgotPasswordScreen} />
