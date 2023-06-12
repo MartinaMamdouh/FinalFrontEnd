@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useContext, useState} from 'react';
 import { View, Text ,Image ,StyleSheet,useWindowDimensions,ScrollView} from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
@@ -6,37 +6,35 @@ import CustomButton from '../../components/CustomButton';
 import SocialSigninButtons from '../../components/SocialSigninButtons';
 import { useNavigation } from '@react-navigation/native';
 import { Button ,TouchableOpacity} from 'react-native';
+import { UserAuthContext } from '../../context/UserAuthContext';
+import axios from 'axios';
+import { LogInAPI } from '../../APIs';
 
 
 const SigninScreen = () => {
-    const[username,setUsername]=useState('');
-    const[password,setPassword]=useState('');
+  const[email,setEmail]=useState('');
+  const[password,setPassword]=useState('');
+  const { logIn } = useContext(UserAuthContext)
 
-    const {height}= useWindowDimensions();
-    const navigation=useNavigation();
+  const {height}= useWindowDimensions();
+  const navigation = useNavigation();
     
-    const onSignInPressed=()=>{
-       // console.warn("sign in");
-
-        //validate user first
-
-    navigation.navigate('Profilelog');
-}
-
-
 const onForgotPasswordPressed=()=>{
-    
-
     navigation.navigate('forgotpassword');
-    
-
 }
-
 
 const onSignUpPressed=()=>{
     navigation.navigate('Signup');
-
 }
+
+  const logInHandler = async () => {
+    axios.post(LogInAPI, { email, password })
+      .then(async ({ data }) => {
+        let { user, token } = data
+        await logIn(user, token)
+        navigation.navigate('Home')
+      })
+  }
 
 
 return(
@@ -47,19 +45,18 @@ return(
     <Image source={Logo} styles={[styles.logo,{height:10},{width: 10}]} 
     resizeMode="contain"/>
 
-    <CustomInput placeholder="Username" value={username}
-     setValue={setUsername}/>
+    <CustomInput placeholder="Email" value={email}
+     setValue={setEmail}/>
     <CustomInput placeholder="Password" 
     value={password} setValue={setPassword}  secureTextEntry={true}/>
 
 {/* <Button title="Sign in !" onPress={onSignInPressed}/> */}
 
-<TouchableOpacity 
-  style={styles.container_PRIMARY}
-  onPress={onSignInPressed}
->
-  <Text style={styles.style3}>Sign in !</Text>
-</TouchableOpacity>
+  <CustomButton
+    text="Sign in"
+    onPress={logInHandler}
+  />
+  {/* <Button title='Sign in' style={styles.style3}>Sign in !</Button> */}
 
 
 <TouchableOpacity 
@@ -77,11 +74,6 @@ return(
 >
   <Text style={styles.style3}>Dont have an account ? Create One Here </Text>
 </TouchableOpacity>
-
-
-
-
-
 
 <SocialSigninButtons/>
 
@@ -120,7 +112,6 @@ style2: {
 
   },
   style3: {
-    fontWeight: 'bold',
     color: 'white',
   },
 

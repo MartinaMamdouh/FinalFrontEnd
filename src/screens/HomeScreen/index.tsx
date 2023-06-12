@@ -1,4 +1,4 @@
-import React, { useState,useEffect ,useCallback} from 'react';
+import React, { useState,useEffect ,useCallback, useContext} from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import products from '../../data/products';
@@ -8,10 +8,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import connection from '../../router/connection';
 import Button from '../../components/Button/Button';
 import { useFocusEffect } from '@react-navigation/native';
+// import { UserAuthContext } from '../../context/UserAuthContext';
 
   
 const HomeScreen_API = ({searchValue}:{searchValue:string}) => {
 
+//   const {userData} = useContext(UserAuthContext)
+// console.log(userData);
   
    const [term, setTerm] = useState('');
    
