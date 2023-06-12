@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginLeft: 40,
         marginTop: 20,
-        color: '#f75d59',
+        color: '#009999',
         fontSize: 20,
         fontWeight: 'bold',
 
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'orange',
+        color: '#00cc99',
         marginLeft: 10,
         marginTop: 7,
     },

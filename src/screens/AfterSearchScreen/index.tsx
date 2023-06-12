@@ -1,16 +1,17 @@
-import React, { useState, useEffect ,useCallback} from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
-import { useFocusEffect } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 const AfterSearchScreen = ({route}) => {
+   const flatListRef = useRef();
    const navigation = useNavigation();
    const { searchValue } = route.params;
    
-//  
+  
+// //  
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
@@ -21,12 +22,17 @@ const AfterSearchScreen = ({route}) => {
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    let pageNumberLimit = 10;
 
+   const [postCompleted, setPostCompleted] = useState(false);
+
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
          setMaxPageLimit(maxPageLimit - pageNumberLimit);
          setMinPageLimit(minPageLimit - pageNumberLimit);
       }
       setCurrentPage((prev) => prev - 1);
+      setTimeout(() => {
+         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+       }, 200);
    };
 
    const onNextClick = () => {
@@ -35,20 +41,31 @@ const AfterSearchScreen = ({route}) => {
          setMinPageLimit(minPageLimit + pageNumberLimit);
       }
       setCurrentPage((prev) => prev + 1);
+      setTimeout(() => {
+         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+       }, 200);
    };
+   // console.log(postCompleted)
+   useEffect(() => {
+      connection.post('/products', { search_key: searchValue })
+      .then(response => {console.log(response)
+                         setPostCompleted(true); })
+      .catch(error => {console.log("in database")
+                        setPostCompleted(true);});
+   }, [searchValue]);
 
-
-   
-   const fetchData= useCallback(() => {
+  
+   useEffect(() => {
+      if (postCompleted) {
       setLoading(true)
-
       connection.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
+           'filter[name_i_cont]': searchValue,
          },}).then(response => {
-         console.log(response.data);
          setProducts(response.data);
+         console.log("getting data")
          setTotalPages(response.data.totalPages);
          setLoading(false);
          let sortedProducts = response.data;
@@ -64,12 +81,28 @@ const AfterSearchScreen = ({route}) => {
          }
  
          setProducts(sortedProducts);
+      
+         
+         const amazonProducts = response.data.filter(product => product.source === 'amazon');
+         const newProducts = response.data.map(product => {
+         if (product.source !== 'amazon') {
+            const randomProduct = amazonProducts[Math.floor(Math.random() * amazonProducts.length)];
+            return { ...product, img_url: randomProduct.img_url };
+         }
+         return product;
+          });
+         setProducts(newProducts);
+      
       }).catch(error => {
          console.error(error);
       });
-      
-   }, [currentPage]);
-   useFocusEffect(fetchData);
+      // setPostCompleted(false);
+   }
+   }, [currentPage,postCompleted]);
+
+
+
+
 
    const loadMoreItems = () => {
       setLoading(true);
@@ -93,8 +126,6 @@ const AfterSearchScreen = ({route}) => {
       setIsDropdownOpen(!isDropdownOpen);
     };
 
-    
-
    return (
       <View style={styles.page}>
         
@@ -107,7 +138,7 @@ const AfterSearchScreen = ({route}) => {
           />
           <Text style={styles.headerText}>{searchValue}</Text>
          </View>
-         
+        
          <View style={styles.pageContent}>
          <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
         <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
@@ -140,10 +171,11 @@ const AfterSearchScreen = ({route}) => {
             <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
           </TouchableOpacity>
         </ScrollView>
-      )}
+      )} 
          
             
-         <FlatList
+       <FlatList
+            ref={flatListRef}
             data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
             keyExtractor={({ id }) => id}
@@ -170,7 +202,7 @@ const AfterSearchScreen = ({route}) => {
                   </TouchableOpacity>
                </View>
                  )}
-         />
+         /> 
                
          
       </View>
