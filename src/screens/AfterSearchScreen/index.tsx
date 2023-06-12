@@ -1,12 +1,12 @@
-import React, { useState, useEffect ,useCallback} from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
-import { useFocusEffect } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 const AfterSearchScreen = ({route}) => {
+   const flatListRef = useRef();
    const navigation = useNavigation();
    const { searchValue } = route.params;
    
@@ -30,6 +30,9 @@ const AfterSearchScreen = ({route}) => {
          setMinPageLimit(minPageLimit - pageNumberLimit);
       }
       setCurrentPage((prev) => prev - 1);
+      setTimeout(() => {
+         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+       }, 200);
    };
 
    const onNextClick = () => {
@@ -38,10 +41,12 @@ const AfterSearchScreen = ({route}) => {
          setMinPageLimit(minPageLimit + pageNumberLimit);
       }
       setCurrentPage((prev) => prev + 1);
+      setTimeout(() => {
+         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+       }, 200);
    };
    // console.log(postCompleted)
    useEffect(() => {
-      console.log("search vallll"+searchValue);
       connection.post('/products', { search_key: searchValue })
       .then(response => {console.log(response)
                          setPostCompleted(true); })
@@ -53,7 +58,6 @@ const AfterSearchScreen = ({route}) => {
    useEffect(() => {
       if (postCompleted) {
       setLoading(true)
-console.log("hna")
       connection.get('/products',{
          params: {
            page: currentPage,
@@ -61,7 +65,7 @@ console.log("hna")
            'filter[name_i_cont]': searchValue,
          },}).then(response => {
          setProducts(response.data);
-         console.log("gowa el get")
+         console.log("getting data")
          setTotalPages(response.data.totalPages);
          setLoading(false);
          let sortedProducts = response.data;
@@ -171,6 +175,7 @@ console.log("hna")
          
             
        <FlatList
+            ref={flatListRef}
             data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
             keyExtractor={({ id }) => id}

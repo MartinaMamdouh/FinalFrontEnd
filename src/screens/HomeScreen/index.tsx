@@ -1,11 +1,11 @@
-import React, { useState, useEffect ,useCallback} from 'react';
+import React, { useState, useCallback, useRef} from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen_API = () => {
-
+   const flatListRef = useRef();
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
@@ -22,6 +22,9 @@ const HomeScreen_API = () => {
          setMinPageLimit(minPageLimit - pageNumberLimit);
       }
       setCurrentPage((prev) => prev - 1);
+      setTimeout(() => {
+        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+      }, 200);
    };
 
    const onNextClick = () => {
@@ -30,6 +33,9 @@ const HomeScreen_API = () => {
          setMinPageLimit(minPageLimit + pageNumberLimit);
       }
       setCurrentPage((prev) => prev + 1);
+        setTimeout(() => {
+        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+      }, 200);
    };
 
 
@@ -61,7 +67,9 @@ const HomeScreen_API = () => {
       }).catch(error => {
          console.error(error);
       });
-      
+    //   setTimeout(() => {
+    //     flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    //   }, 100);
    }, [currentPage]);
    useFocusEffect(fetchData);
 
@@ -125,6 +133,7 @@ const HomeScreen_API = () => {
          
             
          <FlatList
+            ref={flatListRef}
             data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
             keyExtractor={({ id }) => id}
