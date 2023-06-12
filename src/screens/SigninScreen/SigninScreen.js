@@ -71,8 +71,8 @@ const onSignUpPressed=()=>{
 
 }
 
-const onFaceID=()=>{
-  navigation.navigate('faceID');
+const onTouchID=()=>{
+  navigation.navigate('touchID');
 }
 return(
 <Formik initialValues={{
@@ -151,8 +151,8 @@ onPress={handleSubmit}
 </TouchableOpacity>
 
 
-<CustomButton text ="Face ID" 
-onPress={onFaceID}
+<CustomButton text ="Touch ID" 
+onPress={onTouchID}
 bgColor="#d6f5f5"
 fgColor="#29a3a3"
 />

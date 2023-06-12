@@ -63,10 +63,6 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const onLogoutPressed = () => {
-    // console.warn("sign in");
-
-    //validate user first
-
     navigation.navigate('SignIn');
   }
 
