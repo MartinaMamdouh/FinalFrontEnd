@@ -7,9 +7,11 @@ import SocialSigninButtons from '../../components/SocialSigninButtons';
 import { useNavigation } from '@react-navigation/native';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import { CreateUserAPI } from '../../APIs';
 
 const SignupSchema = Yup.object().shape({
-  name: Yup.string()
+  username: Yup.string()
     .min(4, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Username is required'),
@@ -46,135 +48,119 @@ const SignupSchema = Yup.object().shape({
 
 
 const SignUpScreen = () => {
-    const[username,setUsername]=useState('');
-    const[email,setEmail]=useState('');
+  const navigation = useNavigation();
 
-    const[password,setPassword]=useState('');
-    const[passwordRepeat,setPasswordRepeat]=useState('');
-    const navigation=useNavigation();
-    
-    const onRegisterPressed=()=>{
-        console.warn("onRegisterPressed");
-};
+  const onSubmit = (values) => {
+    const payload = { user: { ...values } };
+    delete payload.user.confirmPassword;
+    axios.post(CreateUserAPI, payload)
+    .then(navigation.navigate('Signin'));
+  }
+  const onTermsofUsePressed = () => {
+    console.warn('Terms pressed');
+  };
 
+  const onPrivacyPressed = () => {
+    console.warn('Privacy pressed');
+  };
 
-const onSigninPressed=()=>{
-    navigation.navigate('SignIn');
+  return(
+    <Formik
+      initialValues={{
+        username:'',
+        email:'',
+        password:'',
+        confirmPassword:'',
+    }}
+    validationSchema={SignupSchema}
+    onSubmit={values=>onSubmit(values)}
+    >
+        {({values,errors,touched,handleChange,setFieldTouched,isValid,handleSubmit})=>(
 
+        
+        <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.root}>
+        <Text style={styles.title}>Create an Account</Text>
 
-};
-const onTermsofUsePressed=()=>{
-    console.warn("Terms pressed");
+    <View style={styles.container}> 
+      <TextInput 
+        placeholder="Username "
+        value={values.username}
+        onChangeText={handleChange('username')}
+        onBlur={()=> setFieldTouched('username')}
+      />
+    { touched.name && errors.name && (<Text style={styles.errorTxt}>{errors.name}</Text>)}
+    </View>
 
-};
+    <View  style={styles.container}>
+        <TextInput 
+        placeholder="Email"  
+        onChangeText={handleChange('email')}
+        value={values.email}
+        onBlur={()=> setFieldTouched('email')}
 
-const onPrivacyPressed=()=>{
-    console.warn("Privacy pressed");
-
-};
-
-
-return(
-<Formik initialValues={{
-name:'',
-email:'',
-password:'',
-confirmPassword:'',
-
-
-}}
-
-validationSchema={SignupSchema}
-onSubmit={values=>Alert.alert(JSON.stringify(values))}
->
-    {({values,errors,touched,handleChange,setFieldTouched,isValid,handleSubmit})=>(
-
-    
-    <ScrollView showsVerticalScrollIndicator={false}>
-    <View style={styles.root}>
-    <Text style={styles.title}>Create an Account</Text>
-
-<View style={styles.container}> 
-    <TextInput 
-  placeholder="Username "
-  value={values.name}
-  onChangeText={handleChange('name')}
-  onBlur={()=> setFieldTouched('name')}
-/>
-{ touched.name && errors.name && (<Text style={styles.errorTxt}>{errors.name}</Text>)}
-</View>
-
-<View  style={styles.container}>
-    <TextInput 
-    placeholder="Email"  
-    onChangeText={handleChange('email')}
-    value={values.email}
-    onBlur={()=> setFieldTouched('email')}
-
-     />   
-{touched.email && errors.email && (<Text style={styles.errorTxt}>{errors.email}</Text>)}
-
-</View>
-
-
-<View  style={styles.container}>
-
-    <TextInput  
-    placeholder="password" 
-    value={values.password} 
-    secureTextEntry={true}
-    onChangeText={handleChange('password')}
-    onBlur={()=> setFieldTouched('password')}
-
-    />
-{touched.password && errors.password && (<Text style={styles.errorTxt}>{errors.password}</Text>)}
-
-</View>
-
-
-<View  style={styles.container}>
-
-<TextInput 
-     placeholder="Confirm password" 
-     value={values.confirmPassword} 
-     secureTextEntry={true}
-     onChangeText={handleChange('confirmPassword')}
-     onBlur={()=> setFieldTouched('confirmPassword')}
-
-     />
-{touched.confirmPassword && errors.confirmPassword && (<Text style={styles.errorTxt}>{errors.confirmPassword}</Text>)}
-</View>
-
-{/* <CustomButton text="Register" onPress={onRegisterPressed}/> */}
-
-<Text style={styles.text}>
-     By registering , you confirm that you accept our {''}
-     <Text style={styles.link} onPress={onTermsofUsePressed }> Terms of use </Text> and {''}
-     <Text style={styles.link} onPress={onPrivacyPressed }> Privacy policy </Text>
-
-</Text>
-
-
-
-<TouchableOpacity
-onPress={handleSubmit}
-disabled={!isValid}
-style={[styles.submitBtn,{backgroundColor: isValid ? '#395B64' :'#A5C9CA'},
-
-]}> 
-
-<Text style={styles.submitBtnTxt}>Submit</Text>
-</TouchableOpacity>
-
-
-<SocialSigninButtons/>
-
+        />   
+    {touched.email && errors.email && (<Text style={styles.errorTxt}>{errors.email}</Text>)}
 
     </View>
-    </ScrollView>
-    )}
+
+
+    <View  style={styles.container}>
+
+        <TextInput  
+        placeholder="password" 
+        value={values.password} 
+        secureTextEntry={true}
+        onChangeText={handleChange('password')}
+        onBlur={()=> setFieldTouched('password')}
+
+        />
+    {touched.password && errors.password && (<Text style={styles.errorTxt}>{errors.password}</Text>)}
+
+    </View>
+
+
+    <View  style={styles.container}>
+
+    <TextInput 
+        placeholder="Confirm password" 
+        value={values.confirmPassword} 
+        secureTextEntry={true}
+        onChangeText={handleChange('confirmPassword')}
+        onBlur={()=> setFieldTouched('confirmPassword')}
+
+        />
+    {touched.confirmPassword && errors.confirmPassword && (<Text style={styles.errorTxt}>{errors.confirmPassword}</Text>)}
+    </View>
+
+    {/* <CustomButton text="Register" onPress={onRegisterPressed}/> */}
+
+    <Text style={styles.text}>
+        By registering , you confirm that you accept our {''}
+        <Text style={styles.link} onPress={onTermsofUsePressed }> Terms of use </Text> and {''}
+        <Text style={styles.link} onPress={onPrivacyPressed }> Privacy policy </Text>
+
+    </Text>
+
+    <TouchableOpacity
+    onPress={handleSubmit}
+    disabled={!isValid}
+    style={[styles.submitBtn,{backgroundColor: isValid ? '#395B64' :'#A5C9CA'},
+
+    ]}> 
+
+    <Text style={styles.submitBtnTxt}>Submit</Text>
+    </TouchableOpacity>
+
+
+    <SocialSigninButtons/>
+
+
+      </View>
+      </ScrollView>
+      )}
     </Formik>
-);
+  );
 
 };
 
