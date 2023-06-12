@@ -19,14 +19,26 @@ const WishlistScreen = () => {
                 //Get product names and links from products table
                 connection.get('/products')
                     .then((response) => {
-                        const productInfoss = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
+                        const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
                             id: row.id,
                             name: row.name,
                             image: row.img_url,
                             price: row.price,
                         }));
-                        setProductInfo(productInfoss);
-                        console.log(productInfoss);
+                        // setProductInfo(productInfo);
+                        // console.log(productInfo);
+
+                        const sortedProductInfo = productIds.map((id) =>
+                            productInfo.find((info) => info.id === id)
+                        );
+                        //Sort new array by order of productIds
+                        sortedProductInfo.sort((a, b) =>
+                            productIds.indexOf(b.id) - productIds.indexOf(a.id)
+                        );
+                        // Step 3: Do something with the sorted product info
+                        //console.log(sortedProductInfo);
+                        setProductInfo(sortedProductInfo);
+
                     })
                     .catch((error) => {
                         console.error(error);
@@ -39,11 +51,11 @@ const WishlistScreen = () => {
     }, []);
     useFocusEffect(fetchData);
     const navigation = useNavigation();
-    const onPress = ( itemID ) => {
-        connection.post('/histories', {product_id: itemID})
-        .then(response => console.log(response))
-        .catch(error => console.log(error))
-         navigation.navigate('ProductScreen', { myid: itemID });
+    const onPress = (itemID) => {
+        connection.post('/histories', { product_id: itemID })
+            .then(response => console.log(response))
+            .catch(error => console.log(error))
+        navigation.navigate('ProductScreen', { myid: itemID });
     }
 
     return (
