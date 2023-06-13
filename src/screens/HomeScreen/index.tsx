@@ -23,7 +23,7 @@ const HomeScreen_API = () => {
       }
       setCurrentPage((prev) => prev - 1);
       setTimeout(() => {
-        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
       }, 200);
    };
 
@@ -34,7 +34,7 @@ const HomeScreen_API = () => {
       }
       setCurrentPage((prev) => prev + 1);
         setTimeout(() => {
-        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
       }, 200);
    };
 
@@ -67,9 +67,6 @@ const HomeScreen_API = () => {
       }).catch(error => {
          console.error(error);
       });
-    //   setTimeout(() => {
-    //     flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-    //   }, 100);
    }, [currentPage]);
    useFocusEffect(fetchData);
 

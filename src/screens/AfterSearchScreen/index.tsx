@@ -31,7 +31,7 @@ const AfterSearchScreen = ({route}) => {
       }
       setCurrentPage((prev) => prev - 1);
       setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
        }, 200);
    };
 
@@ -42,7 +42,7 @@ const AfterSearchScreen = ({route}) => {
       }
       setCurrentPage((prev) => prev + 1);
       setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
        }, 200);
    };
    // console.log(postCompleted)
@@ -82,26 +82,11 @@ const AfterSearchScreen = ({route}) => {
  
          setProducts(sortedProducts);
       
-         
-         const amazonProducts = response.data.filter(product => product.source === 'amazon');
-         const newProducts = response.data.map(product => {
-         if (product.source !== 'amazon') {
-            const randomProduct = amazonProducts[Math.floor(Math.random() * amazonProducts.length)];
-            return { ...product, img_url: randomProduct.img_url };
-         }
-         return product;
-          });
-         setProducts(newProducts);
-      
       }).catch(error => {
          console.error(error);
       });
-      // setPostCompleted(false);
    }
    }, [currentPage,postCompleted]);
-
-
-
 
 
    const loadMoreItems = () => {
