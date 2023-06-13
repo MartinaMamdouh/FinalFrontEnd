@@ -80,16 +80,17 @@ const ProfileScreen = () => {
       </Text>
 
       <Image style={styles.tinyLogo} source={require('../profile.png')} />
-
+      <Text/>
       {buttons.map((button) => (
         <CustomButton
           text={button.text}
           onPress={button.onPress}
           bgColor="#c2f0f0"
           fgColor="#1e7b7b"
-          
+
         />
       ))}
+
     </View>
   );
 }

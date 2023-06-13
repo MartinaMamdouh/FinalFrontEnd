@@ -101,6 +101,7 @@ const SigninScreen = () => {
                   onPress={logInHandler}
                 />
                  <View style={styles.space} />
+               
                 <CustomButton text="Touch ID"
                   onPress={onTouchID}
                   bgColor="#c2f0f0"
@@ -118,7 +119,7 @@ const SigninScreen = () => {
               style={styles.style2}
               onPress={onSignUpPressed}
             >
-              <Text style={styles.style3}>Dont have an account ? Create One Here </Text>
+              <Text style={styles.style3}>Dont have an account ? <Text style={styles.greenText}>  Create One Here</Text></Text>
             </TouchableOpacity>
 
             <SocialSigninButtons />
@@ -164,6 +165,9 @@ const styles = StyleSheet.create({
     maxWidth: 100,
     height: '70%',
   },
+  greenText:{
+    color:'#00e6b8',
+  },  
   style2: {
     marginTop: 10,
     alignSelf: 'center',

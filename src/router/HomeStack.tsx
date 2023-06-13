@@ -45,29 +45,21 @@ const HomeStack = () => {
     const navigation = useNavigation();
 
     return (
-
-        // <Stack.Navigator screenOptions={{headerShown:false}}>
-
         <Stack.Navigator
-            // initialRouteName="HomeScreen"
             screenOptions={{
 
                 header: () => (
                     <HeaderComponent setSearchValue={setSearchValue} />),
-            }}>
-
-            {/* product Details */}
+            }}
+        >
             <Stack.Screen component={HomeScreen} name='HomeScreen' />
             <Stack.Screen component={ProductScreen} name="ProductScreen" />
-            {/* <ProductScreen item={}/> */}
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
 
             {searchValue ? (
                 <Stack.Screen name="AfterSearchScreen" component={AfterSearchScreen} options={{ headerShown: false }} />
             ) : null}
-
         </Stack.Navigator>
-
     );
 };
 

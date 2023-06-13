@@ -23,7 +23,7 @@ const ButtomTabNav = () => {
 
         <Tab.Navigator
             screenOptions={{
-                tabBarShowLabel: false,
+                tabBarShowLabel: true,
                 tabBarInactiveTintColor: '#b2d8d8',
                 tabBarActiveTintColor: '#006666',
                 headerShown: false
