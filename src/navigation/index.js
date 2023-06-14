@@ -20,10 +20,10 @@ const Stack = createNativeStackNavigator();
 const Navigation = () => {
 
     return (
-
+// elfile dah mlosh lazma 
         <NavigationContainer>
             <Stack.Navigator >
-                <Stack.Screen name="SignIn" component={SigninScreen} />
+                {/* <Stack.Screen name="SignIn" component={SigninScreen} />
                 <Stack.Screen name="Signup" component={SignUpScreen} />
                 <Stack.Screen name="forgotpassword" component={ForgotPasswordScreen} />
                 <Stack.Screen name="touchID" component={TouchIDScreen} />
@@ -33,7 +33,7 @@ const Navigation = () => {
                 <Stack.Screen name="ProductScreen" component={ProductScreen} />
                 <Stack.Screen name="RatingScreen" component={RatingScreen} />
                 <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
-                <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
+                <Stack.Screen name="HistoryScreen" component={HistoryScreen} /> */}
             </Stack.Navigator>
         </NavigationContainer>
     );

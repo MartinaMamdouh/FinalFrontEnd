@@ -62,7 +62,8 @@ useFocusEffect(
 
     return (
         <ScrollView>
-            <Text style={styles.container}>My Wishlist: </Text>
+            {/* <Text style={styles.container}>My Wishlist: </Text> */}
+            <Text/>
             {productInfo.map((product) => (
                 <Pressable onPress={() => onPress(product.id)} >
                     <View style={styles.root} key={product.id}>

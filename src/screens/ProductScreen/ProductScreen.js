@@ -33,7 +33,7 @@ const ProductScreen = (props) => {
   return (
 
     <ScrollView style={styles.root}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
+      {/* <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
         <Feather
           name="arrow-left"
           size={25}
@@ -41,7 +41,7 @@ const ProductScreen = (props) => {
           onPress={() => navigation.navigate('HomeScreen')}
         />
         <Text style={styles.backButtonText}>  back</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Text style={styles.description}>{product.name}</Text>
       {/* image carsousel */}
       {/* <ImageCarousel images={product.img_url} /> */}
