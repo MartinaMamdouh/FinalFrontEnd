@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -13,20 +12,15 @@ import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const ButtomTabNav = () => {
-    // const navigation = useNavigation();
-    // const onWishlistPressed = () => {
-    //     navigation.navigate('WishlistScreen');
-    // }
-
-
     return (
 
         <Tab.Navigator
             screenOptions={{
-                tabBarShowLabel: true,
+                tabBarShowLabel: false,
                 tabBarInactiveTintColor: '#b2d8d8',
                 tabBarActiveTintColor: '#006666',
-                headerShown: false
+                headerShown: false,
+                
             }}>
             <Tab.Screen component={HomeStack} name='Home'
                 options={{
@@ -47,7 +41,7 @@ const ButtomTabNav = () => {
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Entypo name="heart" color={color} size={25} />
-                    ),
+                    ),                
                 }}
             />
 

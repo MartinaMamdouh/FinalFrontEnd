@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,S
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 // import { UserAuthContext } from '../../context/UserAuthContext';
 
 const HomeScreen_API = () => {
@@ -49,7 +50,7 @@ const HomeScreen_API = () => {
    const fetchData= useCallback(() => {
       setLoading(true)
 
-      connection.get('/products',{
+      axios.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,

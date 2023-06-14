@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import connection from '../../router/connection';
 import heartFill from '../../../assets/images/filled-heart.png';
 import heartEmpty from '../../../assets/images/unfilled-heart.png';
+import axios from 'axios';
 
 const Favorite = ({ item }) => {
   
@@ -18,7 +19,7 @@ const Favorite = ({ item }) => {
     }
 
     const fetchData=useCallback(() => {
-        connection.get('/favorites').then(response => {
+        axios.get('/favorites').then(response => {
             // console.log(response.data);
             const productIds = response.data.map((row) => row.product_id);
            // console.log(productIds);
@@ -34,13 +35,13 @@ const Favorite = ({ item }) => {
         if (favorite.includes(item)) {
             setFavorite(favorite.filter(id => id !== item));
             //console.log("favorite items removed", item)
-            connection.post('/favorites/destroy', params).then(response => { console.log(response.data); })
+            axios.post('/favorites/destroy', params).then(response => { console.log(response.data); })
                 .catch(error => { console.error(error); });
         } else {
 
             setFavorite([...favorite, item]);
             //console.log("favorite items added", item);
-            connection.post('/favorites', params).then(response => { console.log(response.data); })
+            axios.post('/favorites', params).then(response => { console.log(response.data); })
                 .catch(error => { console.error(error); });
         }
 

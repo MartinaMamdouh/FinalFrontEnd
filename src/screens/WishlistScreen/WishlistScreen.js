@@ -5,19 +5,20 @@ import Favorite from '../../components/Favorite/Favorite';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
-const WishlistScreen = () => {
+const WishlistScreen = ({navigation}) => {
 
     const [productInfo, setProductInfo] = useState([]);
     // const [forceUpdate, setForceUpdate] = useState(false);
-
-    const fetchData = useCallback(() => {
-        connection.get('/favorites')
+useFocusEffect(
+    React.useCallback(() => {
+        axios.get('/favorites')
             .then((response) => {
                 const productIds = response.data.map((row) => row.product_id);
                 console.log(productIds);
                 //Get product names and links from products table
-                connection.get('/products')
+                axios.get('/products')
                     .then((response) => {
                         const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
                             id: row.id,
@@ -48,11 +49,12 @@ const WishlistScreen = () => {
                 console.error(error);
             });
 
-    }, []);
-    useFocusEffect(fetchData);
-    const navigation = useNavigation();
+    }, [navigation])
+)
+   // useFocusEffect(fetchData);
+    //const navigation = useNavigation();
     const onPress = (itemID) => {
-        connection.post('/histories', { product_id: itemID })
+        axios.post('/histories', { product_id: itemID })
             .then(response => console.log(response))
             .catch(error => console.log(error))
         navigation.navigate('ProductScreen', { myid: itemID });

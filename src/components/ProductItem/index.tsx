@@ -7,6 +7,7 @@ import Button from '../Button/Button';
 import HomeButton from '../HomeButton/HomeButton';
 import { useNavigation } from '@react-navigation/native';
 import connection from '../../router/connection';
+import axios from 'axios';
 
 //INTERFACE FOR HOW OUR OB JECT LOOKS
 //? for optional properties
@@ -33,7 +34,7 @@ const ProductItem = (props: ProductItemProps) => {
     // console.warn('item pressed');
     //.navigate('ProductDetails', { id: item.id });
 
-    connection.post('/histories', { product_id: item.id })
+    axios.post('/histories', { product_id: item.id })
       .then(response => console.log(response))
       .catch(error => console.log(error))
 

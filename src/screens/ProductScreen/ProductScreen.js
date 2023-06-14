@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Linking, Button, TouchableOpacity } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
+import Feather from 'react-native-vector-icons/Feather';
+import axios from 'axios';
 
 const ProductScreen = (props) => {
 
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
   const fetchData = useCallback(() => {
-   
-    connection.get(`/products`).then(response => {
+
+    axios.get(`/products`).then(response => {
+      // connection.get(`/products`).then(response => {
       setProduct(response.data.find(item => item.id === myid));
     })
       .catch(error => { console.error(error); });
@@ -28,8 +31,17 @@ const ProductScreen = (props) => {
   }
 
   return (
+
     <ScrollView style={styles.root}>
-      {/* <Text> product screen </Text> */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
+        <Feather
+          name="arrow-left"
+          size={25}
+          color="grey"
+          onPress={() => navigation.navigate('HomeScreen')}
+        />
+        <Text style={styles.backButtonText}>  back</Text>
+      </TouchableOpacity>
       <Text style={styles.description}>{product.name}</Text>
       {/* image carsousel */}
       {/* <ImageCarousel images={product.img_url} /> */}
@@ -40,14 +52,13 @@ const ProductScreen = (props) => {
       <Favorite style={styles.heart} item={product.id} />
       {/* Button */}
       <CustomButton text={product.source}
-        onPress={onbuypressed} style={styles.button} />
+        onPress={onbuypressed} />
+
     </ScrollView>
 
 
   );
 }
-
-
 
 const styles = StyleSheet.create({
   root: {
@@ -80,6 +91,20 @@ const styles = StyleSheet.create({
   button: {
     marginBottom: 100,
     color: '#008080',
-  }
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingVertical: 10,
+    backgroundColor: '#e0e0e0',
+    marginBottom: 10,
+  },
+  backButtonText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginLeft: 1,
+    // color:'black',
+  },
 });
 export default ProductScreen;

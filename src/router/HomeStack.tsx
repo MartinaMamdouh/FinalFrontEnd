@@ -4,13 +4,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ProductScreen from '../screens/ProductScreen/ProductScreen';
 import RatingScreen from '../screens/RatingScreen';
 import Navigation from '../navigation';
-import { Text, SafeAreaView, View, TextInput } from 'react-native';
+import { Text, SafeAreaView, View, TextInput, Pressable } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
 import AfterSearchScreen from '../screens/AfterSearchScreen';
 import { useNavigation } from '@react-navigation/native';
-
+import CustomButton from '../components/CustomButton/CustomButton';
+import WishlistScreen from '../screens/WishlistScreen/WishlistScreen';
 const Stack = createStackNavigator();
 
 const HeaderComponent = ({ setSearchValue }) => {
@@ -53,7 +54,8 @@ const HomeStack = () => {
             }}
         >
             <Stack.Screen component={HomeScreen} name='HomeScreen' />
-            <Stack.Screen component={ProductScreen} name="ProductScreen" />
+            <Stack.Screen component={WishlistScreen} name='wishlist'/>
+            <Stack.Screen component={ProductScreen} name='ProductScreen' />
             <Stack.Screen name="RatingScreen" component={RatingScreen} />
 
             {searchValue ? (
