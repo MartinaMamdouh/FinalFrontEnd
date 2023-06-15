@@ -89,7 +89,7 @@ const SignUpScreen = () => {
         onChangeText={handleChange('username')}
         onBlur={()=> setFieldTouched('username')}
       />
-    { touched.name && errors.name && (<Text style={styles.errorTxt}>{errors.name}</Text>)}
+    { touched.username && errors.username && (<Text style={styles.errorTxt}>{errors.username}</Text>)}
     </View>
 
     <View  style={styles.container}>

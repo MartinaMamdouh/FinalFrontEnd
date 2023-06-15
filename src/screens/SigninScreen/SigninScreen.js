@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Text,TextInput, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -10,11 +10,9 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 const SignupSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(4, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Username is required'),
-
+  email: Yup.string()
+  .email('Invalid email')
+  .required('Enter your email address'),
 
 
   password: Yup.string()
@@ -35,7 +33,7 @@ const SignupSchema = Yup.object().shape({
       /(?=.*?[#?!@$%^&*-])/,
       'Must have at least one special character (!@#$%^&*)',
     )
-    .required('Enter your new password.'),
+    .required('Enter your password.'),
 
 
 });
@@ -116,7 +114,7 @@ const SigninScreen = () => {
 
   return (
     <Formik initialValues={{
-      name: '',
+      email: '',
       password: '',
     }}
 
@@ -130,18 +128,65 @@ const SigninScreen = () => {
           <View style={styles.root}>
             <Image source={Logo} styles={[styles.logo, { height: 10 }, { width: 10 }]}
               resizeMode="contain" />
+
             <Text style={styles.text}>Please Enter: </Text>
-            <CustomInput placeholder="Email" value={email}
-              setValue={setEmail} />
-            <CustomInput placeholder="Password"
-              value={password} setValue={setPassword} secureTextEntry={true} />
+
+            
+            
+
+            <View  style={styles.container}>
+            <TextInput 
+            placeholder="Email"  
+            onChangeText={handleChange('email')}
+            value={values.email}
+            onBlur={()=> setFieldTouched('email')}
+
+            />   
+        {touched.email && errors.email && (<Text style={styles.errorTxt}>{errors.email}</Text>)}
+
+        </View>
+
+
+
+
+
+            
+              <View  style={styles.container}>
+
+              <TextInput  
+                  placeholder="Password" 
+                  value={values.password} 
+                  secureTextEntry={true}
+                  onChangeText={handleChange('password')}
+                  onBlur={()=> setFieldTouched('password')}
+
+              />
+              {touched.password && errors.password && (<Text style={styles.errorTxt}>{errors.password}</Text>)}
+
+              </View>
+
+
+
+
+          
+
 
             <View style={styles.row}>
-              <CustomButton
-                text=" Sign in "
+            <TouchableOpacity
                 onPress={logInHandler}
-              />
+                disabled={!isValid}
+                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#808080' }]}
+              >
+                <Text style={styles.buttonText}>Sign in</Text>
+              </TouchableOpacity>
               <View style={styles.space} />
+
+
+              <View style={styles.space} />
+           
+
+
+
 
               <CustomButton text="Touch ID"
                 onPress={handleTouchID}
@@ -192,11 +237,29 @@ const styles = StyleSheet.create({
     color: '#196666'
 
   },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  
+container:{
 
+  backgroundColor:'#FFFFFF',
+  width:'100%',
+  borderColor:'#e8e8e8',
+  borderEndWidth:1,
+  borderRadius:5,
+  paddingHorizontal:10,
+  marginVertical:5,
+},
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#29a3a3',
+    marginLeft: 5, // Adjust the spacing as needed
   },
   space: {
     width: 30,
