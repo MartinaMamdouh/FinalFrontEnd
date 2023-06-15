@@ -42,11 +42,13 @@ const SignupSchema = Yup.object().shape({
 import { UserAuthContext } from '../../context/UserAuthContext';
 import axios from 'axios';
 import { LogInAPI } from '../../APIs';
-
+import * as Keychain from 'react-native-keychain';
+import TouchID from 'react-native-touch-id';
 
 const SigninScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const enableTouch = true;
   const { logIn } = useContext(UserAuthContext)
 
   const { height } = useWindowDimensions();
@@ -60,18 +62,57 @@ const SigninScreen = () => {
     navigation.navigate('Signup');
   }
 
-  const onTouchID = () => {
-    navigation.navigate('touchID');
-  }
+  // const onTouchID = () => {
+  //   navigation.navigate('touchID');
+  // }
   const logInHandler = async () => {
     axios.post(LogInAPI, { email, password })
       .then(async ({ data }) => {
+        const username = email; //setGeneric don't accept email only username
+        if (enableTouch) {
+          Keychain.setGenericPassword(username, password);
+          console.log("email:", email);
+          console.log("username:", username);
+        } 
         let { user, token } = data
         await logIn(user, token)
         navigation.navigate('Home')
       })
   }
 
+  const handleTouchID = async () => {
+    //enableTouch=true;
+    await Keychain.getGenericPassword().then((credentials) => {
+      const { username, password } = credentials;
+      console.log("email after credentials:", username);
+      console.log("password after credentials",password);
+      TouchID.authenticate(`to login with email "${username}"`)
+        .then(() => {
+          axios.post(LogInAPI, { username, password })
+            .then(async ({ data }) => {
+              if (enableTouch) {
+                Keychain.setGenericPassword(username, password);
+              }
+              let { user, token } = data
+              await logIn(user, token)
+              navigation.navigate('Home')
+            })
+            .catch((error) => {
+              if (error === 'INVALID_CREDENTIALS') {
+                Keychain.resetGenericPassword();
+              }
+            });
+        })
+        .catch((error) => {
+          // Handle Touch ID authentication failure
+        });
+    })
+      .catch((error) => {
+        // Handle keychain error
+        console.log("error", error);
+      });
+
+  };
 
   return (
     <Formik initialValues={{
@@ -96,17 +137,18 @@ const SigninScreen = () => {
               value={password} setValue={setPassword} secureTextEntry={true} />
 
             <View style={styles.row}>
-                <CustomButton
-                  text=" Sign in "
-                  onPress={logInHandler}
-                />
-                 <View style={styles.space} />
-               
-                <CustomButton text="Touch ID"
-                  onPress={onTouchID}
-                  bgColor="#c2f0f0"
-                  fgColor="#29a3a3"
-                />
+              <CustomButton
+                text=" Sign in "
+                onPress={logInHandler}
+              />
+              <View style={styles.space} />
+
+              <CustomButton text="Touch ID"
+                onPress={handleTouchID}
+                bgColor="#c2f0f0"
+                fgColor="#29a3a3"
+              />
+
             </View>
             <TouchableOpacity
               style={styles.style2}
@@ -143,18 +185,18 @@ const styles = StyleSheet.create({
     color: '#FF0000',
 
   },
-  text:{
-    fontSize:20,
-    fontWeight:'bold',
-    alignSelf:'auto',
-    color:'#196666'
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    alignSelf: 'auto',
+    color: '#196666'
 
   },
   row: {
-    flex :1,
+    flex: 1,
     flexDirection: 'row',
-   justifyContent: 'space-between',
-   
+    justifyContent: 'space-between',
+
   },
   space: {
     width: 30,
@@ -165,9 +207,9 @@ const styles = StyleSheet.create({
     maxWidth: 100,
     height: '70%',
   },
-  greenText:{
-    color:'#00e6b8',
-  },  
+  greenText: {
+    color: '#00e6b8',
+  },
   style2: {
     marginTop: 10,
     alignSelf: 'center',
@@ -195,7 +237,10 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     alignItems: 'center'
   },
-
+  fingerImg: {
+    width: 100,
+    height: 100,
+  },
 
 });
 

@@ -50,7 +50,7 @@ const HomeStack = () => {
         >
             <Stack.Screen component={HomeScreen} name='HomeScreen' />
             <Stack.Screen component={ProductScreen} name='ProductScreen' />
-            <Stack.Screen name="RatingScreen" component={RatingScreen} />
+            {/* <Stack.Screen name="RatingScreen" component={RatingScreen} /> */}
 
             {searchValue ? (
                 <Stack.Screen name="AfterSearchScreen" component={AfterSearchScreen} options={{ headerShown: false }} />

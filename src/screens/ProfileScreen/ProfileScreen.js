@@ -46,7 +46,7 @@ const ProfileScreen = () => {
 
   const onLogoutPressed = () => {
     logOut();
-    navigation.navigate('SignIn');
+    navigation.navigate('Signin');
   };
 
   const onHistoryPressed = () => {
