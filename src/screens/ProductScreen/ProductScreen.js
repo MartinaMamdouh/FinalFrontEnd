@@ -1,61 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image ,Linking} from 'react-native';
-import product from '../../data/product';
-import { useRoute } from '@react-navigation/native';
-import QuantitySelector from '../../components/QuantitySelector';
-import Button from '../../components/Button/Button';
-import ImageCarousel from '../../components/ImageCarousel';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, Linking, Button, TouchableOpacity } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import connection from '../../router/connection';
-import HomeButton from '../../components/HomeButton/HomeButton';
+import { useFocusEffect } from '@react-navigation/native';
+import Feather from 'react-native-vector-icons/Feather';
+import axios from 'axios';
 
 const ProductScreen = (props) => {
+
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
-  //const product=useState([]);
-  useEffect(() => {
-    // connection.get(`/products?id=${myid}`).then(response => {
-    //   const productInfo = response.data;
-    // })
-    connection.get(`/products`).then(response => {
-      setProduct(response.data.find(item => item.id === myid));
-      //console.log("productinfo=", product);
+  const fetchData = useCallback(() => {
 
+    axios.get(`/products`).then(response => {
+      // connection.get(`/products`).then(response => {
+      setProduct(response.data.find(item => item.id === myid));
     })
       .catch(error => { console.error(error); });
   }, []);
+  useFocusEffect(fetchData);
+
   const navigation = useNavigation();
 
   const onbuypressed = () => {
-    // console.warn("sign in");
-
     //validate user first
     const url = product.link;
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
 
-  // const route = useRoute();
-  // console.log(route.params);
-
-
   return (
-    // <ScrollView>
-
-
-    //     <View style={styles.root} >
-    //       <Text> product screen </Text>
-    //       <Text >{product.id}</Text>
-    //       {/* <Text>{`Product for id ${myid}`}</Text> */}
-    //       <Text style={styles.price}></Text>
-    //     </View>
-
-    // </ScrollView>
-
 
     <ScrollView style={styles.root}>
-      {/* <Text> product screen </Text> */}
+      {/* <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
+        <Feather
+          name="arrow-left"
+          size={25}
+          color="grey"
+          onPress={() => navigation.navigate('HomeScreen')}
+        />
+        <Text style={styles.backButtonText}>  back</Text>
+      </TouchableOpacity> */}
       <Text style={styles.description}>{product.name}</Text>
       {/* image carsousel */}
       {/* <ImageCarousel images={product.img_url} /> */}
@@ -66,21 +52,13 @@ const ProductScreen = (props) => {
       <Favorite style={styles.heart} item={product.id} />
       {/* Button */}
       <CustomButton text={product.source}
-        onPress={onbuypressed} style={styles.button} />
-      {/* <CustomButton text="jumia"
         onPress={onbuypressed} />
-      <CustomButton text="noon"
-        onPress={onbuypressed} /> */}
 
-      {/* quantity selector */}
-      {/* <QuantitySelector quantity={quantity} setQuantity={setQuantity}/> */}
     </ScrollView>
 
 
   );
 }
-
-
 
 const styles = StyleSheet.create({
   root: {
@@ -92,26 +70,41 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-    
+
     // padding:30,
     // backgroundColor:'grey',
-    flex:2,
+    flex: 2,
     height: 200,
     resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
     //  width:150,
     //  height:150,
- },
+  },
   description: {
     marginVertical: 10,
     lineHeight: 20,
     fontWeight: 'bold',
+    fontSize: 16,
   },
   heart: {
     marginLeft: 100,
   },
   button: {
     marginBottom: 100,
-    color: 'orange',
-  }
+    color: '#008080',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingVertical: 10,
+    backgroundColor: '#e0e0e0',
+    marginBottom: 10,
+  },
+  backButtonText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginLeft: 1,
+    // color:'black',
+  },
 });
 export default ProductScreen;

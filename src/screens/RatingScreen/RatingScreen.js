@@ -57,7 +57,7 @@ const RatingScreen = () => {
                 style={styles.buttonStyle}
                 onPress={() => alert(defaultRating)}
             >
-                <Text> Submit </Text>
+                <Text style={styles.subStyle}> Submit </Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
@@ -97,7 +97,11 @@ const styles = StyleSheet.create({
         alignItems:'center',
         marginTop:30,
         padding:15,
-        backgroundColor:'#4cc417'
+        backgroundColor:'#008080'
+    },
+    subStyle:{
+     fontSize: 16,
+     color: 'white',
     }
 })
 
