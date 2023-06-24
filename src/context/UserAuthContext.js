@@ -32,7 +32,7 @@ const UserAuthContextProvider = ({ children }) => {
       setAuthToken(await AsyncStorage.getItem(PRICE_SMART_JWT));
       setUserData(JSON.parse(await AsyncStorage.getItem(USER_DATA_COOKIE)));
       setIsAuthenticated(true);
-      axios.defaults.headers.common.Authorization = authToken;
+      axios.defaults.headers.common.Authorization = token;
     } else {
       setIsAuthenticated(false);
       AsyncStorage.removeItem(PRICE_SMART_JWT);
