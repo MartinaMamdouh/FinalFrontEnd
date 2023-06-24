@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ButtomTabNav from './buttomTabNav';
@@ -9,7 +9,11 @@ import TouchIDScreen from '../screens/TouchIDScreen/TouchIDScreen';
 const Root = createStackNavigator();
 const Router = () => {
   const { isAuthenticated } = useContext(UserAuthContext);
-  const initialRouteName = isAuthenticated ? 'Home' : 'Signin';
+  const [initialRouteName, setInitialRouterName] = useState();
+
+  useEffect(() => {
+    setInitialRouterName(isAuthenticated ? 'Home' : 'Signin');
+  }, [isAuthenticated]);
 
   return (
     <NavigationContainer>
