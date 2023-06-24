@@ -9,7 +9,7 @@ export const UserAuthContext = createContext();
 
 const UserAuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState();
-  const [authToken, setAuthToken] = useState();
+  const [authToken, setAuthToken] = useState('');
   const [userData, setUserData] = useState();
   const [error, setError] = useState('');
 
