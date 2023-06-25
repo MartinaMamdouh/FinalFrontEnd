@@ -1,8 +1,9 @@
-import React, { useState, useEffect ,useRef} from 'react';
-import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
+import React, { useState,useCallback ,useEffect ,useRef} from 'react';
+import { View,Image, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import Feather from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import ax from '../../../assets/images/axios-net.png';
 import axios from 'axios';
 
 const AfterSearchScreen = ({route}) => {
@@ -18,6 +19,9 @@ const AfterSearchScreen = ({route}) => {
    const [sortBy, setSortBy] = useState(''); 
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const [showButtons, setShowButtons] = useState(false);
+   const [hasInternetConnection, setHasInternetConnection] = useState(true);
+   const [reload, setReload] = useState(false);
+   const [button, setButton] = useState(false);
    let pageNumberLimit = 10;
 
   const [postCompleted, setPostCompleted] = useState(false);
@@ -28,9 +32,7 @@ const AfterSearchScreen = ({route}) => {
       setMinPageLimit(minPageLimit - pageNumberLimit);
     }
     setCurrentPage((prev) => prev - 1);
-    setTimeout(() => {
-      flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-    }, 200);
+    setButton(true);
   };
 
   const onNextClick = () => {
@@ -39,9 +41,7 @@ const AfterSearchScreen = ({route}) => {
       setMinPageLimit(minPageLimit + pageNumberLimit);
     }
     setCurrentPage((prev) => prev + 1);
-    setTimeout(() => {
-      flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-    }, 200);
+    setButton(true);
   };
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const AfterSearchScreen = ({route}) => {
   }, [searchValue]);
 
   
-   useEffect(() => {
+  const fetchData= useCallback(() => {
       if (postCompleted) {
       setLoading(true)
       axios.get('/products',{
@@ -67,6 +67,7 @@ const AfterSearchScreen = ({route}) => {
          console.log("getting data")
          setTotalPages(response.data.totalPages);
          setLoading(false);
+         setHasInternetConnection(true);
          let sortedProducts = response.data;
 
          if (sortBy === 'price_asc') {
@@ -81,11 +82,17 @@ const AfterSearchScreen = ({route}) => {
  
          setProducts(sortedProducts);
          setShowButtons(true);
+         if (button){
+          flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+          setButton(false);
+        }
       }).catch(error => {
          console.error(error);
+         setHasInternetConnection(false);
       });
    }
    }, [currentPage,postCompleted]);
+   useFocusEffect(fetchData);
 
    const loadMoreItems = () => {
       setLoading(true);
@@ -111,7 +118,18 @@ const AfterSearchScreen = ({route}) => {
 
   // if (loading) return <ActivityIndicator size="large" />;
   // if (products.length == 0) return <Text>No Results fount</Text>
+  useEffect(() => {
+    if (reload) {
+       fetchData();
+       setReload(false);
+      
+    }
+  }, [reload]);
 
+  const handleReload = () => {
+    setReload(true);
+    
+  };
   return (
     <View style={styles.page}>
       
@@ -158,9 +176,29 @@ const AfterSearchScreen = ({route}) => {
         </TouchableOpacity>
       </ScrollView>
     )} 
-       
-          
-     <FlatList
+       {!hasInternetConnection && (
+            <View>
+               <View style={{maxHeight:0}}>
+               {reload&&(
+                        <ActivityIndicator size="large" />
+                  )}
+               </View>
+             
+                <Image source={ax} style={styles.axImg}
+               />
+               <Text style={styles.axiosErr}>Server can't be reached</Text>
+               <TouchableOpacity 
+                     style={styles.butn}
+                     onPress={handleReload}
+                     
+                  >
+                     <Text style={{fontSize: 17}} >Reload</Text>
+                  </TouchableOpacity>
+            </View>
+         
+      )}
+      {hasInternetConnection && (
+       <FlatList
           ref={flatListRef}
           data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
           renderItem={({ item }) => <ProductItem item={item} />}
@@ -193,7 +231,7 @@ const AfterSearchScreen = ({route}) => {
              </View>
                )}
        /> 
-             
+       )}
        
     </View>
     </View>
@@ -226,6 +264,30 @@ const styles = StyleSheet.create({
       height: '100%',
       padding: 10,
    },
+   axImg: {
+    width:'70%',
+    // maxWidth:215,
+    height:'60%',
+    resizeMode: 'contain',
+    marginLeft:60,
+    marginTop: 50,
+ },
+ axiosErr: {
+    marginLeft:100,
+    fontSize: 18, 
+    fontWeight:'light',
+
+ },
+    butn: {
+       marginTop: 10,
+       backgroundColor: '#b2d8d8',
+       padding: 8,
+       marginHorizontal: 145,
+       borderRadius: 10,
+       borderWidth: 1,
+       borderColor:"#008080",
+       alignItems: 'center',
+    },
 
    //////pagination 
    pageNumbers: {

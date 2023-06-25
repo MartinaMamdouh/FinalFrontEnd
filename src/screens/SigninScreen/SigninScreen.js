@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text,TextInput, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import {Alert, View, Text,TextInput, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -73,6 +73,29 @@ const SigninScreen = () => {
         await logIn(user, token)
         navigation.navigate('Home')
       })
+      .catch((error) => {
+        if (error.response && error.response.status === 500) {
+          // Display an alert for Redis server error
+          Alert.alert(
+            'Server Error',
+            'The server encountered an error. Please try again later.',
+            [
+              { text: 'OK' },
+            ],
+            { cancelable: false }
+          );
+        } else {
+          // Display an alert for other errors
+          Alert.alert(
+            'Sign In Error',
+            'Your email or password is incorrect. Please try again.',
+            [
+              { text: 'OK'},
+            ],
+            { cancelable: false }
+          );
+        }
+      });
   }
 
   const handleTouchID = async () => {
@@ -95,16 +118,39 @@ const SigninScreen = () => {
             .catch((error) => {
               if (error === 'INVALID_CREDENTIALS') {
                 Keychain.resetGenericPassword();
+                Alert.alert(
+                  'Invalid Credentials',
+                  '',
+                  [
+                    { text: 'ok', onPress: () => console.log('OK Pressed') },
+                  ],
+                  { cancelable: false }
+                );
               }
             });
         })
         .catch((error) => {
           // Handle Touch ID authentication failure
+          Alert.alert(
+            'Try Again',
+            'Login with your Touch ID',
+            [
+              { text: 'Cancel', onPress: () => console.log('OK Pressed') },
+            ],
+            { cancelable: false }
+          );
         });
     })
       .catch((error) => {
         // Handle keychain error
-        console.log("error", error);
+        Alert.alert(
+          'Error in Touch ID',
+          'If the error persists, try to Sign In manually',
+          [
+            { text: 'Cancel', onPress: () => console.log('OK Pressed') },
+          ],
+          { cancelable: false }
+        );
       });
 
   };
@@ -168,7 +214,7 @@ const SigninScreen = () => {
             <TouchableOpacity
                 onPress={handleSubmit}
                 disabled={!isValid}
-                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#808080' }]}
+                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#009999' }]}
               >
                 <Text style={styles.buttonText}>Sign in</Text>
               </TouchableOpacity>
@@ -184,7 +230,7 @@ const SigninScreen = () => {
               <CustomButton text="Touch ID"
                 onPress={handleTouchID}
                 bgColor="#c2f0f0"
-                fgColor="#29a3a3"
+                fgColor="#009999"
               />
 
             </View>
@@ -202,7 +248,7 @@ const SigninScreen = () => {
               <Text style={styles.style3}>Dont have an account ? <Text style={styles.greenText}>  Create One Here</Text></Text>
             </TouchableOpacity>
 
-            <SocialSigninButtons />
+            {/* <SocialSigninButtons /> */}
 
           </View>
 
@@ -251,7 +297,7 @@ container:{
   },
   buttonText: {
     fontSize: 20,
-    color: '#29a3a3',
+    color: '#009999',
     marginLeft: 5, // Adjust the spacing as needed
   },
   space: {
@@ -292,11 +338,7 @@ container:{
     borderRadius: 5,
     marginVertical: 15,
     alignItems: 'center'
-  },
-  fingerImg: {
-    width: 100,
-    height: 100,
-  },
+  }
 
 });
 

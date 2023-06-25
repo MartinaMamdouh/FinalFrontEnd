@@ -25,6 +25,7 @@ const HomeScreen_API = () => {
    const [showButtons, setShowButtons] = useState(false);
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
    const [reload, setReload] = useState(false);
+   const [button, setButton] = useState(false);
 
    let pageNumberLimit = 10;
 
@@ -34,9 +35,7 @@ const HomeScreen_API = () => {
          setMinPageLimit(minPageLimit - pageNumberLimit);
       }
       setCurrentPage((prev) => prev - 1);
-      setTimeout(() => {
-        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-      }, 200);
+      setButton(true);
    };
 
    const onNextClick = () => {
@@ -45,13 +44,11 @@ const HomeScreen_API = () => {
          setMinPageLimit(minPageLimit + pageNumberLimit);
       }
       setCurrentPage((prev) => prev + 1);
-        setTimeout(() => {
-        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-      }, 200);
+      setButton(true);
    };
 
 
-   
+
    const fetchData= useCallback(() => {
       setLoading(true)
 
@@ -78,13 +75,14 @@ const HomeScreen_API = () => {
  
          setProducts(sortedProducts);
          setShowButtons(true);
+         if (button){
+            flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+            setButton(false);
+          }
       }).catch(error => {
          console.error(error);
          setHasInternetConnection(false);
       });
-    //   setTimeout(() => {
-    //     flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-    //   }, 100);
    }, [currentPage]);
    useFocusEffect(fetchData);
 

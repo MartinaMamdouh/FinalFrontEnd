@@ -54,7 +54,18 @@ const SignUpScreen = () => {
     const payload = { user: { ...values } };
     delete payload.user.confirmPassword;
     axios.post(CreateUserAPI, payload)
-    .then(navigation.navigate('Signin'));
+    .then(navigation.navigate('Signin'))
+    .catch((error) => {
+      console.log("error", error);
+      Alert.alert(
+        'Sign Up Error',
+        'User already exists, Sign In',
+        [
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false }
+      );
+    });
   }
   const onTermsofUsePressed = () => {
     console.warn('Terms pressed');
