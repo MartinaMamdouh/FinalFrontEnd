@@ -1,59 +1,56 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
-import connection from '../../router/connection';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-const AfterSearchScreen = ({route}) => {
-   const flatListRef = useRef();
-   const navigation = useNavigation();
-   const { searchValue } = route.params;
-   
-  
-// //  
-   const [currentPage, setCurrentPage] = useState(1);
-   const [loading, setLoading] = useState(false);
-   const [products, setProducts] = useState([]);
-   const [maxPageLimit, setMaxPageLimit] = useState(5);
-   const [minPageLimit, setMinPageLimit] = useState(0);
-   const [totalPages, setTotalPages] = useState(0);
-   const [sortBy, setSortBy] = useState(''); 
-   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-   let pageNumberLimit = 10;
+const AfterSearchScreen = ({ route }) => {
+  const flatListRef = useRef();
+  const navigation = useNavigation();
+  const { searchValue } = route.params;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [maxPageLimit, setMaxPageLimit] = useState(5);
+  const [minPageLimit, setMinPageLimit] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [sortBy, setSortBy] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  let pageNumberLimit = 10;
 
-   const [postCompleted, setPostCompleted] = useState(false);
+  const [postCompleted, setPostCompleted] = useState(false);
 
-   const onPrevClick = () => {
-      if ((currentPage - 1) % pageNumberLimit === 0) {
-         setMaxPageLimit(maxPageLimit - pageNumberLimit);
-         setMinPageLimit(minPageLimit - pageNumberLimit);
-      }
-      setCurrentPage((prev) => prev - 1);
-      setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-       }, 200);
-   };
+  const onPrevClick = () => {
+    if ((currentPage - 1) % pageNumberLimit === 0) {
+      setMaxPageLimit(maxPageLimit - pageNumberLimit);
+      setMinPageLimit(minPageLimit - pageNumberLimit);
+    }
+    setCurrentPage((prev) => prev - 1);
+    setTimeout(() => {
+      flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    }, 200);
+  };
 
-   const onNextClick = () => {
-      if (currentPage + 1 > maxPageLimit) {
-         setMaxPageLimit(maxPageLimit + pageNumberLimit);
-         setMinPageLimit(minPageLimit + pageNumberLimit);
-      }
-      setCurrentPage((prev) => prev + 1);
-      setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-       }, 200);
-   };
-   // console.log(postCompleted)
-   useEffect(() => {
-      axios.post('/products', { search_key: searchValue })
+  const onNextClick = () => {
+    if (currentPage + 1 > maxPageLimit) {
+      setMaxPageLimit(maxPageLimit + pageNumberLimit);
+      setMinPageLimit(minPageLimit + pageNumberLimit);
+    }
+    setCurrentPage((prev) => prev + 1);
+    setTimeout(() => {
+      flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    }, 200);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    axios.post('/products', { search_key: searchValue })
       .then(response => {console.log(response)
-                         setPostCompleted(true); })
+                        setPostCompleted(true); })
       .catch(error => {console.log("in database")
-                        setPostCompleted(true);});
-   }, [searchValue]);
+                      setPostCompleted(true);});
+  }, [searchValue]);
 
   
    useEffect(() => {
@@ -82,8 +79,7 @@ const AfterSearchScreen = ({route}) => {
          }
  
          setProducts(sortedProducts);
-      
-         
+
          const amazonProducts = response.data.filter(product => product.source === 'amazon');
          const newProducts = response.data.map(product => {
          if (product.source !== 'amazon') {
@@ -100,10 +96,6 @@ const AfterSearchScreen = ({route}) => {
       // setPostCompleted(false);
    }
    }, [currentPage,postCompleted]);
-
-
-
-
 
    const loadMoreItems = () => {
       setLoading(true);
@@ -126,6 +118,9 @@ const AfterSearchScreen = ({route}) => {
     const toggleDropdown = () => {
       setIsDropdownOpen(!isDropdownOpen);
     };
+
+  // if (loading) return <ActivityIndicator size="large" />;
+  // if (products.length == 0) return <Text>No Results fount</Text>
 
    return (
       <View style={styles.page}>
@@ -173,19 +168,23 @@ const AfterSearchScreen = ({route}) => {
           </TouchableOpacity>
         </ScrollView>
       )} 
-         
-            
-       <FlatList
+        
+      { loading ? 
+        <ActivityIndicator size="large" /> :
+        <FlatList
             ref={flatListRef}
-            data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
+            data={products}
+            ListEmptyComponent={() => (
+              <View style={styles.container}>
+                <Text style={styles.title}>No products found</Text>
+              </View>
+            )}
             renderItem={({ item }) => <ProductItem item={item} />}
             keyExtractor={({ id }) => id}
-            onEndReached={loadMoreItems}
-            onEndReachedThreshold={0.5}
-            // mafeesh scroll indicator
             showsVerticalScrollIndicator={false}
 
             ListFooterComponent={() => (
+              products.length !== 0 && 
                <View style={styles.pageNumbers}>
                   <TouchableOpacity
                      style={styles.button}
@@ -204,8 +203,8 @@ const AfterSearchScreen = ({route}) => {
                </View>
                  )}
          /> 
-               
-         
+      }
+            
       </View>
       </View>
 
@@ -295,6 +294,17 @@ fontSize: 18,
 dropdownContainer: {
 backgroundColor: '#e0e0e0',
 maxHeight: 150,
+},
+container: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  margin: 20
+},
+title: {
+  fontSize: 36,
+  fontWeight: 'bold',
+  textAlign: 'center',
 },
 });
 
