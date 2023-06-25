@@ -1,7 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
-import connection from '../../router/connection';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -10,9 +9,6 @@ const AfterSearchScreen = ({route}) => {
    const flatListRef = useRef();
    const navigation = useNavigation();
    const { searchValue } = route.params;
-   
-  
-// //  
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
@@ -24,37 +20,38 @@ const AfterSearchScreen = ({route}) => {
    const [showButtons, setShowButtons] = useState(false);
    let pageNumberLimit = 10;
 
-   const [postCompleted, setPostCompleted] = useState(false);
+  const [postCompleted, setPostCompleted] = useState(false);
 
-   const onPrevClick = () => {
-      if ((currentPage - 1) % pageNumberLimit === 0) {
-         setMaxPageLimit(maxPageLimit - pageNumberLimit);
-         setMinPageLimit(minPageLimit - pageNumberLimit);
-      }
-      setCurrentPage((prev) => prev - 1);
-      setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-       }, 200);
-   };
+  const onPrevClick = () => {
+    if ((currentPage - 1) % pageNumberLimit === 0) {
+      setMaxPageLimit(maxPageLimit - pageNumberLimit);
+      setMinPageLimit(minPageLimit - pageNumberLimit);
+    }
+    setCurrentPage((prev) => prev - 1);
+    setTimeout(() => {
+      flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    }, 200);
+  };
 
-   const onNextClick = () => {
-      if (currentPage + 1 > maxPageLimit) {
-         setMaxPageLimit(maxPageLimit + pageNumberLimit);
-         setMinPageLimit(minPageLimit + pageNumberLimit);
-      }
-      setCurrentPage((prev) => prev + 1);
-      setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-       }, 200);
-   };
-   // console.log(postCompleted)
-   useEffect(() => {
-      axios.post('/products', { search_key: searchValue })
+  const onNextClick = () => {
+    if (currentPage + 1 > maxPageLimit) {
+      setMaxPageLimit(maxPageLimit + pageNumberLimit);
+      setMinPageLimit(minPageLimit + pageNumberLimit);
+    }
+    setCurrentPage((prev) => prev + 1);
+    setTimeout(() => {
+      flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    }, 200);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    axios.post('/products', { search_key: searchValue })
       .then(response => {console.log(response)
-                         setPostCompleted(true); })
+                        setPostCompleted(true); })
       .catch(error => {console.log("in database")
-                        setPostCompleted(true);});
-   }, [searchValue]);
+                      setPostCompleted(true);});
+  }, [searchValue]);
 
   
    useEffect(() => {
@@ -90,7 +87,6 @@ const AfterSearchScreen = ({route}) => {
    }
    }, [currentPage,postCompleted]);
 
-
    const loadMoreItems = () => {
       setLoading(true);
       if (currentPage * 10 < totalPages * 10) {
@@ -113,94 +109,97 @@ const AfterSearchScreen = ({route}) => {
       setIsDropdownOpen(!isDropdownOpen);
     };
 
-   return (
-      <View style={styles.page}>
-        
-         <View style={styles.newheader}>
-         <Feather
-            name="arrow-left"
-            size={25}
-            color="white"
-            onPress={() => navigation.navigate('HomeScreen')}
-          />
-          <Text style={styles.headerText}>{searchValue}</Text>
-         </View>
-        
-         <View style={styles.pageContent}>
-         <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
-        <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
-      </TouchableOpacity>
-      {isDropdownOpen && (
-        <ScrollView style={styles.dropdownContainer}>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_asc')}
-          >
-            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_desc')}
-          >
-            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_asc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_desc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      )} 
-         
-            
-       <FlatList
-            ref={flatListRef}
-            data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
-            renderItem={({ item }) => <ProductItem item={item} />}
-            keyExtractor={({ id }) => id}
-            onEndReached={loadMoreItems}
-            onEndReachedThreshold={0.5}
-            // mafeesh scroll indicator
-            showsVerticalScrollIndicator={false}
+  // if (loading) return <ActivityIndicator size="large" />;
+  // if (products.length == 0) return <Text>No Results fount</Text>
 
-            ListFooterComponent={() => (
-               <View style={styles.pageNumbers}>
-                  {showButtons && ( // check if products is not empty
-                  <>
-                  <TouchableOpacity
-                     style={styles.button}
-                     onPress={onPrevClick}
-                     disabled={currentPage === 1}
-                  >
-                     <Text style= {styles.text}>Prev</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     style={styles.button}
-                     onPress={onNextClick}
-                     disabled={currentPage === totalPages}
-                  >
-                     <Text style= {styles.text}>Next</Text>
-                  </TouchableOpacity>
-                  </>
-                  )}
-               </View>
-                 )}
-         /> 
-               
-         
-      </View>
-      </View>
+  return (
+    <View style={styles.page}>
+      
+       <View style={styles.newheader}>
+       <Feather
+          name="arrow-left"
+          size={25}
+          color="white"
+          onPress={() => navigation.navigate('HomeScreen')}
+        />
+        <Text style={styles.headerText}>{searchValue}</Text>
+       </View>
+      
+       <View style={styles.pageContent}>
+       <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
+      <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
+      <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
+    </TouchableOpacity>
+    {isDropdownOpen && (
+      <ScrollView style={styles.dropdownContainer}>
+        <TouchableOpacity
+          style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
+          onPress={() => handleSortBy('price_asc')}
+        >
+          <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+          onPress={() => handleSortBy('price_desc')}
+        >
+          <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+          onPress={() => handleSortBy('rating_asc')}
+        >
+          <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+          onPress={() => handleSortBy('rating_desc')}
+        >
+          <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    )} 
+       
+          
+     <FlatList
+          ref={flatListRef}
+          data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
+          renderItem={({ item }) => <ProductItem item={item} />}
+          keyExtractor={({ id }) => id}
+          onEndReached={loadMoreItems}
+          onEndReachedThreshold={0.5}
+          // mafeesh scroll indicator
+          showsVerticalScrollIndicator={false}
+
+          ListFooterComponent={() => (
+             <View style={styles.pageNumbers}>
+                {showButtons && ( // check if products is not empty
+                <>
+                <TouchableOpacity
+                   style={styles.button}
+                   onPress={onPrevClick}
+                   disabled={currentPage === 1}
+                >
+                   <Text style= {styles.text}>Prev</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                   style={styles.button}
+                   onPress={onNextClick}
+                   disabled={currentPage === totalPages}
+                >
+                   <Text style= {styles.text}>Next</Text>
+                </TouchableOpacity>
+                </>
+                )}
+             </View>
+               )}
+       /> 
+             
+       
+    </View>
+    </View>
 
 
-   );
+ );
 };
 
 const styles = StyleSheet.create({
@@ -285,6 +284,17 @@ fontSize: 18,
 dropdownContainer: {
 backgroundColor: '#e0e0e0',
 maxHeight: 150,
+},
+container: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  margin: 20
+},
+title: {
+  fontSize: 36,
+  fontWeight: 'bold',
+  textAlign: 'center',
 },
 });
 
