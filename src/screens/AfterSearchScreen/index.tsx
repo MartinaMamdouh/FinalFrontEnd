@@ -20,6 +20,7 @@ const AfterSearchScreen = ({route}) => {
    const [totalPages, setTotalPages] = useState(0);
    const [sortBy, setSortBy] = useState(''); 
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+   const [showButtons, setShowButtons] = useState(false);
    let pageNumberLimit = 10;
 
    const [postCompleted, setPostCompleted] = useState(false);
@@ -81,7 +82,7 @@ const AfterSearchScreen = ({route}) => {
          }
  
          setProducts(sortedProducts);
-      
+         setShowButtons(true);
       }).catch(error => {
          console.error(error);
       });
@@ -171,6 +172,8 @@ const AfterSearchScreen = ({route}) => {
 
             ListFooterComponent={() => (
                <View style={styles.pageNumbers}>
+                  {showButtons && ( // check if products is not empty
+                  <>
                   <TouchableOpacity
                      style={styles.button}
                      onPress={onPrevClick}
@@ -185,6 +188,8 @@ const AfterSearchScreen = ({route}) => {
                   >
                      <Text style= {styles.text}>Next</Text>
                   </TouchableOpacity>
+                  </>
+                  )}
                </View>
                  )}
          /> 
