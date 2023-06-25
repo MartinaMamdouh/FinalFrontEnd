@@ -30,8 +30,8 @@ const SignupSchema = Yup.object().shape({
       'Must have at least one digit',
     )
     .matches(
-      /(?=.*?[#?!@$%^&*-])/,
-      'Must have at least one special character (!@#$%^&*)',
+      /(?=.*?[#?!@$%^&*-_])/,
+      'Must have at least one special character (#?!@$%^&*-_)',
     )
     .required('Enter your password.'),
 
