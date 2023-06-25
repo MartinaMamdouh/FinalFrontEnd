@@ -1,14 +1,12 @@
 import React, { useState, useCallback, useRef, useContext } from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
-import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import { CurrentPageContext } from '../../context/CurrentPageContext';
 const HomeScreen_API = () => {
    let pageNumberLimit = 10;
    const flatListRef = useRef();
-   const { currentPage, setCurrentPage } = useContext(CurrentPageContext);
+   const [ currentPage, setCurrentPage ] = useState(1);
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);

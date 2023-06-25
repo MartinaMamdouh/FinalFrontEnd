@@ -1,23 +1,17 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Linking, Button, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { Text, StyleSheet, ScrollView, Image, Linking } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
-import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
-import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
-import { CurrentPageContext } from '../../context/CurrentPageContext';
 const ProductScreen = (props) => {
-
-  const { currentPage } = useContext(CurrentPageContext);
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
   const fetchData = useCallback(() => {
     axios.get('/products', {
       params: {
-         page: currentPage,
-         per_page: 10,
+         per_page: 1000,
       },
    }).then(response => {
       setProduct(response.data.find(item => item.id === myid));
@@ -53,14 +47,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   image: {
-
-    // padding:30,
-    // backgroundColor:'grey',
     flex: 2,
     height: 200,
     resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
-    //  width:150,
-    //  height:150,
   },
   description: {
     marginVertical: 10,
@@ -87,7 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     marginLeft: 1,
-    // color:'black',
   },
 });
 export default ProductScreen;

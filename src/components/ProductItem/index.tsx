@@ -31,15 +31,11 @@ const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-    // console.warn('item pressed');
-    //.navigate('ProductDetails', { id: item.id });
 
+    navigation.navigate('ProductScreen', { myid: item.id });
     axios.post('/histories', { product_id: item.id })
       .then(response => console.log(response))
       .catch(error => console.log(error))
-
-
-    navigation.navigate('ProductScreen', { myid: item.id });
   }
 
   const handlePress = () => {

@@ -12,16 +12,17 @@ const HistoryScreen = () => {
         //Get product IDs from history table
         axios.get('/histories').then((response) => {
             const productIds = response.data.map((row) => row.product_id);
-            console.log(productIds);
             //Get product names and links from products table
-            axios.get('/products').then((response) => {
+            axios.get('/products', {
+                params: {
+                    per_page: 1000,
+                },
+            }).then((response) => {
                 const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
                     id: row.id,
                     name: row.name,
                     image: row.img_url,
                 }));
-                // setProductInfo(productInfo);
-                // console.log(productInfo);
                 //Map productInfo to new array
                 const sortedProductInfo = productIds.map((id) =>
                     productInfo.find((info) => info.id === id)
@@ -31,7 +32,6 @@ const HistoryScreen = () => {
                     productIds.indexOf(a.id) - productIds.indexOf(b.id)
                 );
                 // Step 3: Do something with the sorted product info
-                console.log(sortedProductInfo);
                 setProductInfo(sortedProductInfo);
             })
                 .catch((error) => {
