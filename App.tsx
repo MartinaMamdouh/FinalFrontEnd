@@ -15,6 +15,7 @@ import axios from 'axios';
 import {API_URL} from '@env';
 import AsyncStorage from '@react-native-community/async-storage';
 import { PRICE_SMART_JWT } from './src/config';
+import { CurrentPageProvider } from './src/context/CurrentPageContext';
 
 const App=() => {
   const isDarkMode = useColorScheme()==='dark';
@@ -46,10 +47,12 @@ const App=() => {
 
   return (
     <UserAuthContextProvider>
+      <CurrentPageProvider>
       <View style={backgroundStyle}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <Router />
       </View>
+      </CurrentPageProvider>
     </UserAuthContextProvider>
   );
 };

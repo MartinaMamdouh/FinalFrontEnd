@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, Linking, Button, TouchableOpacity } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import { useNavigation } from '@react-navigation/native';
@@ -7,56 +7,39 @@ import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
-
+import { CurrentPageContext } from '../../context/CurrentPageContext';
 const ProductScreen = (props) => {
 
+  const { currentPage } = useContext(CurrentPageContext);
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
   const fetchData = useCallback(() => {
-
-    axios.get(`/products`).then(response => {
-      // connection.get(`/products`).then(response => {
+    axios.get('/products', {
+      params: {
+         page: currentPage,
+         per_page: 10,
+      },
+   }).then(response => {
       setProduct(response.data.find(item => item.id === myid));
     })
       .catch(error => { console.error(error); });
   }, []);
   useFocusEffect(fetchData);
 
-  const navigation = useNavigation();
-
-  const onbuypressed = () => {
+  const onLinkPressed = () => {
     //validate user first
     const url = product.link;
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
 
   return (
-
     <ScrollView style={styles.root}>
-      {/* <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
-        <Feather
-          name="arrow-left"
-          size={25}
-          color="grey"
-          onPress={() => navigation.navigate('HomeScreen')}
-        />
-        <Text style={styles.backButtonText}>  back</Text>
-      </TouchableOpacity> */}
       <Text style={styles.description}>{product.name}</Text>
-      {/* image carsousel */}
-      {/* <ImageCarousel images={product.img_url} /> */}
       <Image style={styles.image} source={{ uri: product.img_url }} />
-      {/* price */}
       <Text style={styles.price}>Price: {product.price} EGP</Text>
-      {/* add to wishlist */}
       <Favorite style={styles.heart} item={product.id} />
-      {/* Button */}
-      <CustomButton text={product.source}
-        onPress={onbuypressed} />
-
+      <CustomButton text={product.source} onPress={onLinkPressed} />
     </ScrollView>
-
-
   );
 }
 
