@@ -19,27 +19,15 @@ import { CurrentPageProvider } from './src/context/CurrentPageContext';
 
 const App=() => {
   const isDarkMode = useColorScheme()==='dark';
-  const [ready, setReady] = useState();
+  // const [ready, setReady] = useState();
+  const [initialRouteName, setInitialRouterName] = useState();
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     flex:1,
   };
 
   axios.defaults.baseURL = API_URL;
-
-  useEffect(() => {
-    const initState = async () => {
-      const authToken = await AsyncStorage.getItem(PRICE_SMART_JWT);
-      if (authToken) {
-        axios.defaults.headers.common.Authorization = authToken;
-        setReady(true);
-      }
-    };
-
-    initState();
-  }, []);
-
-  if (!ready) return null;
 
   setTimeout(() => {
     SplashScreen.hide();

@@ -5,8 +5,10 @@ import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import WishlistStack from './WishlistStack';
 import RatingScreen from '../screens/RatingScreen';
+
 const Tab = createBottomTabNavigator();
 const ButtomTabNav = () => {
+  
     return (
 
         <Tab.Navigator
