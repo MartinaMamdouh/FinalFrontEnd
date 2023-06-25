@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProductScreen from '../screens/ProductScreen/ProductScreen';
 import RatingScreen from '../screens/RatingScreen';
-import Navigation from '../navigation';
-import { Text, SafeAreaView, View, TextInput } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { SafeAreaView, View } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import SearchBar from '../components/SearchBar';
 import AfterSearchScreen from '../screens/AfterSearchScreen';
 import { useNavigation } from '@react-navigation/native';
-
 const Stack = createStackNavigator();
 
 const HeaderComponent = ({ setSearchValue }) => {
@@ -45,29 +41,21 @@ const HomeStack = () => {
     const navigation = useNavigation();
 
     return (
-
-        // <Stack.Navigator screenOptions={{headerShown:false}}>
-
         <Stack.Navigator
-            // initialRouteName="HomeScreen"
             screenOptions={{
 
                 header: () => (
                     <HeaderComponent setSearchValue={setSearchValue} />),
-            }}>
-
-            {/* product Details */}
+            }}
+        >
             <Stack.Screen component={HomeScreen} name='HomeScreen' />
-            <Stack.Screen component={ProductScreen} name="ProductScreen" />
-            {/* <ProductScreen item={}/> */}
-            <Stack.Screen name="RatingScreen" component={RatingScreen} />
+            <Stack.Screen component={ProductScreen} name='ProductScreen' />
+            {/* <Stack.Screen name="RatingScreen" component={RatingScreen} /> */}
 
             {searchValue ? (
                 <Stack.Screen name="AfterSearchScreen" component={AfterSearchScreen} options={{ headerShown: false }} />
             ) : null}
-
         </Stack.Navigator>
-
     );
 };
 

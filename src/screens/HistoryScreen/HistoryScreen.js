@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import connection from '../../router/connection';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const HistoryScreen = () => {
     const [productInfo, setProductInfo] = useState([]);
@@ -9,11 +10,11 @@ const HistoryScreen = () => {
 
     useEffect(() => {
         //Get product IDs from history table
-        connection.get('/histories').then((response) => {
+        axios.get('/histories').then((response) => {
             const productIds = response.data.map((row) => row.product_id);
             console.log(productIds);
             //Get product names and links from products table
-            connection.get('/products').then((response) => {
+            axios.get('/products').then((response) => {
                 const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
                     id: row.id,
                     name: row.name,
@@ -62,7 +63,7 @@ const HistoryScreen = () => {
 
     const navigation = useNavigation();
     const onPress = (itemID) => {
-        connection.post('/histories', { product_id: itemID })
+        axios.post('/histories', { product_id: itemID })
             .then(response => console.log(response))
             .catch(error => console.log(error))
         navigation.navigate('ProductScreen', { myid: itemID });

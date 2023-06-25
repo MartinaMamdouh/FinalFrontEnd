@@ -5,19 +5,20 @@ import Favorite from '../../components/Favorite/Favorite';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
-const WishlistScreen = () => {
+const WishlistScreen = ({navigation}) => {
 
     const [productInfo, setProductInfo] = useState([]);
     // const [forceUpdate, setForceUpdate] = useState(false);
-
-    const fetchData = useCallback(() => {
-        connection.get('/favorites')
+useFocusEffect(
+    React.useCallback(() => {
+        axios.get('/favorites')
             .then((response) => {
                 const productIds = response.data.map((row) => row.product_id);
                 console.log(productIds);
                 //Get product names and links from products table
-                connection.get('/products')
+                axios.get('/products')
                     .then((response) => {
                         const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
                             id: row.id,
@@ -48,11 +49,12 @@ const WishlistScreen = () => {
                 console.error(error);
             });
 
-    }, []);
-    useFocusEffect(fetchData);
-    const navigation = useNavigation();
+    }, [navigation])
+)
+   // useFocusEffect(fetchData);
+    //const navigation = useNavigation();
     const onPress = (itemID) => {
-        connection.post('/histories', { product_id: itemID })
+        axios.post('/histories', { product_id: itemID })
             .then(response => console.log(response))
             .catch(error => console.log(error))
         navigation.navigate('ProductScreen', { myid: itemID });
@@ -60,7 +62,8 @@ const WishlistScreen = () => {
 
     return (
         <ScrollView>
-            <Text style={styles.container}>My Wishlist: </Text>
+            {/* <Text style={styles.container}>My Wishlist: </Text> */}
+            <Text/>
             {productInfo.map((product) => (
                 <Pressable onPress={() => onPress(product.id)} >
                     <View style={styles.root} key={product.id}>
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginLeft: 40,
         marginTop: 20,
-        color: '#f75d59',
+        color: '#009999',
         fontSize: 20,
         fontWeight: 'bold',
 
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'orange',
+        color: '#00cc99',
         marginLeft: 10,
         marginTop: 7,
     },

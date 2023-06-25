@@ -4,12 +4,18 @@ import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import ax from '../../../assets/images/axios-net.png';
-
+import axios from 'axios';
+// import { UserAuthContext } from '../../context/UserAuthContext';
 
 const HomeScreen_API = () => {
    const flatListRef = useRef();
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
+//   const {userData} = useContext(UserAuthContext)
+// console.log(userData);
+  
+   const [term, setTerm] = useState('');
+   
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
@@ -29,7 +35,7 @@ const HomeScreen_API = () => {
       }
       setCurrentPage((prev) => prev - 1);
       setTimeout(() => {
-         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
+        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
       }, 200);
    };
 
@@ -40,7 +46,7 @@ const HomeScreen_API = () => {
       }
       setCurrentPage((prev) => prev + 1);
         setTimeout(() => {
-         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
+        flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
       }, 200);
    };
 
@@ -48,7 +54,8 @@ const HomeScreen_API = () => {
    
    const fetchData= useCallback(() => {
       setLoading(true)
-      connection.get('/products',{
+
+      axios.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
@@ -75,6 +82,9 @@ const HomeScreen_API = () => {
          console.error(error);
          setHasInternetConnection(false);
       });
+    //   setTimeout(() => {
+    //     flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    //   }, 100);
    }, [currentPage]);
    useFocusEffect(fetchData);
 
@@ -175,8 +185,7 @@ const HomeScreen_API = () => {
             keyExtractor={({ id }) => id}
             onEndReached={loadMoreItems}
             onEndReachedThreshold={0.5}
-            // mafeesh scroll indicator
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
 
             ListFooterComponent={() => (
                <View style={styles.pageNumbers}>

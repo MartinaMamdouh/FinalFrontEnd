@@ -4,6 +4,7 @@ import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const AfterSearchScreen = ({route}) => {
    const flatListRef = useRef();
@@ -32,7 +33,7 @@ const AfterSearchScreen = ({route}) => {
       }
       setCurrentPage((prev) => prev - 1);
       setTimeout(() => {
-         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
+         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
        }, 200);
    };
 
@@ -43,12 +44,12 @@ const AfterSearchScreen = ({route}) => {
       }
       setCurrentPage((prev) => prev + 1);
       setTimeout(() => {
-         (flatListRef.current as Flatlist).scrollToOffset({ animated: false, offset: 0 });
+         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
        }, 200);
    };
    // console.log(postCompleted)
    useEffect(() => {
-      connection.post('/products', { search_key: searchValue })
+      axios.post('/products', { search_key: searchValue })
       .then(response => {console.log(response)
                          setPostCompleted(true); })
       .catch(error => {console.log("in database")
@@ -59,7 +60,7 @@ const AfterSearchScreen = ({route}) => {
    useEffect(() => {
       if (postCompleted) {
       setLoading(true)
-      connection.get('/products',{
+      axios.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
