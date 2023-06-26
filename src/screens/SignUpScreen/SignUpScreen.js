@@ -1,8 +1,5 @@
 import React,{useState} from 'react';
 import { View, Text ,TextInput,StyleSheet,useWindowDimensions,ScrollView, TouchableOpacity, Alert} from 'react-native';
-
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
 import SocialSigninButtons from '../../components/SocialSigninButtons';
 import { useNavigation } from '@react-navigation/native';
 import { Formik} from 'formik';
