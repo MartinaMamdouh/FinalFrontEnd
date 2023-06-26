@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
     // maxWidth:215,
     height:'60%',
     resizeMode: 'contain',
-    marginLeft:60,
+    alignSelf:"center",
     marginTop: 50,
  },
  axiosErr: {
-    marginLeft:60,
+    alignSelf:"center",
     fontSize: 18, 
     fontWeight:'light',
    
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
        marginTop: 10,
        backgroundColor: '#b2d8d8',
        padding: 8,
-       marginHorizontal: 145,
+       alignSelf:"center",
        borderRadius: 10,
        borderWidth: 1,
        borderColor:"#008080",

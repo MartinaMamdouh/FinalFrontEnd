@@ -142,8 +142,7 @@ const styles = StyleSheet.create({
        
         fontWeight: "normal",
         marginTop: 245,
-        marginLeft: 60,
-        marginRight: 10,
+        alignSelf:"center",
     },
     rightContainer: {
         flex: 6,

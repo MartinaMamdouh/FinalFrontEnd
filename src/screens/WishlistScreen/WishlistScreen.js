@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useCallback} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import connection from '../../router/connection';
@@ -6,9 +6,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import emptyWishlist from '../../../assets/images/emptyWishlist.png';
 const WishlistScreen = ({ navigation }) => {
+    const [netErr, setNetERR] = useState(false)
 
     const [productInfo, setProductInfo] = useState([]);
-    const [showMessage, setShowMessage] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -38,35 +38,52 @@ const WishlistScreen = ({ navigation }) => {
                             );
                             // Step 3: Do something with the sorted product info
                             setProductInfo(sortedProductInfo);
-
+                        
                         })
                         .catch((error) => {
                             console.error(error);
                         });
+
+                        setNetERR(false)
                 })
                 .catch((error) => {
-                    console.error(error);
+                    if (error.request) {
+                        setNetERR(true)
+                      }
                 });
 
         }, [navigation])
     );
-    useEffect(() => {
-            //Show "history empty" message after 10 seconds if productInfo is still empty
-            if (productInfo.length === 0) {
-                const timer = setTimeout(() => {
-                    setShowMessage(true);
-                }, 1000);
-                return () => clearTimeout(timer);
-            }
-        }, [productInfo]);
 
-    if (showMessage) {
+    
+    // useEffect(() => {
+    //     //Show "no wishlist" message after 10 seconds if productInfo is still empty
+    //     if (productInfo.length === 0 && netErr===0) {
+    //         const timer = setTimeout(() => {
+    //             setShowMessage(true);
+            
+    //         }, 1000);
+    //         return () => clearTimeout(timer);
+    //     }
+    // }, [productInfo]);
+
+        if(netErr){
+            return (
+                <View>
+                <Text style={styles.network} >Please check your internet connection</Text>
+            </View> 
+            );
+    
+        }
+
+   else if (productInfo.length === 0) {
         return (
             <View style={styles.empty}>
                 <Image source={emptyWishlist} />
-            </View>  
-        );       
+            </View> 
+        );
     }
+
 
     const onPress = (itemID) => {
         axios.post('/histories', { product_id: itemID })
@@ -104,7 +121,9 @@ const WishlistScreen = ({ navigation }) => {
 
 
     );
+
 };
+
 
 const styles = StyleSheet.create({
     raw: {
@@ -165,8 +184,14 @@ const styles = StyleSheet.create({
     },
     empty: {
         flex: 1,
-        marginLeft: 20,
         marginTop: 50,
-    }
+        alignSelf:"center",
+    },
+    network:{
+        fontSize: 17,
+       alignSelf:"center",
+        fontWeight: "normal",
+        marginTop: 245,
+    },
 })
 export default WishlistScreen;
