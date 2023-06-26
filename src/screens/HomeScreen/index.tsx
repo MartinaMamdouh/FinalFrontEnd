@@ -29,7 +29,7 @@ const HomeScreen_API = () => {
       setButton(true);
    };
 
-   const onNextClick = useCallback(() => {
+   const onNextClick = () => {
       if (currentPage + 1 > maxPageLimit) {
          setMaxPageLimit(maxPageLimit + pageNumberLimit);
          setMinPageLimit(minPageLimit + pageNumberLimit);
