@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect,useContext} from 'react';
-import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
+import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity,ScrollView,BackHandler,Alert } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import { useFocusEffect } from '@react-navigation/native';
 import ax from '../../../assets/images/axios-net.png';
@@ -19,7 +19,21 @@ const HomeScreen_API = () => {
    const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
 
-
+   const handleBackPress = () => {
+      Alert.alert(
+        'Exit',
+        'Do you want to exit the app?',
+        [
+          { text: 'Yes', onPress: () => BackHandler.exitApp() },
+          { text: 'No', onPress: () => console.log('NO Pressed') }
+        ],
+        { cancelable: false }
+      );
+      return true; // Return true to enable back button override
+    };
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    
+ 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
          setMaxPageLimit(maxPageLimit - pageNumberLimit);
