@@ -7,6 +7,7 @@ import axios from 'axios';
 const HistoryScreen = () => {
     const [productInfo, setProductInfo] = useState([]);
     const [showMessage, setShowMessage] = useState(false);
+    const [netErr, setNetERR] = useState(false)
 
     useEffect(() => {
         //Get product IDs from history table
@@ -39,15 +40,18 @@ const HistoryScreen = () => {
                 });
         })
             .catch((error) => {
-                console.error(error);
+                if (error.request) {
+                    setNetERR(true)
+                  }
             });
 
     }, []);
     useEffect(() => {
-        //Show "history empty" message after 10 seconds if productInfo is still empty
-        if (productInfo.length === 0) {
+        //Show "no history" message after 10 seconds if productInfo is still empty
+        if (productInfo.length === 0 && netErr===0) {
             const timer = setTimeout(() => {
                 setShowMessage(true);
+            
             }, 1000);
             return () => clearTimeout(timer);
         }
@@ -59,6 +63,15 @@ const HistoryScreen = () => {
                 <Text style={styles.empty} >No History</Text>
             </View>
         );
+    }
+
+    if(netErr){
+        return (
+            <View>
+                <Text style={styles.network} >              Network error occurred {"\n"}Please check your internet connection</Text>
+            </View>
+        );
+
     }
 
     const navigation = useNavigation();
@@ -122,6 +135,14 @@ const styles = StyleSheet.create({
         fontWeight: "normal",
         marginTop: 245,
         marginLeft: 110,
+        marginRight: 10,
+    },
+    network:{
+        fontSize: 17,
+       
+        fontWeight: "normal",
+        marginTop: 245,
+        marginLeft: 60,
         marginRight: 10,
     },
     rightContainer: {

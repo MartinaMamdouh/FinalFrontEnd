@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useRef, useContext } from 'react';
-import { View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState, useCallback, useRef, useEffect,useContext} from 'react';
+import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import { useFocusEffect } from '@react-navigation/native';
+import ax from '../../../assets/images/axios-net.png';
 import axios from 'axios';
 const HomeScreen_API = () => {
    let pageNumberLimit = 10;
@@ -13,7 +14,11 @@ const HomeScreen_API = () => {
    const [totalPages, setTotalPages] = useState(0);
    const [sortBy, setSortBy] = useState('');
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-   
+   const [showButtons, setShowButtons] = useState(false);
+   const [hasInternetConnection, setHasInternetConnection] = useState(true);
+   const [reload, setReload] = useState(false);
+   const [button, setButton] = useState(false);
+
 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
@@ -21,9 +26,7 @@ const HomeScreen_API = () => {
          setMinPageLimit(minPageLimit - pageNumberLimit);
       }
       setCurrentPage((prev) => prev - 1);
-      setTimeout(() => {
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-      }, 200);
+      setButton(true);
    };
 
    const onNextClick = useCallback(() => {
@@ -32,15 +35,14 @@ const HomeScreen_API = () => {
          setMinPageLimit(minPageLimit + pageNumberLimit);
       }
       setCurrentPage((prev) => prev + 1);
-      
-         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-     
-      }, [currentPage, maxPageLimit, pageNumberLimit]);
+      setButton(true);
+   };
 
 
 
-   const fetchData = useCallback(() => {
-      axios.get('/products', {
+   const fetchData= useCallback(() => {
+
+      axios.get('/products',{
          params: {
             page: currentPage,
             per_page: 10,
@@ -48,8 +50,7 @@ const HomeScreen_API = () => {
       }).then(response => {
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
-
-         //sort
+         setHasInternetConnection(true);
          let sortedProducts = response.data;
          if (sortBy === 'price_asc') {
             sortedProducts = sortedProducts.sort((a, b) => a.price - b.price);
@@ -61,9 +62,14 @@ const HomeScreen_API = () => {
             sortedProducts = sortedProducts.sort((a, b) => b.rating - a.rating);
          }
          setProducts(sortedProducts);
-
+         setShowButtons(true);
+         if (button){
+            flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+            setButton(false);
+          }
       }).catch(error => {
          console.error(error);
+         setHasInternetConnection(false);
       });
    }, [currentPage]);
    useFocusEffect(fetchData);
@@ -80,73 +86,107 @@ const HomeScreen_API = () => {
 
    const toggleDropdown = () => {
       setIsDropdownOpen(!isDropdownOpen);
-   };
-
+    };
+    useEffect(() => {
+      if (reload) {
+         fetchData();
+         setReload(false);
+        
+      }
+    }, [reload]);
+  
+    const handleReload = () => {
+      setReload(true);
+      
+    };
    return (
       <View style={styles.page}>
          <View style={styles.pageContent}>
-            <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-               <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
-               <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
-            </TouchableOpacity>
-            {isDropdownOpen && (
-               <ScrollView style={styles.dropdownContainer}>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('price_asc')}
+         <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
+        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
+        <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      {isDropdownOpen && (
+        <ScrollView style={styles.dropdownContainer}>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_asc')}
+          >
+            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_desc')}
+          >
+            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_asc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_desc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+          {!hasInternetConnection && (
+            <View>
+               <View style={{maxHeight:0}}>
+               {reload&&(
+                        <ActivityIndicator size="large" />
+                  )}
+               </View>
+             
+                <Image source={ax} style={styles.axImg}
+               />
+               <Text style={styles.axiosErr}>Server can't be reached</Text>
+               <TouchableOpacity 
+                     style={styles.butn}
+                     onPress={handleReload}
+                     
                   >
-                     <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+                     <Text style={{fontSize: 17}} >Reload</Text>
+                  </TouchableOpacity>
+            </View>
+         
+      )}
+         {hasInternetConnection && (
+         <FlatList
+            ref={flatListRef}
+            data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
+            renderItem={({ item }) => <ProductItem item={item} />}
+            showsVerticalScrollIndicator={true}
+
+            ListFooterComponent={() => (
+               <View style={styles.pageNumbers}>
+                  {showButtons && ( // check if products is not empty
+                  <>
+                  <TouchableOpacity
+                     style={styles.button}
+                     onPress={onPrevClick}
+                     disabled={currentPage === 1}
+                  >
+                     <Text style= {styles.text}>Prev</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('price_desc')}
+                     style={styles.button}
+                     onPress={onNextClick}
+                     disabled={currentPage === totalPages}
                   >
-                     <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+                     <Text style= {styles.text}>Next</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('rating_asc')}
-                  >
-                     <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('rating_desc')}
-                  >
-                     <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-                  </TouchableOpacity>
-               </ScrollView>
-            )}
-
-
-            <FlatList
-               ref={flatListRef}
-               data={products}
-               ListEmptyComponent={() => <ActivityIndicator size="large" />}
-               renderItem={({ item }) => <ProductItem item={item} />}
-               showsVerticalScrollIndicator={true}
-
-               ListFooterComponent={() => (
-                  <View style={styles.pageNumbers}>
-                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={onPrevClick}
-                        disabled={currentPage === 1}
-                     >
-                        <Text style={styles.text}>Prev</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={onNextClick}
-                        disabled={currentPage === totalPages}
-                     >
-                        <Text style={styles.text}>Next</Text>
-                     </TouchableOpacity>
-                  </View>
-               )}
-            />
-
-         </View>
+                  </>
+                  )}
+               </View>
+                 )}
+         />
+          )}
+      </View>
       </View>
 
 
@@ -191,6 +231,30 @@ const styles = StyleSheet.create({
       // width:150,
       // height:150, 
    },
+   axImg: {
+      width:'70%',
+      // maxWidth:215,
+      height:'60%',
+      resizeMode: 'contain',
+      marginLeft:60,
+      marginTop: 50,
+   },
+   axiosErr: {
+      marginLeft:100,
+      fontSize: 18, 
+      fontWeight:'light',
+
+   },
+      butn: {
+         marginTop: 10,
+         backgroundColor: '#b2d8d8',
+         padding: 8,
+         marginHorizontal: 145,
+         borderRadius: 10,
+         borderWidth: 1,
+         borderColor:"#008080",
+         alignItems: 'center',
+      },
    rightContainer: {
       padding: 10,// blank distance between text and image 
       // width:'100%',
