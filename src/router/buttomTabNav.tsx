@@ -19,7 +19,7 @@ const ButtomTabNav = () => {
                 headerShown: false,
                 
             }}>
-            <Tab.Screen component={HomeStack} name='Home'
+            <Tab.Screen component={HomeStack} name='HomeStack'
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Entypo name="home" color={color} size={25} />

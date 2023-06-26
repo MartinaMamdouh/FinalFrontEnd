@@ -15,7 +15,7 @@ const ForgotPasswordScreen = () =>{
     }
     
     const onSignInPress = () => {
-        navigation.navigate('SignIn');
+        navigation.navigate('Signin');
 
     }
     
