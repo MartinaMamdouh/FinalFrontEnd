@@ -19,7 +19,6 @@ const HomeScreen_API = () => {
    const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
 
-   let pageNumberLimit = 10;
 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
@@ -42,7 +41,6 @@ const HomeScreen_API = () => {
 
 
    const fetchData= useCallback(() => {
-      setLoading(true)
 
       axios.get('/products',{
          params: {
@@ -52,7 +50,6 @@ const HomeScreen_API = () => {
       }).then(response => {
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
-         setLoading(false);
          setHasInternetConnection(true);
          let sortedProducts = response.data;
          if (sortBy === 'price_asc') {
@@ -163,9 +160,6 @@ const HomeScreen_API = () => {
             ref={flatListRef}
             data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
             renderItem={({ item }) => <ProductItem item={item} />}
-            keyExtractor={({ id }) => id}
-            onEndReached={loadMoreItems}
-            onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={true}
 
             ListFooterComponent={() => (
