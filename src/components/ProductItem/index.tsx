@@ -31,7 +31,7 @@ const ProductItem = (props: ProductItemProps) => {
 
   const onPress = () => {
     console.warn('item pressed');
-    //.navigate('ProductDetails', { id: item.id });
+    
 
     connection.post('/histories', { product_id: item.id })
       .then(response => console.log(response))
@@ -51,13 +51,10 @@ const ProductItem = (props: ProductItemProps) => {
     <View style={styles.random}>
       <Pressable onPress={onPress} style={styles.root}>
         <Image style={styles.image} source={{ uri: item.img_url }} />
-        {/* <Image source={Logo} style={[styles.image]} resizeMode="contain"/> */}
-        {/* 3amalna view gedida for different row */}
         <View style={styles.rightContainer}>
           <Text style={styles.title} numberOfLines={3}>{item.name}</Text>
           {/* Rating  */}
           <View style={styles.ratingContainer}>
-            {/* <AntDesign name="star"size={18}color={"#e47911"}/> */}
             {[0, 0, 0, 0, 0].map((el, i) =>
               <Entypo
                 style={styles.starImgStyle}

@@ -57,11 +57,6 @@ const ButtomTabNav = () => {
                     ),                   
                 }}               
             />
-{/* <CustomButton text="My Wishlist"
-                //  onPress={() => navigation.navigate('WishlistScreen')}
-                bgColor="#E7EAF4"
-                fgColor="#4765A9"
-            /> */}
         </Tab.Navigator>
         
 
