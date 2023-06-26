@@ -1,53 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-
-const WishlistScreen = ({navigation}) => {
+import emptyWishlist from '../../../assets/images/emptyWishlist.png';
+const WishlistScreen = ({ navigation }) => {
 
     const [productInfo, setProductInfo] = useState([]);
-useFocusEffect(
-    React.useCallback(() => {
-        axios.get('/favorites')
-            .then((response) => {
-                const productIds = response.data.map((row) => row.product_id);
-                console.log(productIds);
-                //Get product names and links from products table
-                axios.get('/products', {
-                    params: {
-                        per_page: 1000,
-                    },
-                })
-                    .then((response) => {
-                        const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
-                            id: row.id,
-                            name: row.name,
-                            image: row.img_url,
-                            price: row.price,
-                        }));
-                        const sortedProductInfo = productIds.map((id) =>
-                            productInfo.find((info) => info.id === id)
-                        );
-                        //Sort new array by order of productIds
-                        sortedProductInfo.sort((a, b) =>
-                            productIds.indexOf(b.id) - productIds.indexOf(a.id)
-                        );
-                        // Step 3: Do something with the sorted product info
-                        setProductInfo(sortedProductInfo);
+    const [showMessage, setShowMessage] = useState(false);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            axios.get('/favorites')
+                .then((response) => {
+                    const productIds = response.data.map((row) => row.product_id);
+                    console.log(productIds);
+                    //Get product names and links from products table
+                    axios.get('/products', {
+                        params: {
+                            per_page: 1000,
+                        },
                     })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                        .then((response) => {
+                            const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
+                                id: row.id,
+                                name: row.name,
+                                image: row.img_url,
+                                price: row.price,
+                            }));
+                            const sortedProductInfo = productIds.map((id) =>
+                                productInfo.find((info) => info.id === id)
+                            );
+                            //Sort new array by order of productIds
+                            sortedProductInfo.sort((a, b) =>
+                                productIds.indexOf(b.id) - productIds.indexOf(a.id)
+                            );
+                            // Step 3: Do something with the sorted product info
+                            setProductInfo(sortedProductInfo);
 
-    }, [navigation])
-)
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+        }, [navigation])
+    );
+    useEffect(() => {
+            //Show "history empty" message after 10 seconds if productInfo is still empty
+            if (productInfo.length === 0) {
+                const timer = setTimeout(() => {
+                    setShowMessage(true);
+                }, 1000);
+                return () => clearTimeout(timer);
+            }
+        }, [productInfo]);
+
+    if (showMessage) {
+        return (
+            <View style={styles.empty}>
+                <Image source={emptyWishlist} />
+            </View>  
+        );       
+    }
+
     const onPress = (itemID) => {
         axios.post('/histories', { product_id: itemID })
             .then(response => console.log(response))
@@ -57,7 +77,7 @@ useFocusEffect(
 
     return (
         <ScrollView>
-            <Text/>
+            <Text />
             {productInfo.map((product) => (
                 <Pressable onPress={() => onPress(product.id)} >
                     <View style={styles.root} key={product.id}>
@@ -143,5 +163,10 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         resizeMode: 'contain',
     },
+    empty: {
+        flex: 1,
+        marginLeft: 20,
+        marginTop: 50,
+    }
 })
 export default WishlistScreen;

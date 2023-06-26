@@ -26,16 +26,16 @@ const HomeScreen_API = () => {
       }, 200);
    };
 
-   const onNextClick = () => {
+   const onNextClick = useCallback(() => {
       if (currentPage + 1 > maxPageLimit) {
          setMaxPageLimit(maxPageLimit + pageNumberLimit);
          setMinPageLimit(minPageLimit + pageNumberLimit);
       }
       setCurrentPage((prev) => prev + 1);
-      setTimeout(() => {
+      
          flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
-      }, 200);
-   };
+     
+      }, [currentPage, maxPageLimit, pageNumberLimit]);
 
 
 
