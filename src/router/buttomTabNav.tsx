@@ -5,7 +5,7 @@ import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import WishlistStack from './WishlistStack';
 import RatingScreen from '../screens/RatingScreen';
-
+import AboutUsScreen from '../screens/AboutUsScreen';
 const Tab = createBottomTabNavigator();
 const ButtomTabNav = () => {
   
@@ -42,7 +42,7 @@ const ButtomTabNav = () => {
                 }}
             />
 
-            <Tab.Screen component={RatingScreen} name='more'
+            <Tab.Screen component={AboutUsScreen} name='more'
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Entypo name="menu" color={color} size={25} />
