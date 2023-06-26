@@ -214,7 +214,7 @@ const SigninScreen = () => {
             <TouchableOpacity
                 onPress={handleSubmit}
                 disabled={!isValid}
-                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#009999' }]}
+                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#A5C9CA' }]}
               >
                 <Text style={styles.buttonText}>Sign in</Text>
               </TouchableOpacity>
