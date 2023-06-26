@@ -53,6 +53,16 @@ const SignUpScreen = () => {
     axios.post(CreateUserAPI, payload)
     .then(navigation.navigate('Signin'))
     .catch((error) => {
+      if(error.request){
+        Alert.alert(
+              'Server Error',
+              'The server encountered an error. Please try again later.',
+              [
+                { text: 'OK' },
+              ],
+              { cancelable: false }
+            );
+      } else{
       console.log("error", error);
       Alert.alert(
         'Sign Up Error',
@@ -61,7 +71,7 @@ const SignUpScreen = () => {
           { text: 'OK', onPress: () => console.log('OK Pressed') },
         ],
         { cancelable: false }
-      );
+      );}
     });
   }
   const onTermsofUsePressed = () => {

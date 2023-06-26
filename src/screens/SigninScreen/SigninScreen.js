@@ -74,17 +74,17 @@ const SigninScreen = () => {
         navigation.navigate('Home')
       })
       .catch((error) => {
-        if (error.response && error.response.status === 500) {
-          // Display an alert for Redis server error
-          Alert.alert(
-            'Server Error',
-            'The server encountered an error. Please try again later.',
-            [
-              { text: 'OK' },
-            ],
-            { cancelable: false }
-          );
-        } else {
+        if(error.request){
+        Alert.alert(
+              'Server Error',
+              'The server encountered an error. Please try again later.',
+              [
+                { text: 'OK' },
+              ],
+              { cancelable: false }
+            );
+      }
+        else {
           // Display an alert for other errors
           Alert.alert(
             'Sign In Error',
@@ -214,7 +214,7 @@ const SigninScreen = () => {
             <TouchableOpacity
                 onPress={handleSubmit}
                 disabled={!isValid}
-                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#009999' }]}
+                style={[styles.row, { backgroundColor: isValid ? '#c2f0f0' : '#A5C9CA' }]}
               >
                 <Text style={styles.buttonText}>Sign in</Text>
               </TouchableOpacity>

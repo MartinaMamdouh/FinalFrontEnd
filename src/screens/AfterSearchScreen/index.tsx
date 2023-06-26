@@ -1,5 +1,5 @@
 import React, { useState,useCallback ,useEffect ,useRef} from 'react';
-import { View,Image, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
+import {View,Image, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity,ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import Feather from 'react-native-vector-icons/Feather';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -118,18 +118,6 @@ const AfterSearchScreen = ({route}) => {
 
   // if (loading) return <ActivityIndicator size="large" />;
   // if (products.length == 0) return <Text>No Results fount</Text>
-  useEffect(() => {
-    if (reload) {
-       fetchData();
-       setReload(false);
-      
-    }
-  }, [reload]);
-
-  const handleReload = () => {
-    setReload(true);
-    
-  };
   return (
     <View style={styles.page}>
       
@@ -178,21 +166,21 @@ const AfterSearchScreen = ({route}) => {
     )} 
        {!hasInternetConnection && (
             <View>
-               <View style={{maxHeight:0}}>
-               {reload&&(
-                        <ActivityIndicator size="large" />
-                  )}
-               </View>
-             
                 <Image source={ax} style={styles.axImg}
                />
-               <Text style={styles.axiosErr}>Server can't be reached</Text>
+               <Text style={styles.axiosErr}>        Server can't be reached{"\n"}Please go back and try again later.</Text>
+               
                <TouchableOpacity 
                      style={styles.butn}
-                     onPress={handleReload}
+                     onPress={() => navigation.navigate('HomeScreen')}
                      
                   >
-                     <Text style={{fontSize: 17}} >Reload</Text>
+                     <Feather
+                       name="arrow-left"
+                      size={25}
+                      color="black"
+                      />
+                       <Text style={{fontSize: 17}} >Home </Text>
                   </TouchableOpacity>
             </View>
          
@@ -273,9 +261,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
  },
  axiosErr: {
-    marginLeft:100,
+    marginLeft:60,
     fontSize: 18, 
     fontWeight:'light',
+   
 
  },
     butn: {
@@ -287,6 +276,7 @@ const styles = StyleSheet.create({
        borderWidth: 1,
        borderColor:"#008080",
        alignItems: 'center',
+       flexDirection: 'row',
     },
 
    //////pagination 

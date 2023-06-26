@@ -68,7 +68,7 @@ const HistoryScreen = () => {
     if(netErr){
         return (
             <View>
-                <Text style={styles.network} >              Network error occurred {"\n"}Please check your internet connection</Text>
+                <Text style={styles.network} >Please check your internet connection</Text>
             </View>
         );
 
