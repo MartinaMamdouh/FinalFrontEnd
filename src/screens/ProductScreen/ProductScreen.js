@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { Text, StyleSheet, ScrollView, Image, Linking } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import CustomButton from '../../components/CustomButton';
-import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 const ProductScreen = (props) => {

@@ -3,10 +3,8 @@ import { View, Text, Image, Pressable, Linking, SafeAreaView } from 'react-nativ
 import styles from './styles';
 import Favorite from '../Favorite';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Button from '../Button/Button';
 import HomeButton from '../HomeButton/HomeButton';
 import { useNavigation } from '@react-navigation/native';
-import connection from '../../router/connection';
 import axios from 'axios';
 
 //INTERFACE FOR HOW OUR OB JECT LOOKS

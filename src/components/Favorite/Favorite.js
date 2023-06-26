@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, Image, Pressable } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import connection from '../../router/connection';
 import heartFill from '../../../assets/images/filled-heart.png';
 import heartEmpty from '../../../assets/images/unfilled-heart.png';
 import axios from 'axios';

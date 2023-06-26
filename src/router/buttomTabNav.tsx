@@ -27,7 +27,7 @@ const ButtomTabNav = () => {
                 }}
 
             />
-            <Tab.Screen component={ProfileStack} name='Profile'
+            <Tab.Screen component={ProfileStack} name='ProfileStack'
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Entypo name="user" color={color} size={25} />
