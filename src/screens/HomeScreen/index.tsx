@@ -49,11 +49,14 @@ const HomeScreen_API = () => {
    
    const fetchData= useCallback(() => {
       setLoading(true)
-
+      
+    
       axios.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
+           sort_column: sortBy === 'price_asc' || sortBy === 'price_desc' ? 'price' : 'rating',
+        sort_order: sortBy.includes('asc') ? 'asc' : 'desc',
          },}).then(response => {
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
@@ -92,6 +95,41 @@ const HomeScreen_API = () => {
    const handleSortBy = (sortOption) => {
       setSortBy(sortOption);
       setIsDropdownOpen(false);
+            
+      let sortColumn = '';
+      let sortOrder = '';
+
+      if (sortOption === 'price_asc') {
+         sortColumn = 'price';
+         sortOrder = 'asc';
+      } else if (sortOption === 'price_desc') {
+         sortColumn = 'price';
+         sortOrder = 'desc';
+      } else if (sortOption === 'rating_asc') {
+         sortColumn = 'rating';
+         sortOrder = 'asc';
+      } else if (sortOption === 'rating_desc') {
+         sortColumn = 'rating';
+         sortOrder = 'desc';
+      }
+
+      axios
+         .get('/products', {
+            params: {
+            page: currentPage,
+            per_page: 10,
+            sort_column: sortColumn,
+            sort_order: sortOrder,
+            },
+         })
+         .then((response) => {
+            setProducts(response.data);
+            setTotalPages(response.data.totalPages);
+            setLoading(false);
+         })
+         .catch((error) => {
+            console.error(error);
+         });
     };
 
     const isSortActive = (sortOption) => {
