@@ -16,7 +16,7 @@ const NewPasswordScreen = () =>{
     }
     
     const onSignInPress = () => {
-        navigation.navigate('SignIn');
+        navigation.navigate('Signin');
     }
    
     
