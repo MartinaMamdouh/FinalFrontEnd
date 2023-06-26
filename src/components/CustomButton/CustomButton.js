@@ -33,8 +33,7 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    backgroundColor: 'orange',
-
+    backgroundColor: '#29a3a3',  
 
   },
 
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: 'black',
+    color: '#d6f5f5',
     fontSize: 20,
   },
 

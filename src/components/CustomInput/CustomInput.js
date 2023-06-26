@@ -21,14 +21,16 @@ const styles = StyleSheet.create({
   container: {
 
     backgroundColor: '#FFFFFF',
-    width: '100%',
+    width: 370,
     borderColor: '#e8e8e8',
     borderEndWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginVertical: 5,
   },
-  input: {},
+  input: {
+    fontSize:20,
+  },
 });
 
 

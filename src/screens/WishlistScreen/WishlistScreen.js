@@ -1,31 +1,42 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
-import ImageCarousel from '../../components/ImageCarousel';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 
-const WishlistScreen = () => {
+const WishlistScreen = ({navigation}) => {
 
     const [productInfo, setProductInfo] = useState([]);
-    // const [forceUpdate, setForceUpdate] = useState(false);
-
-    const fetchData = useCallback(() => {
-        connection.get('/favorites')
+useFocusEffect(
+    React.useCallback(() => {
+        axios.get('/favorites')
             .then((response) => {
                 const productIds = response.data.map((row) => row.product_id);
                 console.log(productIds);
                 //Get product names and links from products table
-                connection.get('/products')
+                axios.get('/products', {
+                    params: {
+                        per_page: 1000,
+                    },
+                })
                     .then((response) => {
-                        const productInfoss = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
+                        const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
                             id: row.id,
                             name: row.name,
                             image: row.img_url,
                             price: row.price,
                         }));
-                        setProductInfo(productInfoss);
-                        console.log(productInfoss);
+                        const sortedProductInfo = productIds.map((id) =>
+                            productInfo.find((info) => info.id === id)
+                        );
+                        //Sort new array by order of productIds
+                        sortedProductInfo.sort((a, b) =>
+                            productIds.indexOf(b.id) - productIds.indexOf(a.id)
+                        );
+                        // Step 3: Do something with the sorted product info
+                        setProductInfo(sortedProductInfo);
+
                     })
                     .catch((error) => {
                         console.error(error);
@@ -35,34 +46,42 @@ const WishlistScreen = () => {
                 console.error(error);
             });
 
-    }, []);
-    useFocusEffect(fetchData);
+    }, [navigation])
+)
+    const onPress = (itemID) => {
+        axios.post('/histories', { product_id: itemID })
+            .then(response => console.log(response))
+            .catch(error => console.log(error))
+        navigation.navigate('ProductScreen', { myid: itemID });
+    }
 
     return (
         <ScrollView>
-            <Text style={styles.container}>My WishlistScreen: </Text>
+            <Text/>
             {productInfo.map((product) => (
+                <Pressable onPress={() => onPress(product.id)} >
+                    <View style={styles.root} key={product.id}>
 
-                <View style={styles.root} key={product.id}>
-                    <Image style={styles.image} source={{ uri: product.image }} />
-                    <View style={styles.rightContainer}>
-                        <Text style={styles.title} numberOfLines={3}>
-                            {product.name}
-                        </Text>
-                        <View style={styles.raw}>
-                            <Text style={styles.price} numberOfLines={3}>
-                                {product.price} EGP
+                        <Image style={styles.image} source={{ uri: product.image }} />
+                        <View style={styles.rightContainer}>
+                            <Text style={styles.title} numberOfLines={3}>
+                                {product.name}
                             </Text>
-                            <Text style={styles.heart} >
-                                <Favorite item={product.id} />
-                            </Text>
+                            <View style={styles.raw}>
+                                <Text style={styles.price} numberOfLines={3}>
+                                    {product.price} EGP
+                                </Text>
+                                <Text style={styles.heart} >
+                                    <Favorite item={product.id} />
+                                </Text>
+                            </View>
                         </View>
                     </View>
-                </View>
+                </Pressable>
 
             ))}
         </ScrollView>
-        // </View>
+
 
     );
 };
@@ -76,7 +95,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginLeft: 40,
         marginTop: 20,
-        color: '#f75d59',
+        color: '#009999',
         fontSize: 20,
         fontWeight: 'bold',
 
@@ -110,7 +129,7 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'orange',
+        color: '#00cc99',
         marginLeft: 10,
         marginTop: 7,
     },
@@ -121,7 +140,6 @@ const styles = StyleSheet.create({
     },
     heart: {
         flex: 2,
-        //height: 150,
         marginLeft: 30,
         resizeMode: 'contain',
     },

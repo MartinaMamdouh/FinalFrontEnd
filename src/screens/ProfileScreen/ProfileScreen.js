@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   headline: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#1f7a7a',
     marginBottom: 20,
   },
   headlineContainer: {
@@ -46,7 +46,7 @@ const ProfileScreen = () => {
 
   const onLogoutPressed = () => {
     logOut();
-    navigation.navigate('SignIn');
+    navigation.navigate('Signin');
   };
 
   const onHistoryPressed = () => {
@@ -80,15 +80,17 @@ const ProfileScreen = () => {
       </Text>
 
       <Image style={styles.tinyLogo} source={require('../profile.png')} />
-
+      <Text/>
       {buttons.map((button) => (
         <CustomButton
           text={button.text}
           onPress={button.onPress}
-          bgColor="#E7EAF4"
-          fgColor="#4765A9"
+          bgColor="#c2f0f0"
+          fgColor="#1e7b7b"
+
         />
       ))}
+
     </View>
   );
 }
