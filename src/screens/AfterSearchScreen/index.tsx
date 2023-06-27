@@ -11,7 +11,6 @@ const AfterSearchScreen = ({ route }) => {
   const navigation = useNavigation();
   const { searchValue } = route.params;
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [maxPageLimit, setMaxPageLimit] = useState(5);
   const [minPageLimit, setMinPageLimit] = useState(0);
@@ -20,7 +19,6 @@ const AfterSearchScreen = ({ route }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [hasInternetConnection, setHasInternetConnection] = useState(true);
-  const [reload, setReload] = useState(false);
   const [button, setButton] = useState(false);
   let pageNumberLimit = 10;
 
@@ -45,7 +43,7 @@ const AfterSearchScreen = ({ route }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+  
     axios
       .post('/products', { search_key: searchValue })
       .then((response) => {
@@ -61,7 +59,6 @@ const AfterSearchScreen = ({ route }) => {
 
   const fetchData = useCallback(() => {
     if (postCompleted) {
-      setLoading(true)
       axios.get('/products', {
         params: {
           page: currentPage,
@@ -72,7 +69,6 @@ const AfterSearchScreen = ({ route }) => {
         setProducts(response.data);
         console.log("getting data")
         setTotalPages(response.data.totalPages);
-        setLoading(false);
         setHasInternetConnection(true);
         let sortedProducts = response.data;
 
@@ -100,19 +96,11 @@ const AfterSearchScreen = ({ route }) => {
   }, [currentPage, postCompleted, sortBy]);
   useFocusEffect(fetchData);
 
-  const loadMoreItems = () => {
-    setLoading(true);
-    if (currentPage * 10 < totalPages * 10) {
-      // Fetch more data and update the state
-      // ...
-      setCurrentPage(currentPage + 1);
-      setLoading(false);
-    }
-  };
-
   const handleSortBy = (sortOption) => {
+     setCurrentPage(1);
     setSortBy(sortOption);
     setIsDropdownOpen(false);
+    
   };
 
   const isSortActive = (sortOption) => {
@@ -196,9 +184,6 @@ const AfterSearchScreen = ({ route }) => {
               ref={flatListRef}
               data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
               renderItem={({ item }) => <ProductItem item={item} />}
-              keyExtractor={({ id }) => id}
-              onEndReached={loadMoreItems}
-              onEndReachedThreshold={0.5}
               // mafeesh scroll indicator
               showsVerticalScrollIndicator={false}
 

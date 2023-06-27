@@ -35,8 +35,8 @@ const Router = () => {
         <Root.Screen component={SigninScreen} name="Signin" />
         <Root.Screen component={SignUpScreen} name="Signup" />
         <Root.Screen component={TouchIDScreen} name="touchID" />
-        <Root.Screen name="forgotpassword" component={ForgotPasswordScreen} />
-            <Root.Screen name="newpassword" component={NewPasswordScreen} />
+        <Root.Screen component={ForgotPasswordScreen} name="forgotpassword" />
+        <Root.Screen component={NewPasswordScreen} name="newpassword" />
       </Root.Navigator>
     </NavigationContainer>
   );

@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useRef, useEffect, useContext } from 'react';
-import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, BackHandler, Alert } from 'react-native';
+import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, BackHandler, Alert, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import { useFocusEffect } from '@react-navigation/native';
 import ax from '../../../assets/images/axios-net.png';
+import { useNavigation } from '@react-navigation/native';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import axios from 'axios';
 const HomeScreen_API = () => {
    let pageNumberLimit = 10;
@@ -149,96 +151,127 @@ const HomeScreen_API = () => {
       setReload(true);
 
    };
+   //search
+   const [searchValue, setSearchValue] = useState('');
+   const HeaderComponent = ({ setSearchValue }) => {
+      const navigation = useNavigation();
+      const handleSearchResult = (result: string) => {
+         console.log('Search result:', result);
+         setSearchValue(result);
+         // do something with the search result, such as filtering data or updating state
+         navigation.navigate('AfterSearchScreen', { searchValue: result });
+      }
+      return (
+         <SafeAreaView style={{ backgroundColor: '#009999' }}>
+            <View style={{
+               margin: 10,
+               // padding:5,
+               backgroundColor: 'white',
+               flexDirection: 'row',
+               alignItems: 'center',
+            }}>
+
+               <SearchBar onResult={handleSearchResult} />
+
+            </View>
+
+         </SafeAreaView>
+
+      );
+   };
    return (
-      <View style={styles.page}>
-         <View style={styles.pageContent}>
-            <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-               <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
-               <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
-            </TouchableOpacity>
-            {isDropdownOpen && (
-               <ScrollView style={styles.dropdownContainer}>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('price_asc')}
-                  >
-                     <Text style={styles.sortButtonText}>Price (Low to High)</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('price_desc')}
-                  >
-                     <Text style={styles.sortButtonText}>Price (High to Low)</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('rating_asc')}
-                  >
-                     <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-                     onPress={() => handleSortBy('rating_desc')}
-                  >
-                     <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-                  </TouchableOpacity>
-               </ScrollView>
-            )}
-            {!hasInternetConnection && (
-               <View>
-                  <View style={{ maxHeight: 0 }}>
-                     {reload && (
-                        <ActivityIndicator size="large" />
-                     )}
-                  </View>
+      <View>
+         <HeaderComponent setSearchValue={setSearchValue} />
 
-                  <Image source={ax} style={styles.axImg}
-                  />
-                  <Text style={styles.axiosErr}>Server can't be reached</Text>
-                  <TouchableOpacity
-                     style={styles.butn}
-                     onPress={handleReload}
-
-                  >
-                     <Text style={{ fontSize: 17 }} >Reload</Text>
-                  </TouchableOpacity>
-               </View>
-
-            )}
-            {hasInternetConnection && (
-               <FlatList
-                  ref={flatListRef}
-                  data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
-                  renderItem={({ item }) => <ProductItem item={item} />}
-                  showsVerticalScrollIndicator={true}
-
-                  ListFooterComponent={() => (
-                     <View style={styles.pageNumbers}>
-                        {showButtons && ( // check if products is not empty
-                           <>
-                              <TouchableOpacity
-                                 style={styles.button}
-                                 onPress={onPrevClick}
-                                 disabled={currentPage === 1}
-                              >
-                                 <Text style={styles.text}>Prev</Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity
-                                 style={styles.button}
-                                 onPress={onNextClick}
-                                 disabled={currentPage === totalPages}
-                              >
-                                 <Text style={styles.text}>Next</Text>
-                              </TouchableOpacity>
-                           </>
+         <View style={styles.page}>
+            <View style={styles.pageContent}>
+               <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
+                  <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
+                  <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
+               </TouchableOpacity>
+               {isDropdownOpen && (
+                  <ScrollView style={styles.dropdownContainer}>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('price_asc')}
+                     >
+                        <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('price_desc')}
+                     >
+                        <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('rating_asc')}
+                     >
+                        <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('rating_desc')}
+                     >
+                        <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+                     </TouchableOpacity>
+                  </ScrollView>
+               )}
+               {!hasInternetConnection && (
+                  <View>
+                     <View style={{ maxHeight: 0 }}>
+                        {reload && (
+                           <ActivityIndicator size="large" />
                         )}
                      </View>
-                  )}
-               />
-            )}
+
+                     <Image source={ax} style={styles.axImg}
+                     />
+                     <Text style={styles.axiosErr}>Server can't be reached</Text>
+                     <TouchableOpacity
+                        style={styles.butn}
+                        onPress={handleReload}
+
+                     >
+                        <Text style={{ fontSize: 17 }} >Reload</Text>
+                     </TouchableOpacity>
+                  </View>
+
+               )}
+               {hasInternetConnection && (
+                  <FlatList
+                     ref={flatListRef}
+                     data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
+                     renderItem={({ item }) => <ProductItem item={item} />}
+                     showsVerticalScrollIndicator={true}
+
+                     ListFooterComponent={() => (
+                        <View style={styles.pageNumbers}>
+                           {showButtons && ( // check if products is not empty
+                              <>
+                                 <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={onPrevClick}
+                                    disabled={currentPage === 1}
+                                 >
+                                    <Text style={styles.text}>Prev</Text>
+                                 </TouchableOpacity>
+                                 <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={onNextClick}
+                                    disabled={currentPage === totalPages}
+                                 >
+                                    <Text style={styles.text}>Next</Text>
+                                 </TouchableOpacity>
+                              </>
+                           )}
+                        </View>
+                     )}
+                  />
+               )}
+            </View>
          </View>
       </View>
-
 
    );
 };
