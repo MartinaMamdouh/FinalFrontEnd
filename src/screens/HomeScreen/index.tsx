@@ -182,7 +182,6 @@ const HomeScreen_API = () => {
    return (
       <View>
          <HeaderComponent setSearchValue={setSearchValue} />
-
          <View style={styles.page}>
             <View style={styles.pageContent}>
                <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
@@ -269,10 +268,16 @@ const HomeScreen_API = () => {
                      )}
                   />
                )}
+               <Text>                      </Text>
+               <Text>                      </Text>
+               <Text>                      </Text>
+               <Text>                      </Text>
+               <Text>                      </Text>
+               <Text>                      </Text>
+               <Text>                      </Text>
             </View>
          </View>
       </View>
-
    );
 };
 
