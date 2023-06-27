@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { setState,useState, useEffect, useCallback } from 'react';
 import {Modal, View, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import connection from '../../router/connection';
@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import styles from './styles';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import Drawer from '../../components/Drawer';
-
+import axios from 'axios';
 const HomeScreen_API = ({navigation}) => {
 
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -95,9 +95,18 @@ const HomeScreen_API = ({navigation}) => {
    };
    
  
-     const toggleDrawer = () => {
-       setIsDrawerOpen(!isDrawerOpen);
-     };
+   //   const toggleDrawer = () => {
+   //     setIsDrawerOpen(!isDrawerOpen);
+   //   };
+   // const handleApplyFilter = (name, rating, price, page, perPage, sortColumn, sortOrder) => {
+   //    // Call any necessary functions or perform actions based on the filter parameters
+   //    setState({
+   //       nameFilter: name,
+   //       ratingFilter: rating,
+   //       priceFilter: price,
+   //       // ... other filter parameters
+   //     });
+    };
 
    return (
       <View style={styles.page}>
@@ -140,7 +149,7 @@ const HomeScreen_API = ({navigation}) => {
                <Ionicons name='options-sharp' color='grey' size={25}/>
                {/* {isDrawerOpen &&  <Drawer navigation={navigation} />} */}
                </TouchableOpacity>
-               <Modal visible={isModalOpen} animationType="slide"><Drawer navigation={navigation}/></Modal>
+               <Modal visible={isModalOpen} animationType="slide"><Drawer navigation={navigation} handleApplyFilter={handleApplyFilter}/></Modal>
 
             <FlatList
                data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
