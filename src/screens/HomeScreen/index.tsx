@@ -7,14 +7,16 @@ import axios from 'axios';
 // import { UserAuthContext } from '../../context/UserAuthContext';
 
 const HomeScreen_API = () => {
-   const flatListRef = useRef();
+   //const flatListRef = useRef();
+   const flatListRef = useRef(null);
+
    const [currentPage, setCurrentPage] = useState(1);
    const [loading, setLoading] = useState(false);
 //   const {userData} = useContext(UserAuthContext)
 // console.log(userData);
   
    const [term, setTerm] = useState('');
-   
+
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
@@ -30,6 +32,7 @@ const HomeScreen_API = () => {
       }
       setCurrentPage((prev) => prev - 1);
       setTimeout(() => {
+         
         flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
       }, 200);
    };
