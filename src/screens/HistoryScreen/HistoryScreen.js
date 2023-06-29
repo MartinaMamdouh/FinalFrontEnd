@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
-import connection from '../../router/connection';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 

@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Entypo from 'react-native-vector-icons/Entypo';
 import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import WishlistStack from './WishlistStack';
-import RatingScreen from '../screens/RatingScreen';
 import AboutUsScreen from '../screens/AboutUsScreen';
+
 const Tab = createBottomTabNavigator();
 const ButtomTabNav = () => {
-  
+
     return (
 
         <Tab.Navigator
@@ -27,7 +27,7 @@ const ButtomTabNav = () => {
                 }}
 
             />
-            <Tab.Screen component={ProfileStack} name='Profile'
+            <Tab.Screen component={ProfileStack} name='ProfileStack'
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Entypo name="user" color={color} size={25} />

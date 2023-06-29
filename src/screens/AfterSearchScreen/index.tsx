@@ -11,7 +11,7 @@ const AfterSearchScreen = ({route}) => {
    const navigation = useNavigation();
    const { searchValue } = route.params;
    const [currentPage, setCurrentPage] = useState(1);
-   const [loading, setLoading] = useState(false);
+  //  const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
@@ -20,7 +20,7 @@ const AfterSearchScreen = ({route}) => {
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const [showButtons, setShowButtons] = useState(false);
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
-   const [reload, setReload] = useState(false);
+  //  const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
    let pageNumberLimit = 10;
 
@@ -45,7 +45,7 @@ const AfterSearchScreen = ({route}) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    //setLoading(true);
     axios.post('/products', { search_key: searchValue })
       .then(response => {console.log(response)
                         setPostCompleted(true); })
@@ -56,17 +56,20 @@ const AfterSearchScreen = ({route}) => {
   
   const fetchData= useCallback(() => {
       if (postCompleted) {
-      setLoading(true)
+      // setLoading(true)
       axios.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
            'filter[name_i_cont]': searchValue,
+           sort_column: sortBy === 'price_asc' || sortBy === 'price_desc' ? 'price' : 'rating',
+            sort_order: sortBy.includes('asc') ? 'asc' : 'desc',
+
          },}).then(response => {
          setProducts(response.data);
-         console.log("getting data")
+         //console.log("getting data")
          setTotalPages(response.data.totalPages);
-         setLoading(false);
+        //  setLoading(false);
          setHasInternetConnection(true);
          let sortedProducts = response.data;
 
@@ -94,18 +97,44 @@ const AfterSearchScreen = ({route}) => {
    }, [currentPage,postCompleted]);
    useFocusEffect(fetchData);
 
-   const loadMoreItems = () => {
-      setLoading(true);
-      if (currentPage * 10 < totalPages * 10) {
-         // Fetch more data and update the state
-         // ...
-         setCurrentPage(currentPage + 1);
-         setLoading(false);
-      }
-   };
    const handleSortBy = (sortOption) => {
+    setCurrentPage(1);
       setSortBy(sortOption);
       setIsDropdownOpen(false);
+      let sortColumn = '';
+      let sortOrder = '';
+
+      if (sortOption === 'price_asc') {
+         sortColumn = 'price';
+         sortOrder = 'asc';
+      } else if (sortOption === 'price_desc') {
+         sortColumn = 'price';
+         sortOrder = 'desc';
+      } else if (sortOption === 'rating_asc') {
+         sortColumn = 'rating';
+         sortOrder = 'asc';
+      } else if (sortOption === 'rating_desc') {
+         sortColumn = 'rating';
+         sortOrder = 'desc';
+      }
+
+      axios
+         .get('/products', {
+            params: {
+               page: currentPage,
+               per_page: 10,
+               'filter[name_i_cont]': searchValue,
+               sort_column: sortColumn,
+               sort_order: sortOrder,
+            },
+         })
+         .then((response) => {
+            setProducts(response.data);
+            setTotalPages(response.data.totalPages);
+         })
+         .catch((error) => {
+            console.error(error);
+         });
     };
 
     const isSortActive = (sortOption) => {
@@ -116,8 +145,6 @@ const AfterSearchScreen = ({route}) => {
       setIsDropdownOpen(!isDropdownOpen);
     };
 
-  // if (loading) return <ActivityIndicator size="large" />;
-  // if (products.length == 0) return <Text>No Results fount</Text>
   return (
     <View style={styles.page}>
       
@@ -190,9 +217,9 @@ const AfterSearchScreen = ({route}) => {
           ref={flatListRef}
           data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
           renderItem={({ item }) => <ProductItem item={item} />}
-          keyExtractor={({ id }) => id}
-          onEndReached={loadMoreItems}
-          onEndReachedThreshold={0.5}
+          // keyExtractor={({ id }) => id}
+          // onEndReached={loadMoreItems}
+          // onEndReachedThreshold={0.5}
           // mafeesh scroll indicator
           showsVerticalScrollIndicator={false}
 
@@ -207,6 +234,7 @@ const AfterSearchScreen = ({route}) => {
                 >
                    <Text style= {styles.text}>Prev</Text>
                 </TouchableOpacity>
+                <Text style={styles.curPage}> {currentPage}/{totalPages}</Text>
                 <TouchableOpacity
                    style={styles.button}
                    onPress={onNextClick}
@@ -291,7 +319,7 @@ const styles = StyleSheet.create({
    button: {
       backgroundColor: '#b2d8d8',
       padding: 8,
-      marginHorizontal: 145,
+      marginHorizontal: 110,
       borderRadius: 10,
       borderWidth: 1,
       borderColor:"#008080",
@@ -300,7 +328,11 @@ const styles = StyleSheet.create({
       color:"#008080",
       fontSize: 15,
    },
-
+   curPage:{
+      fontSize:17,
+      fontWeight:'bold',
+      color:'#008080',
+   },
 //sort
 sortButton: {
    paddingHorizontal: 10,

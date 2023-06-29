@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, Image, Pressable } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import connection from '../../router/connection';
 import heartFill from '../../../assets/images/filled-heart.png';
 import heartEmpty from '../../../assets/images/unfilled-heart.png';
 import axios from 'axios';
@@ -59,7 +58,9 @@ const styles = StyleSheet.create({
         height: 40,
         resizeMode: 'cover',
         marginLeft: 10,
+        marginRight:10,
         marginBottom: 10,
+        marginTop:10
 
     },
 

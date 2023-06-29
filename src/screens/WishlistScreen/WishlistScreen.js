@@ -1,7 +1,6 @@
 import React, { useState, useEffect , useCallback} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
-import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import emptyWishlist from '../../../assets/images/emptyWishlist.png';

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     //alignContent: 'space-around',
     justifyContent: 'center',
-   //marginBottome: 30,
+   marginTop: 25,
     flex:4,
   },
   text: {

@@ -63,52 +63,88 @@ const SigninScreen = () => {
   const logInHandler = async ({ email, password }) => {
     axios.post(LogInAPI, { email, password })
       .then(async ({ data }) => {
-        const username = email; //setGeneric don't accept email only username
+        const username = email; //setGeneric doesn't accept email-only, only username
         if (enableTouch) {
           Keychain.setGenericPassword(username, password);
           console.log("email:", email);
           console.log("username:", username);
-        } 
-        let { user, token } = data
-        await logIn(user, token)
-        navigation.navigate('Home')
+        }
+        let { user, token } = data;
+        await logIn(user, token);
+        navigation.navigate('Home');
       })
       .catch((error) => {
-        console.log(error.request.status)
-        if(error.request.status==0 || error.request.status==422){
-        Alert.alert(
-              'Server Error',
-              'The server encountered an error. Please try again later.',
-              [
-                { text: 'OK' },
-              ],
+        if (error.response) {
+          // The request was made and the server responded with an error status code
+          const status = error.response.status;
+          if (status === 401) {
+            Alert.alert(
+              'Sign In Error',
+              'Your email or password is incorrect. Please try again.',
+              [{ text: 'OK' }],
               { cancelable: false }
             );
-            
-      }
-        else {
-          // Display an alert for other errors
+          }  else if (status === 404) {
+            Alert.alert(
+              'Sign In Error',
+              'The requested resource was not found. Please try again later.',
+              [{ text: 'OK' }],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert(
+              'Server Error',
+              'The server encountered an error. Please try again later.',
+              [{ text: 'OK' }],
+              { cancelable: false }
+            );
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log("error.request:",error.request.status);
+          Alert.alert(
+            'Server Error',
+            'The server encountered an error. Please try again later.',
+            [{ text: 'OK' }],
+            { cancelable: false }
+          );
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
           Alert.alert(
             'Sign In Error',
-            'Your email or password is incorrect. Please try again.',
-            [
-              { text: 'OK'},
-            ],
+            'An unexpected error occurred. Please try again later.',
+            [{ text: 'OK' }],
             { cancelable: false }
           );
         }
       });
-  }
+  };
 
   const handleTouchID = async () => {
-    //enableTouch=true;
+   // enableTouch=true;
+    console.log("welcome touch");
     await Keychain.getGenericPassword().then((credentials) => {
       const { username, password } = credentials;
+      if(!username){
+        return(
+          Alert.alert(
+            'Error in Touch ID',
+            'If the error persists, try to Sign In manually',
+            [
+              { text: 'Cancel', onPress: () => console.log('OK Pressed') },
+            ],
+            { cancelable: false }
+          )
+        )
+      }
       console.log("email after credentials:", username);
       console.log("password after credentials",password);
       TouchID.authenticate(`to login with email "${username}"`)
         .then(() => {
-          axios.post(LogInAPI, { username, password })
+          console.log("welcome ");
+          const email=username;         
+          axios.post(LogInAPI, { email, password })
             .then(async ({ data }) => {
               if (enableTouch) {
                 Keychain.setGenericPassword(username, password);
@@ -122,9 +158,9 @@ const SigninScreen = () => {
                 Keychain.resetGenericPassword();
                 Alert.alert(
                   'Invalid Credentials',
-                  '',
+                  'Please check your username and password.',
                   [
-                    { text: 'ok', onPress: () => console.log('OK Pressed') },
+                    { text: 'OK', onPress: () => Keychain.resetGenericPassword() },
                   ],
                   { cancelable: false }
                 );
@@ -134,10 +170,10 @@ const SigninScreen = () => {
         .catch((error) => {
           // Handle Touch ID authentication failure
           Alert.alert(
-            'Try Again',
-            'Login with your Touch ID',
+            'Touch ID Authentication Error',
+            'There was an error during Touch ID authentication. Please try again.',
             [
-              { text: 'Cancel', onPress: () => console.log('OK Pressed') },
+              { text: 'OK', onPress: () => console.log('OK Pressed') },
             ],
             { cancelable: false }
           );
@@ -146,10 +182,10 @@ const SigninScreen = () => {
       .catch((error) => {
         // Handle keychain error
         Alert.alert(
-          'Error in Touch ID',
-          'If the error persists, try to Sign In manually',
+          'Keychain Error',
+          'There was an error accessing the keychain. Please try again.',
           [
-            { text: 'Cancel', onPress: () => console.log('OK Pressed') },
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
           ],
           { cancelable: false }
         );
@@ -225,9 +261,6 @@ const SigninScreen = () => {
 
               <View style={styles.space} />
            
-
-
-
 
               <CustomButton text="Touch ID"
                 onPress={handleTouchID}
