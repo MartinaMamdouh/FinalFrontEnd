@@ -5,28 +5,10 @@ import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
 import WishlistStack from './WishlistStack';
 import AboutUsScreen from '../screens/AboutUsScreen';
-import { BackHandler } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const ButtomTabNav = () => {
-  const navigation = useNavigation();
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.goBack();
-      return true;
-    };
-  
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-  
-    return () => backHandler.remove();
-  }, []);
-
-  
     return (
 
         <Tab.Navigator
