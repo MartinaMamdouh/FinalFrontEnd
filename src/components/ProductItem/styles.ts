@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
       borderRadius: 10,// to make border sharper
       backgroundColor: '#fff',
       // marginVertical: 5,
+      // marginTop:1
 
    },
    random: {
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
       resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
       // width:150,
       // height:150,
+      marginTop:5
    },
    rightContainer: {
       padding: 10,// blank distance between text and image 
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
    leftContainer: {
       padding: 10,// blank distance between text and image 
       // width:'100%',
+      marginTop:5,
       flex: 8,
    },
    ButtonContainer: {
