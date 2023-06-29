@@ -82,6 +82,11 @@ const styles = StyleSheet.create({
    },
    heart: {
    },
+   sourceLogo: {
+      width: 90,
+      height: 90,
+      marginRight: 10,
+    },
 });
 
-export default styles; 
+export default styles;
