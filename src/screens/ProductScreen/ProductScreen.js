@@ -4,6 +4,9 @@ import Favorite from '../../components/Favorite/Favorite';
 import CustomButton from '../../components/CustomButton';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
+import sourceLogos from '../../../assets/images/source_logos';
+import { View } from 'react-native';
+
 const ProductScreen = (props) => {
   const [product, setProduct] = useState([]);
   const { myid } = props.route.params;
@@ -30,8 +33,16 @@ const ProductScreen = (props) => {
       <Text style={styles.description}>{product.name}</Text>
       <Image style={styles.image} source={{ uri: product.img_url }} />
       <Text style={styles.price}>Price: {product.price} EGP</Text>
+      <View style={styles.row}>
+      {sourceLogos[product.source] && (
+        <Image
+          style={styles.sourceLogo}
+          source={{ uri: sourceLogos[product.source] }}
+        />
+      )}
       <Favorite style={styles.heart} item={product.id} />
-      <CustomButton text={product.source} onPress={onLinkPressed} />
+      </View>
+      <CustomButton text={`Go to ${product.source}`} onPress={onLinkPressed} />
     </ScrollView>
   );
 }
@@ -48,7 +59,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 2,
     height: 200,
-    resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
+    resizeMode: 'contain',
   },
   description: {
     marginVertical: 10,
@@ -56,12 +67,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  heart: {
-    marginLeft: 100,
-  },
+  // heart: {
+  //   marginTop:100,
+  //   marginLeft: 90,
+  // },
   button: {
     marginBottom: 100,
     color: '#008080',
+  },
+  row:{
+    flexDirection: 'row',
+    marginHorizontal:10
   },
   backButton: {
     flexDirection: 'row',
@@ -76,5 +92,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 1,
   },
+  sourceLogo: {
+    width: 90,
+    height: 90,
+    marginRight: 10,
+  },
 });
+
 export default ProductScreen;

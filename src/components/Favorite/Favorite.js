@@ -58,7 +58,9 @@ const styles = StyleSheet.create({
         height: 40,
         resizeMode: 'cover',
         marginLeft: 10,
+        marginRight:10,
         marginBottom: 10,
+        marginTop:10
 
     },
 
