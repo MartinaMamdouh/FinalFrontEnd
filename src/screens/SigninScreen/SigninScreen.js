@@ -74,7 +74,8 @@ const SigninScreen = () => {
         navigation.navigate('Home')
       })
       .catch((error) => {
-        if(error.request){
+        console.log(error.request.status)
+        if(error.request.status==0 || error.request.status==422){
         Alert.alert(
               'Server Error',
               'The server encountered an error. Please try again later.',
@@ -83,6 +84,7 @@ const SigninScreen = () => {
               ],
               { cancelable: false }
             );
+            
       }
         else {
           // Display an alert for other errors

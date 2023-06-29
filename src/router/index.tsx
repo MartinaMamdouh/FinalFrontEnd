@@ -10,6 +10,7 @@ import { PRICE_SMART_JWT } from '../config';
 import axios from 'axios';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen/NewPasswordScreen';
+import CodeScreen from '../screens/CodeScreen/CodeScreen';
 const Root = createStackNavigator();
 const Router = () => {
   const [authToken, setAuthToken] = useState();
@@ -36,6 +37,7 @@ const Router = () => {
         <Root.Screen component={SignUpScreen} name="Signup" />
         <Root.Screen component={TouchIDScreen} name="touchID" />
         <Root.Screen name="forgotpassword" component={ForgotPasswordScreen} />
+        <Root.Screen name="CodeScreen" component={CodeScreen} />
             <Root.Screen name="newpassword" component={NewPasswordScreen} />
       </Root.Navigator>
     </NavigationContainer>
