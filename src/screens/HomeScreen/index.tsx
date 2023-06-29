@@ -20,7 +20,7 @@ const HomeScreen_API = () => {
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
    const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
-
+   console.log("totalPages",totalPages);
    const handleBackPress = () => {
       Alert.alert(
          'Exit',
@@ -255,6 +255,7 @@ const HomeScreen_API = () => {
                                  >
                                     <Text style={styles.text}>Prev</Text>
                                  </TouchableOpacity>
+                                 <Text style={styles.curPage}>{currentPage} / {totalPages} </Text>
                                  <TouchableOpacity
                                     style={styles.button}
                                     onPress={onNextClick}
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
    button: {
       backgroundColor: '#b2d8d8',
       padding: 8,
-      marginHorizontal: 130,
+      marginHorizontal: 110,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: "#008080",
@@ -397,7 +398,11 @@ const styles = StyleSheet.create({
       color: "#008080",
       fontSize: 15,
    },
-
+   curPage:{
+      fontSize:17,
+      fontWeight:'bold',
+      color:'#008080',
+   },
    //sort
    sortButton: {
       paddingHorizontal: 10,
