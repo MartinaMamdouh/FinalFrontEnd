@@ -6,7 +6,26 @@ import ax from '../../../assets/images/axios-net.png';
 import { useNavigation } from '@react-navigation/native';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import axios from 'axios';
+let currentScreen = '';
+const handleBackPress = () => {
+   if(currentScreen==='Home'){
+   Alert.alert(
+      'Exit',
+      'Do you want to exit the app?',
+      [
+         { text: 'Yes', onPress: () => BackHandler.exitApp() },
+         { text: 'No', onPress: () => console.log('NO Pressed') }
+      ],
+      { cancelable: false }
+   );
+   return true; // Return true to enable back button override
+}
+return false;
+};
+BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
 const HomeScreen_API = () => {
+   currentScreen='Home';
    let pageNumberLimit = 10;
    const flatListRef = useRef();
    const [currentPage, setCurrentPage] = useState(1);
@@ -20,21 +39,6 @@ const HomeScreen_API = () => {
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
    const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
-   console.log("totalPages",totalPages);
-   const handleBackPress = () => {
-      Alert.alert(
-         'Exit',
-         'Do you want to exit the app?',
-         [
-            { text: 'Yes', onPress: () => BackHandler.exitApp() },
-            { text: 'No', onPress: () => console.log('NO Pressed') }
-         ],
-         { cancelable: false }
-      );
-      return true; // Return true to enable back button override
-   };
-   BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
