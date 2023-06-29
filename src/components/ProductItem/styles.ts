@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
       borderColor: '#d1d1d1',
       borderRadius: 10,// to make border sharper
       backgroundColor: '#fff',
-      marginVertical: 5,
+      // marginVertical: 5,
 
    },
    random: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
    Container: {
       flexDirection: 'row',
       alignItems: 'flex-start',
-      marginVertical: 5,
+      // marginVertical: 5,
       marginHorizontal:10,
    },
    starImgStyle: {
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
    price: {
       fontSize: 18,
       fontWeight: 'bold',
+      marginTop:30,
    },
    heart: {
    },

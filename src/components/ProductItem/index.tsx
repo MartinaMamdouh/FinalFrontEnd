@@ -72,7 +72,7 @@ const ProductItem = (props: ProductItemProps) => {
         <Favorite item={item.id} />
       </Pressable>
       <View style={styles.Container}>
-        <View >
+       
           {sourceLogos[item.source] && (
             <Image
               style={styles.sourceLogo}
@@ -80,9 +80,9 @@ const ProductItem = (props: ProductItemProps) => {
             />
           )}
           <Text style={styles.price}>
-            {item.source.charAt(0).toUpperCase() + item.source.slice(1)}: {item.price} EGP
+              {item.price} EGP
           </Text>
-        </View>
+        
         <HomeButton text=" Shop now " onPress={handlePress} />
       </View>
       <View></View>
