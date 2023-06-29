@@ -5,21 +5,19 @@
  * @format
  * @flow strict-local
  */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {StatusBar, StyleSheet, useColorScheme, View,} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Router from './src/router';
 import SplashScreen from 'react-native-splash-screen';
-import UserAuthContextProvider, { UserAuthContext } from './src/context/UserAuthContext';
+import UserAuthContextProvider from './src/context/UserAuthContext';
 import axios from 'axios';
 import {API_URL} from '@env';
-import AsyncStorage from '@react-native-community/async-storage';
-import { PRICE_SMART_JWT } from './src/config';
+import { LogBox } from 'react-native';
 
 const App=() => {
   const isDarkMode = useColorScheme()==='dark';
-  // const [ready, setReady] = useState();
-  const [initialRouteName, setInitialRouterName] = useState();
+  LogBox.ignoreAllLogs();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

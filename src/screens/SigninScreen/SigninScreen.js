@@ -63,40 +63,63 @@ const SigninScreen = () => {
   const logInHandler = async ({ email, password }) => {
     axios.post(LogInAPI, { email, password })
       .then(async ({ data }) => {
-        const username = email; //setGeneric don't accept email only username
+        const username = email; //setGeneric doesn't accept email-only, only username
         if (enableTouch) {
           Keychain.setGenericPassword(username, password);
           console.log("email:", email);
           console.log("username:", username);
-        } 
-        let { user, token } = data
-        await logIn(user, token)
-        navigation.navigate('Home')
+        }
+        let { user, token } = data;
+        await logIn(user, token);
+        navigation.navigate('Home');
       })
       .catch((error) => {
-        if(error.request){
-        Alert.alert(
-              'Server Error',
-              'The server encountered an error. Please try again later.',
-              [
-                { text: 'OK' },
-              ],
+        if (error.response) {
+          // The request was made and the server responded with an error status code
+          const status = error.response.status;
+          if (status === 401) {
+            Alert.alert(
+              'Sign In Error',
+              'Your email or password is incorrect. Please try again.',
+              [{ text: 'OK' }],
               { cancelable: false }
             );
-      }
-        else {
-          // Display an alert for other errors
+          }  else if (status === 404) {
+            Alert.alert(
+              'Sign In Error',
+              'The requested resource was not found. Please try again later.',
+              [{ text: 'OK' }],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert(
+              'Server Error',
+              'The server encountered an error. Please try again later.',
+              [{ text: 'OK' }],
+              { cancelable: false }
+            );
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log("error.request:",error.request.status);
+          Alert.alert(
+            'Server Error',
+            'The server encountered an error. Please try again later.',
+            [{ text: 'OK' }],
+            { cancelable: false }
+          );
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
           Alert.alert(
             'Sign In Error',
-            'Your email or password is incorrect. Please try again.',
-            [
-              { text: 'OK'},
-            ],
+            'An unexpected error occurred. Please try again later.',
+            [{ text: 'OK' }],
             { cancelable: false }
           );
         }
       });
-  }
+  };
 
   const handleTouchID = async () => {
    // enableTouch=true;
