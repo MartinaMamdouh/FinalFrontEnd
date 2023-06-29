@@ -268,13 +268,6 @@ const HomeScreen_API = () => {
                      )}
                   />
                )}
-               <Text>                      </Text>
-               <Text>                      </Text>
-               <Text>                      </Text>
-               <Text>                      </Text>
-               <Text>                      </Text>
-               <Text>                      </Text>
-               <Text>                      </Text>
             </View>
          </View>
       </View>
@@ -389,12 +382,13 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 5,
+      marginBottom:135,
       zIndex: 1,
    },
    button: {
       backgroundColor: '#b2d8d8',
       padding: 8,
-      marginHorizontal: 145,
+      marginHorizontal: 130,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: "#008080",
