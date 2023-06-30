@@ -17,6 +17,7 @@ import axios from 'axios';
 const AfterSearchScreen = ({ route }) => {
   //const flatListRef = useRef();
   const flatListRef = useRef(null);
+  const [sortOptionLabel, setSortOptionLabel] = useState('Sort By');
 
   const navigation = useNavigation();
   const { searchValue } = route.params;
@@ -134,25 +135,37 @@ const AfterSearchScreen = ({ route }) => {
   };
 
   const handleSortBy = (sortOption) => {
-    setSortBy(sortOption);
-    setIsDropdownOpen(false);
     let sortColumn = '';
       let sortOrder = '';
+      let label = '';
+      
+
 
       if (sortOption === 'price_asc') {
          sortColumn = 'price';
          sortOrder = 'asc';
+         label  = 'Sorting by Price: Low to high';
+
       } else if (sortOption === 'price_desc') {
          sortColumn = 'price';
          sortOrder = 'desc';
+         label  = 'Sorting by Price: High to low';
+
       } else if (sortOption === 'rating_asc') {
          sortColumn = 'rating';
          sortOrder = 'asc';
+         label  = 'Sorting by Rating: Low to high';
+
       } else if (sortOption === 'rating_desc') {
          sortColumn = 'rating';
          sortOrder = 'desc';
-      }
+         label  = 'Sorting by Rating: High to low';
 
+      }
+      setSortBy(sortOption);
+      setIsDropdownOpen(false);
+      setCurrentPage(1);
+      setSortOptionLabel(label);
       axios
          .get('/products', {
             params: {
@@ -194,7 +207,7 @@ const AfterSearchScreen = ({ route }) => {
 
       <View style={styles.pageContent}>
         <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-          <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
+        <Text style={styles.dropdownButtonText}>{sortOptionLabel}</Text>
           <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
         </TouchableOpacity>
         {isDropdownOpen && (
@@ -324,31 +337,43 @@ const styles = StyleSheet.create({
   },
   activeSortButton: {
     backgroundColor: '#ccc',
+    
+
   },
   sortButtonText: {
-    fontSize: 14,
+    fontSize: 16,
   },
 
   dropdownButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 10,
-    backgroundColor: '#e0e0e0',
-    marginBottom: 5,
-    marginRight: 260,
-  },
-  dropdownButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  dropdownButtonArrow: {
-    fontSize: 18,
+    paddingHorizontal: 20,
+    backgroundColor: '#009999',
+    width: '100%',
+    
+ },
+ dropdownButtonText: {
+ fontSize: 16,
+ fontWeight: 'bold',
+ marginRight: 10,
+ color: 'black',
+ },
+ dropdownButtonArrow: {
+  fontSize: 18,
+  color: 'white',
+  
   },
   dropdownContainer: {
-    backgroundColor: '#e0e0e0',
-    maxHeight: 150,
+
+     backgroundColor: '#e0ffff',
+     position: 'absolute',
+     top: 55,
+     left: 0,
+     right: 0,
+     zIndex: 2,
+     
   },
   container: {
     flex: 1,

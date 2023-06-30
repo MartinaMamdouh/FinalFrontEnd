@@ -16,6 +16,7 @@ const HomeScreen_API = () => {
 // console.log(userData);
   
    const [term, setTerm] = useState('');
+   const [sortOptionLabel, setSortOptionLabel] = useState('Sort By');
 
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
@@ -64,19 +65,7 @@ const HomeScreen_API = () => {
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
          setLoading(false);
-         let sortedProducts = response.data;
-
-         if (sortBy === 'price_asc') {
-           sortedProducts = sortedProducts.sort((a, b) => a.price - b.price);
-         } else if (sortBy === 'price_desc') {
-           sortedProducts = sortedProducts.sort((a, b) => b.price - a.price);
-         } else if (sortBy === 'rating_asc') {
-           sortedProducts = sortedProducts.sort((a, b) => a.rating - b.rating);
-         } else if (sortBy === 'rating_desc') {
-           sortedProducts = sortedProducts.sort((a, b) => b.rating - a.rating);
-         }
- 
-         setProducts(sortedProducts);
+        
       }).catch(error => {
          console.error(error);
       });
@@ -96,26 +85,37 @@ const HomeScreen_API = () => {
       }
    };
    const handleSortBy = (sortOption) => {
-      setSortBy(sortOption);
-      setIsDropdownOpen(false);
-            
       let sortColumn = '';
       let sortOrder = '';
+      let label = '';
+      
+
 
       if (sortOption === 'price_asc') {
          sortColumn = 'price';
          sortOrder = 'asc';
+         label  = 'Sorting by Price: Low to high';
+
       } else if (sortOption === 'price_desc') {
          sortColumn = 'price';
          sortOrder = 'desc';
+         label  = 'Sorting by Price: High to low';
+
       } else if (sortOption === 'rating_asc') {
          sortColumn = 'rating';
          sortOrder = 'asc';
+         label  = 'Sorting by Rating: Low to high';
+
       } else if (sortOption === 'rating_desc') {
          sortColumn = 'rating';
          sortOrder = 'desc';
-      }
+         label  = 'Sorting by Rating: High to low';
 
+      }
+      setSortBy(sortOption);
+      setIsDropdownOpen(false);
+      setCurrentPage(1);
+      setSortOptionLabel(label);
       axios
          .get('/products', {
             params: {
@@ -147,13 +147,13 @@ const HomeScreen_API = () => {
       <View style={styles.page}>
          <View style={styles.pageContent}>
          <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
+         <Text style={styles.dropdownButtonText}>{sortOptionLabel}</Text>
         <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
       </TouchableOpacity>
       {isDropdownOpen && (
         <ScrollView style={styles.dropdownContainer}>
           <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
+            style={[styles.sortButton, isSortActive('price') && styles.activeSortButton]}
             onPress={() => handleSortBy('price_asc')}
           >
             <Text style={styles.sortButtonText}>Price (Low to High)</Text>
@@ -322,34 +322,44 @@ sortButton: {
    borderRadius: 5,
    borderWidth: 1,
    borderColor: '#ccc',
+   textcolor: 'white',
  },
 activeSortButton: {
-backgroundColor: '#ccc',
+backgroundColor: '#fff',
 },
 sortButtonText: {
-fontSize: 14,
+fontSize: 16,
+textcolor: '#fff',
 },
 
 dropdownButton: {
-flexDirection: 'row',
-alignItems: 'center',
-justifyContent: 'center',
-paddingVertical: 10,
-backgroundColor: '#e0e0e0',
-marginBottom: 10,
-marginRight:260,
+   flexDirection: 'row',
+   alignItems: 'center',
+   justifyContent: 'space-between',
+   paddingVertical: 10,
+   paddingHorizontal: 20,
+   backgroundColor: '#009999',
+   width: '100%',
+   
 },
 dropdownButtonText: {
 fontSize: 16,
 fontWeight: 'bold',
 marginRight: 10,
+color: 'black',
 },
 dropdownButtonArrow: {
 fontSize: 18,
+color: 'white',
+
 },
 dropdownContainer: {
-backgroundColor: '#e0e0e0',
-maxHeight: 150,
+   backgroundColor: '#e0ffff',
+   position: 'absolute',
+   top: 55,
+   left: 0,
+   right: 0,
+   zIndex: 2,
 },
 });
 export default HomeScreen_API; 
