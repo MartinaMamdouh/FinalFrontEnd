@@ -437,23 +437,6 @@ const styles = StyleSheet.create({
       alignSelf:'center',
       marginTop:20,
    },
-   //sort
-   sortButton: {
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: '#ccc',
-   },
-   activeSortButton: {
-      backgroundColor: '#ccc',
-   },
-   nodata:{
-      color: "#008080",
-      fontSize: 20,
-      alignSelf:'center',
-      marginTop:20,
-   },
   
 //sort
 sortButton: {
@@ -479,7 +462,9 @@ dropdownButton: {
    paddingVertical: 10,
    paddingHorizontal: 20,
    backgroundColor: '#b3cccc',
-   width: '100%',
+   width: '45%',
+   marginBottom:3,
+   marginRight:225,
    
 },
 dropdownButtonText: {
@@ -494,7 +479,7 @@ color: '#476b6b',
 
 },
 dropdownContainer: {
-   backgroundColor: '#e0ffff',
+   backgroundColor: '#e6ffff',
    position: 'absolute',
    top: 55,
    left: 0,
