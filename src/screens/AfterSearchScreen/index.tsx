@@ -22,6 +22,7 @@ const AfterSearchScreen = ({route}) => {
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
   //  const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
+   const [nodata, setNoData] = useState(false);
    let pageNumberLimit = 10;
 
   const [postCompleted, setPostCompleted] = useState(false);
@@ -89,6 +90,10 @@ const AfterSearchScreen = ({route}) => {
           flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
           setButton(false);
         }
+        if(response.data.length === 0) {
+         setNoData(true);
+         setShowButtons(false);
+      }
       }).catch(error => {
          console.error(error);
          setHasInternetConnection(false);
@@ -215,12 +220,10 @@ const AfterSearchScreen = ({route}) => {
       {hasInternetConnection && (
        <FlatList
           ref={flatListRef}
-          data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
+          data={products} ListEmptyComponent={() => (
+            nodata ? <Text style={styles.nodata}>No data available</Text> : <ActivityIndicator size="large" />
+          )}
           renderItem={({ item }) => <ProductItem item={item} />}
-          // keyExtractor={({ id }) => id}
-          // onEndReached={loadMoreItems}
-          // onEndReachedThreshold={0.5}
-          // mafeesh scroll indicator
           showsVerticalScrollIndicator={false}
 
           ListFooterComponent={() => (
@@ -306,6 +309,12 @@ const styles = StyleSheet.create({
        alignItems: 'center',
        flexDirection: 'row',
     },
+    nodata:{
+      color: "#008080",
+      fontSize: 20,
+      alignSelf:'center',
+      marginTop:20,
+   },
 
    //////pagination 
    pageNumbers: {
