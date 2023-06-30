@@ -39,6 +39,7 @@ const HomeScreen_API = () => {
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
    const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
+   const [nodata, setNoData] = useState(false);
 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
@@ -87,6 +88,10 @@ const HomeScreen_API = () => {
          if (button) {
             flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
             setButton(false);
+         }
+         if(response.data.length === 0) {
+            setNoData(true);
+            setShowButtons(false);
          }
       }).catch(error => {
          console.error(error);
@@ -244,8 +249,10 @@ const HomeScreen_API = () => {
                {hasInternetConnection && (
                   <FlatList
                      ref={flatListRef}
-                     data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
-                     renderItem={({ item }) => <ProductItem item={item} />}
+                     data={products} ListEmptyComponent={() => (
+                        nodata ? <Text style={styles.nodata}>No data available</Text> : <ActivityIndicator size="large" />
+                      )}
+                      renderItem={({ item }) => <ProductItem item={item} />}
                      showsVerticalScrollIndicator={true}
 
                      ListFooterComponent={() => (
@@ -259,6 +266,7 @@ const HomeScreen_API = () => {
                                  >
                                     <Text style={styles.text}>Prev</Text>
                                  </TouchableOpacity>
+                                 <Text style={styles.curPage}>{currentPage} / {totalPages} </Text>
                                  <TouchableOpacity
                                     style={styles.button}
                                     onPress={onNextClick}
@@ -271,7 +279,8 @@ const HomeScreen_API = () => {
                         </View>
                      )}
                   />
-               )}
+               )
+               }
             </View>
          </View>
       </View>
@@ -392,7 +401,7 @@ const styles = StyleSheet.create({
    button: {
       backgroundColor: '#b2d8d8',
       padding: 8,
-      marginHorizontal: 130,
+      marginHorizontal: 110,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: "#008080",
@@ -401,7 +410,17 @@ const styles = StyleSheet.create({
       color: "#008080",
       fontSize: 15,
    },
-
+   curPage:{
+      fontSize:17,
+      fontWeight:'bold',
+      color:'#008080',
+   },
+   nodata:{
+      color: "#008080",
+      fontSize: 20,
+      alignSelf:'center',
+      marginTop:20,
+   },
    //sort
    sortButton: {
       paddingHorizontal: 10,

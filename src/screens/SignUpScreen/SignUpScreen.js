@@ -51,7 +51,16 @@ const SignUpScreen = () => {
     const payload = { user: { ...values } };
     delete payload.user.confirmPassword;
     axios.post(CreateUserAPI, payload)
-    .then(navigation.navigate('Signin'))
+    .then((response) => {
+      Alert.alert(
+        'Account created successfully',
+        '',
+        [
+          { text: 'OK', onPress: () => navigation.navigate('Signin') },
+        ],
+        { cancelable: false }
+      );
+    })
     .catch((error) => {
       if(error.request){
         Alert.alert(
