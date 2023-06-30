@@ -75,17 +75,7 @@ const HomeScreen_API = () => {
          setProducts(response.data);
          setTotalPages(response.data.totalPages);
          setHasInternetConnection(true);
-         let sortedProducts = response.data;
-         if (sortBy === 'price_asc') {
-            sortedProducts = sortedProducts.sort((a, b) => a.price - b.price);
-         } else if (sortBy === 'price_desc') {
-            sortedProducts = sortedProducts.sort((a, b) => b.price - a.price);
-         } else if (sortBy === 'rating_asc') {
-            sortedProducts = sortedProducts.sort((a, b) => a.rating - b.rating);
-         } else if (sortBy === 'rating_desc') {
-            sortedProducts = sortedProducts.sort((a, b) => b.rating - a.rating);
-         }
-         setProducts(sortedProducts);
+         
          setShowButtons(true);
          if (button) {
             flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
