@@ -376,7 +376,7 @@ dropdownButton: {
   paddingVertical: 10,
   paddingHorizontal: 20,
   backgroundColor: '#b3cccc',
-  width: '45%',
+  width: '48%',
   marginBottom:3,
 
 },
@@ -400,7 +400,7 @@ dropdownContainer: {
    right: 0,
    zIndex: 2,
    marginLeft:10,
-   marginRight:225,
+   marginRight:215,
 
 },
 container: {

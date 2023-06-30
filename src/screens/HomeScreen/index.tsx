@@ -462,7 +462,7 @@ dropdownButton: {
    paddingVertical: 10,
    paddingHorizontal: 20,
    backgroundColor: '#b3cccc',
-   width: '45%',
+   width: '48%',
    marginBottom:3,
    marginRight:225,
    
@@ -485,6 +485,7 @@ dropdownContainer: {
    left: 0,
    right: 0,
    zIndex: 2,
+   marginRight:203,
 },
 });
 export default HomeScreen_API; 
