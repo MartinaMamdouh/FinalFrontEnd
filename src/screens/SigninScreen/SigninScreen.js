@@ -110,7 +110,6 @@ const SigninScreen = () => {
           );
         } else {
           // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
           Alert.alert(
             'Sign In Error',
             'An unexpected error occurred. Please try again later.',

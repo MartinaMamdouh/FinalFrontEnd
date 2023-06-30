@@ -83,7 +83,7 @@ const ProductItem = (props: ProductItemProps) => {
               {item.price} EGP
           </Text>
         
-        <HomeButton text=" Shop now " onPress={handlePress} />
+        <HomeButton text=" Shop " onPress={handlePress} />
       </View>
       <View></View>
     </View>
