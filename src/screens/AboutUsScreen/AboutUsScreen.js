@@ -30,7 +30,7 @@ const About = () => {
         </Text>
       </View>
 
-      <Text style={styles.mainHeader}> Follow me on Social Network </Text>
+      <Text style={styles.mainHeader}> Follow us on Social Network </Text>
 
       <View style={styles.menuContainer}>
         <TouchableOpacity

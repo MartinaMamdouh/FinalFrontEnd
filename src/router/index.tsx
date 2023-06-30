@@ -11,6 +11,7 @@ import axios from 'axios';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen/NewPasswordScreen';
 import CodeScreen from '../screens/CodeScreen/CodeScreen';
+
 const Root = createStackNavigator();
 const Router = () => {
   const [authToken, setAuthToken] = useState();

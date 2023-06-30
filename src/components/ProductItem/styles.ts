@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
       //backgroundColor: "#009688",
       //borderRadius: 10,
       paddingVertical: 5,
-      paddingHorizontal: 20,
+      paddingHorizontal: 30,
       //justifyContent:'space-evenly',
       
     },
