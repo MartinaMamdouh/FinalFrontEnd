@@ -1,58 +1,209 @@
 import React,{useState} from 'react';
-import { View, Text ,Image ,StyleSheet,useWindowDimensions,ScrollView} from 'react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
-import SocialSigninButtons from '../../components/SocialSigninButtons';
+import { Alert,Image,View, Text, TextInput,StyleSheet,TouchableOpacity,ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import Feather from 'react-native-vector-icons/Feather';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
+
+const SignupSchema = Yup.object().shape({
+  email: Yup.string()
+  .email('Invalid email')
+  .required('Enter your email address'),
+
+});
 
 const ForgotPasswordScreen = () =>{
-    const [username, setUsername] = useState('');
     const navigation=useNavigation();
 
-    const onSendPressed = () => {
-        navigation.navigate('newpassword');
-    }
-    
-    const onSignInPress = () => {
-        navigation.navigate('SignIn');
+    const [email, setEmail] = useState('');
+
+  const onSubmit = (values) => {
+    const data = {
+      email: values.email
+    };
+  
+    axios.post('/passwords/forgot', data)
+      .then((response) => {
+        navigation.navigate('CodeScreen',values.email);
+      
+      })
+      .catch((error) => {
+        if(error.request.status==404){
+           Alert.alert(
+            'Error',
+            'Your email is incorrect. Please try again.',
+            [
+              { text: 'OK'},
+            ],
+            { cancelable: false }
+          );
+              }
+                else {
+
+                Alert.alert(
+                  'Server Error',
+                  'The server encountered an error. Please try again later.',
+                  [
+                    { text: 'OK' },
+                  ],
+                  { cancelable: false }
+                );
+                 
+                }
+      
+      })
+  };
+    const onBackPress = () => {
+        navigation.navigate('Signin');
 
     }
+
     
     
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.root}>
-        <Text style={styles.title}>Reset Password</Text>
-        <CustomInput placeholder="Username" value={username} setValue={setUsername}/>
+      <Formik initialValues={{
+        email: ''
+      }}
+  
+        validationSchema={SignupSchema}
+        onSubmit={values => onSubmit(values)}
+  
+      >
+        {({ values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit }) => (
+  
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.root}>
+       
+              <Text style={styles.title}>Forgot Password? </Text>
 
-        <CustomButton text="Send" onPress={onSendPressed}/>
-        <CustomButton text="Back to Sign in" onPress={onSignInPress} type="TERTIARY"/>    
-        </View>
-        </ScrollView>
+  
+              <View  style={styles.container}>
+              <TextInput 
+              placeholder="Email"  
+              onChangeText={handleChange('email')}
+              value={values.email}
+              onBlur={()=> setFieldTouched('email')}
+  
+              />   
+          {touched.email && errors.email && (<Text style={styles.errorTxt}>{errors.email}</Text>)}
+  
+          </View>
+
+  
+              <View style={styles.row}>
+              <TouchableOpacity
+                  onPress={handleSubmit}
+                  disabled={!isValid}
+                  style={[styles.submitBtn,{backgroundColor: isValid ? '#395B64' :'#A5C9CA'},
+
+    ]}> 
+
+    <Text style={styles.submitBtnTxt}>Send</Text>
+                </TouchableOpacity>
+                <View style={styles.space} />
+  
+  
+                <View style={styles.space} />
+  
+              </View>
+              <TouchableOpacity
+                   style={styles.bttn}
+                   onPress={onBackPress}
+                > 
+                  <Feather
+                name="arrow-left"
+                size={25}
+                color="white"
+              />
+                   <Text style= {styles.txt}>Back</Text>
+                
+                </TouchableOpacity>
+
+  
+            </View>
+  
+          </ScrollView>
+        )}
+      </Formik>
     
     );
    };
 
-
-const styles = StyleSheet.create({
+   const styles =StyleSheet.create({
     root:{
-alignItems: 'center',
- padding: 20,
+    
+        alignItems:'center',
+        padding:20,
+    },
+    container:{
+    
+      backgroundColor:'#FFFFFF',
+      width:'100%',
+      borderColor:'#e8e8e8',
+      borderEndWidth:1,
+      borderRadius:5,
+      paddingHorizontal:10,
+      marginVertical:5,
+    },
+    title:{
+    
+    fontSize:26,
+    fontweight:'bold',
+    color:'#051C60',
+    margin:10,
+    marginTop:40,
+  marginBottom:50,
+    
+    },
+  
+    link:{
+    
+    color:'#FDB075',
+    
+    },
+    
+    errorTxt :{
+        color: '#FF0000',
+        
+      },
+      submitBtn:{
+        padding:10,
+        borderRadius:15,
+        justifyContent:'center',
+        marginTop:20,
+    
+      },
+      submitBtnTxt:{
+        color:'#fff',
+        textAlign:'center',
+        fontSize:18,
+        fontWeight:'700',
+    
+      },
+    
+      bttn: {
+  backgroundColor: 'gray',
+  padding: 8,
+  borderRadius: 10,
+  flexDirection:'row',
+  alignSelf: 'flex-start',
+  marginTop:250,
 },
- title: {
-fontSize: 24,
-fontWeight: 'bold',
- color: '#051C60',
-  margin: 10,
+txt: {
+  color:"white",
+  fontSize: 18,
 },
-text:{
-color: 'gray',
-marginVertical: 10,
+row: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 10,
+  borderRadius: 10,
+  marginVertical: 10,
 },
+      
+    });
 
-link: {
-color: '#FDB075',
-},
-});
 export default ForgotPasswordScreen;

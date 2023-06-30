@@ -3,11 +3,10 @@ import { View, Text, Image, Pressable, Linking, SafeAreaView } from 'react-nativ
 import styles from './styles';
 import Favorite from '../Favorite';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Button from '../Button/Button';
 import HomeButton from '../HomeButton/HomeButton';
 import { useNavigation } from '@react-navigation/native';
-import connection from '../../router/connection';
 import axios from 'axios';
+import sourceLogos from '../../../assets/images/source_logos';
 
 //INTERFACE FOR HOW OUR OB JECT LOOKS
 //? for optional properties
@@ -31,8 +30,8 @@ const ProductItem = (props: ProductItemProps) => {
   const navigation = useNavigation();
 
   const onPress = () => {
-
     navigation.navigate('ProductScreen', { myid: item.id });
+    console.log(typeof navigation, navigation);
     axios.post('/histories', { product_id: item.id })
       .then(response => console.log(response))
       .catch(error => console.log(error))
@@ -42,6 +41,7 @@ const ProductItem = (props: ProductItemProps) => {
     const url = item.link;
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
+
   const { item } = props;
 
   return (
@@ -67,19 +67,26 @@ const ProductItem = (props: ProductItemProps) => {
             )
             }
             <Text>{item.reviews_count}</Text>
-
           </View>
         </View>
         <Favorite item={item.id} />
       </Pressable>
       <View style={styles.Container}>
-        <Text style={[styles.leftContainer, styles.price]}>{item.source.charAt(0).toUpperCase() + item.source.slice(1)}:  {item.price} EGP</Text>
-        <HomeButton text=" Shop now "
-          onPress={handlePress}></HomeButton>
+       
+          {sourceLogos[item.source] && (
+            <Image
+              style={styles.sourceLogo}
+              source={{ uri: sourceLogos[item.source] }}
+            />
+          )}
+          <Text style={styles.price}>
+              {item.price} EGP
+          </Text>
+        
+        <HomeButton text=" Shop now " onPress={handlePress} />
       </View>
-      <View>
-      </View>
-    </View >
+      <View></View>
+    </View>
   );
 };
 

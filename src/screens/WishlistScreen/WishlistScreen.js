@@ -1,53 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect , useCallback} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
-import connection from '../../router/connection';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-
-const WishlistScreen = ({navigation}) => {
+import emptyWishlist from '../../../assets/images/emptyWishlist.png';
+const WishlistScreen = ({ navigation }) => {
+    const [netErr, setNetERR] = useState(false)
 
     const [productInfo, setProductInfo] = useState([]);
-useFocusEffect(
-    React.useCallback(() => {
-        axios.get('/favorites')
-            .then((response) => {
-                const productIds = response.data.map((row) => row.product_id);
-                console.log(productIds);
-                //Get product names and links from products table
-                axios.get('/products', {
-                    params: {
-                        per_page: 1000,
-                    },
-                })
-                    .then((response) => {
-                        const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
-                            id: row.id,
-                            name: row.name,
-                            image: row.img_url,
-                            price: row.price,
-                        }));
-                        const sortedProductInfo = productIds.map((id) =>
-                            productInfo.find((info) => info.id === id)
-                        );
-                        //Sort new array by order of productIds
-                        sortedProductInfo.sort((a, b) =>
-                            productIds.indexOf(b.id) - productIds.indexOf(a.id)
-                        );
-                        // Step 3: Do something with the sorted product info
-                        setProductInfo(sortedProductInfo);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            axios.get('/favorites')
+                .then((response) => {
+                    const productIds = response.data.map((row) => row.product_id);
+                    console.log(productIds);
+                    //Get product names and links from products table
+                    axios.get('/products', {
+                        params: {
+                            per_page: 1000,
+                        },
                     })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                        .then((response) => {
+                            const productInfo = response.data.filter(row => productIds.includes(row.id)).map((row) => ({
+                                id: row.id,
+                                name: row.name,
+                                image: row.img_url,
+                                price: row.price,
+                            }));
+                            const sortedProductInfo = productIds.map((id) =>
+                                productInfo.find((info) => info.id === id)
+                            );
+                            //Sort new array by order of productIds
+                            sortedProductInfo.sort((a, b) =>
+                                productIds.indexOf(b.id) - productIds.indexOf(a.id)
+                            );
+                            // Step 3: Do something with the sorted product info
+                            setProductInfo(sortedProductInfo);
+                        
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
 
-    }, [navigation])
-)
+                        setNetERR(false)
+                })
+                .catch((error) => {
+                    if (error.request) {
+                        setNetERR(true)
+                      }
+                });
+
+        }, [navigation])
+    );
+
+    
+    // useEffect(() => {
+    //     //Show "no wishlist" message after 10 seconds if productInfo is still empty
+    //     if (productInfo.length === 0 && netErr===0) {
+    //         const timer = setTimeout(() => {
+    //             setShowMessage(true);
+            
+    //         }, 1000);
+    //         return () => clearTimeout(timer);
+    //     }
+    // }, [productInfo]);
+
+        if(netErr){
+            return (
+                <View>
+                <Text style={styles.network} >Please check your internet connection</Text>
+            </View> 
+            );
+    
+        }
+
+   else if (productInfo.length === 0) {
+        return (
+            <View style={styles.empty}>
+                <Image source={emptyWishlist} />
+            </View> 
+        );
+    }
+
+
     const onPress = (itemID) => {
         axios.post('/histories', { product_id: itemID })
             .then(response => console.log(response))
@@ -57,7 +93,7 @@ useFocusEffect(
 
     return (
         <ScrollView>
-            <Text/>
+            <Text />
             {productInfo.map((product) => (
                 <Pressable onPress={() => onPress(product.id)} >
                     <View style={styles.root} key={product.id}>
@@ -84,7 +120,9 @@ useFocusEffect(
 
 
     );
+
 };
+
 
 const styles = StyleSheet.create({
     raw: {
@@ -142,6 +180,17 @@ const styles = StyleSheet.create({
         flex: 2,
         marginLeft: 30,
         resizeMode: 'contain',
+    },
+    empty: {
+        flex: 1,
+        marginTop: 50,
+        alignSelf:"center",
+    },
+    network:{
+        fontSize: 17,
+       alignSelf:"center",
+        fontWeight: "normal",
+        marginTop: 245,
     },
 })
 export default WishlistScreen;

@@ -11,7 +11,7 @@ const AfterSearchScreen = ({route}) => {
    const navigation = useNavigation();
    const { searchValue } = route.params;
    const [currentPage, setCurrentPage] = useState(1);
-   const [loading, setLoading] = useState(false);
+  //  const [loading, setLoading] = useState(false);
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
@@ -20,8 +20,9 @@ const AfterSearchScreen = ({route}) => {
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const [showButtons, setShowButtons] = useState(false);
    const [hasInternetConnection, setHasInternetConnection] = useState(true);
-   const [reload, setReload] = useState(false);
+  //  const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
+   const [nodata, setNoData] = useState(false);
    let pageNumberLimit = 10;
 
   const [postCompleted, setPostCompleted] = useState(false);
@@ -45,7 +46,7 @@ const AfterSearchScreen = ({route}) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    //setLoading(true);
     axios.post('/products', { search_key: searchValue })
       .then(response => {console.log(response)
                         setPostCompleted(true); })
@@ -56,17 +57,20 @@ const AfterSearchScreen = ({route}) => {
   
   const fetchData= useCallback(() => {
       if (postCompleted) {
-      setLoading(true)
+      // setLoading(true)
       axios.get('/products',{
          params: {
            page: currentPage,
            per_page: 10,
            'filter[name_i_cont]': searchValue,
+           sort_column: sortBy === 'price_asc' || sortBy === 'price_desc' ? 'price' : 'rating',
+            sort_order: sortBy.includes('asc') ? 'asc' : 'desc',
+
          },}).then(response => {
          setProducts(response.data);
-         console.log("getting data")
+         //console.log("getting data")
          setTotalPages(response.data.totalPages);
-         setLoading(false);
+        //  setLoading(false);
          setHasInternetConnection(true);
          let sortedProducts = response.data;
 
@@ -86,6 +90,10 @@ const AfterSearchScreen = ({route}) => {
           flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
           setButton(false);
         }
+        if(response.data.length === 0) {
+         setNoData(true);
+         setShowButtons(false);
+      }
       }).catch(error => {
          console.error(error);
          setHasInternetConnection(false);
@@ -94,18 +102,44 @@ const AfterSearchScreen = ({route}) => {
    }, [currentPage,postCompleted]);
    useFocusEffect(fetchData);
 
-   const loadMoreItems = () => {
-      setLoading(true);
-      if (currentPage * 10 < totalPages * 10) {
-         // Fetch more data and update the state
-         // ...
-         setCurrentPage(currentPage + 1);
-         setLoading(false);
-      }
-   };
    const handleSortBy = (sortOption) => {
+    setCurrentPage(1);
       setSortBy(sortOption);
       setIsDropdownOpen(false);
+      let sortColumn = '';
+      let sortOrder = '';
+
+      if (sortOption === 'price_asc') {
+         sortColumn = 'price';
+         sortOrder = 'asc';
+      } else if (sortOption === 'price_desc') {
+         sortColumn = 'price';
+         sortOrder = 'desc';
+      } else if (sortOption === 'rating_asc') {
+         sortColumn = 'rating';
+         sortOrder = 'asc';
+      } else if (sortOption === 'rating_desc') {
+         sortColumn = 'rating';
+         sortOrder = 'desc';
+      }
+
+      axios
+         .get('/products', {
+            params: {
+               page: currentPage,
+               per_page: 10,
+               'filter[name_i_cont]': searchValue,
+               sort_column: sortColumn,
+               sort_order: sortOrder,
+            },
+         })
+         .then((response) => {
+            setProducts(response.data);
+            setTotalPages(response.data.totalPages);
+         })
+         .catch((error) => {
+            console.error(error);
+         });
     };
 
     const isSortActive = (sortOption) => {
@@ -116,8 +150,6 @@ const AfterSearchScreen = ({route}) => {
       setIsDropdownOpen(!isDropdownOpen);
     };
 
-  // if (loading) return <ActivityIndicator size="large" />;
-  // if (products.length == 0) return <Text>No Results fount</Text>
   return (
     <View style={styles.page}>
       
@@ -188,12 +220,10 @@ const AfterSearchScreen = ({route}) => {
       {hasInternetConnection && (
        <FlatList
           ref={flatListRef}
-          data={products} ListEmptyComponent={() => <ActivityIndicator size="large" />}
+          data={products} ListEmptyComponent={() => (
+            nodata ? <Text style={styles.nodata}>No data available</Text> : <ActivityIndicator size="large" />
+          )}
           renderItem={({ item }) => <ProductItem item={item} />}
-          keyExtractor={({ id }) => id}
-          onEndReached={loadMoreItems}
-          onEndReachedThreshold={0.5}
-          // mafeesh scroll indicator
           showsVerticalScrollIndicator={false}
 
           ListFooterComponent={() => (
@@ -207,6 +237,7 @@ const AfterSearchScreen = ({route}) => {
                 >
                    <Text style= {styles.text}>Prev</Text>
                 </TouchableOpacity>
+                <Text style={styles.curPage}> {currentPage}/{totalPages}</Text>
                 <TouchableOpacity
                    style={styles.button}
                    onPress={onNextClick}
@@ -257,11 +288,11 @@ const styles = StyleSheet.create({
     // maxWidth:215,
     height:'60%',
     resizeMode: 'contain',
-    marginLeft:60,
+    alignSelf:"center",
     marginTop: 50,
  },
  axiosErr: {
-    marginLeft:60,
+    alignSelf:"center",
     fontSize: 18, 
     fontWeight:'light',
    
@@ -271,13 +302,19 @@ const styles = StyleSheet.create({
        marginTop: 10,
        backgroundColor: '#b2d8d8',
        padding: 8,
-       marginHorizontal: 145,
+       alignSelf:"center",
        borderRadius: 10,
        borderWidth: 1,
        borderColor:"#008080",
        alignItems: 'center',
        flexDirection: 'row',
     },
+    nodata:{
+      color: "#008080",
+      fontSize: 20,
+      alignSelf:'center',
+      marginTop:20,
+   },
 
    //////pagination 
    pageNumbers: {
@@ -291,7 +328,7 @@ const styles = StyleSheet.create({
    button: {
       backgroundColor: '#b2d8d8',
       padding: 8,
-      marginHorizontal: 145,
+      marginHorizontal: 110,
       borderRadius: 10,
       borderWidth: 1,
       borderColor:"#008080",
@@ -300,7 +337,11 @@ const styles = StyleSheet.create({
       color:"#008080",
       fontSize: 15,
    },
-
+   curPage:{
+      fontSize:17,
+      fontWeight:'bold',
+      color:'#008080',
+   },
 //sort
 sortButton: {
    paddingHorizontal: 10,
