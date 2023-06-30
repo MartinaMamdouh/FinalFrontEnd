@@ -73,7 +73,7 @@ const HomeScreen_API = () => {
          },
       }).then(response => {
          setProducts(response.data);
-         setTotalPages(response.data.totalPages);
+         setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
          setHasInternetConnection(true);
          let sortedProducts = response.data;
          if (sortBy === 'price_asc') {
@@ -150,7 +150,7 @@ const HomeScreen_API = () => {
          })
          .then((response) => {
             setProducts(response.data);
-            setTotalPages(response.data.totalPages);
+            setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
          })
          .catch((error) => {
             console.error(error);
