@@ -29,6 +29,8 @@ const HomeScreen_API = () => {
    let pageNumberLimit = 10;
    const flatListRef = useRef();
    const [currentPage, setCurrentPage] = useState(1);
+   const [term, setTerm] = useState('');
+   const [sortOptionLabel, setSortOptionLabel] = useState('Sort By');
    const [products, setProducts] = useState([]);
    const [maxPageLimit, setMaxPageLimit] = useState(5);
    const [minPageLimit, setMinPageLimit] = useState(0);
@@ -108,21 +110,35 @@ const HomeScreen_API = () => {
 
       let sortColumn = '';
       let sortOrder = '';
+      let label = '';
+      
+
 
       if (sortOption === 'price_asc') {
          sortColumn = 'price';
          sortOrder = 'asc';
+         label  = 'Sorting by Price: Low to high';
+
       } else if (sortOption === 'price_desc') {
          sortColumn = 'price';
          sortOrder = 'desc';
+         label  = 'Sorting by Price: High to low';
+
       } else if (sortOption === 'rating_asc') {
          sortColumn = 'rating';
          sortOrder = 'asc';
+         label  = 'Sorting by Rating: Low to high';
+
       } else if (sortOption === 'rating_desc') {
          sortColumn = 'rating';
          sortOrder = 'desc';
-      }
+         label  = 'Sorting by Rating: High to low';
 
+      }
+      setSortBy(sortOption);
+      setIsDropdownOpen(false);
+      setCurrentPage(1);
+      setSortOptionLabel(label);
       axios
          .get('/products', {
             params: {
@@ -194,36 +210,36 @@ const HomeScreen_API = () => {
          <View style={styles.page}>
             <View style={styles.pageContent}>
                <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-                  <Text style={styles.dropdownButtonText}>Sort By: {sortBy || ''}</Text>
+                  <Text style={styles.dropdownButtonText}>{sortOptionLabel}</Text>
                   <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
                </TouchableOpacity>
                {isDropdownOpen && (
-                  <ScrollView style={styles.dropdownContainer}>
-                     <TouchableOpacity
-                        style={[styles.sortButton, isSortActive('price_asc') && styles.activeSortButton]}
-                        onPress={() => handleSortBy('price_asc')}
-                     >
-                        <Text style={styles.sortButtonText}>Price (Low to High)</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity
-                        style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-                        onPress={() => handleSortBy('price_desc')}
-                     >
-                        <Text style={styles.sortButtonText}>Price (High to Low)</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity
-                        style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-                        onPress={() => handleSortBy('rating_asc')}
-                     >
-                        <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity
-                        style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-                        onPress={() => handleSortBy('rating_desc')}
-                     >
-                        <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-                     </TouchableOpacity>
-                  </ScrollView>
+                 <ScrollView style={styles.dropdownContainer}>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_asc')}
+          >
+            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('price_desc')}
+          >
+            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_asc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+            onPress={() => handleSortBy('rating_desc')}
+          >
+            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+          </TouchableOpacity>
+        </ScrollView>
                )}
                {!hasInternetConnection && (
                   <View>
@@ -421,41 +437,52 @@ const styles = StyleSheet.create({
       alignSelf:'center',
       marginTop:20,
    },
-   //sort
-   sortButton: {
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: '#ccc',
-   },
-   activeSortButton: {
-      backgroundColor: '#ccc',
-   },
-   sortButtonText: {
-      fontSize: 14,
-   },
+  
+//sort
+sortButton: {
+   paddingHorizontal: 10,
+   paddingVertical: 5,
+   borderRadius: 5,
+   borderWidth: 1,
+   borderColor: '#ccc',
+   textcolor: 'white',
+ },
+activeSortButton: {
+backgroundColor: '#fff',
+},
+sortButtonText: {
+fontSize: 16,
+textcolor: '#fff',
+},
 
-   dropdownButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 10,
-      backgroundColor: '#e0e0e0',
-      marginBottom: 10,
-      marginRight: 260,
-   },
-   dropdownButtonText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginRight: 10,
-   },
-   dropdownButtonArrow: {
-      fontSize: 18,
-   },
-   dropdownContainer: {
-      backgroundColor: '#e0e0e0',
-      maxHeight: 150,
-   },
+dropdownButton: {
+   flexDirection: 'row',
+   alignItems: 'center',
+   justifyContent: 'space-between',
+   paddingVertical: 10,
+   paddingHorizontal: 20,
+   backgroundColor: '#b3cccc',
+   width: '100%',
+   
+},
+dropdownButtonText: {
+fontSize: 16,
+fontWeight: 'bold',
+marginRight: 10,
+color: '#476b6b',
+},
+dropdownButtonArrow: {
+fontSize: 18,
+color: '#476b6b',
+
+},
+dropdownContainer: {
+   backgroundColor: '#e0ffff',
+   position: 'absolute',
+   top: 55,
+   left: 0,
+   right: 0,
+   zIndex: 2,
+},
 });
 export default HomeScreen_API; 
