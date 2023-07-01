@@ -117,16 +117,10 @@ const HomeScreen_API = ({navigation}) => {
 
    //sort
    const handleSortBy = (sortOption) => {
-      setCurrentPage(1);
-      setSortBy(sortOption);
-      setIsDropdownOpen(false);
-
       let sortColumn = '';
       let sortOrder = '';
       let label = '';
-      
-
-
+   
       if (sortOption === 'price_asc') {
          sortColumn = 'price';
          sortOrder = 'asc';
