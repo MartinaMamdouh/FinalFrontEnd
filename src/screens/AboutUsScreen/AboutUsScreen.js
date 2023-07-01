@@ -29,49 +29,6 @@ const About = () => {
               We are passionate about providing our users with accurate, up-to-date information so that they can make informed purchasing decisions. Our goal is to help you save money, time, and hassle by providing you with the tools and information you need to make a wise decision.
         </Text>
       </View>
-
-      <Text style={styles.mainHeader}> Follow me on Social Network </Text>
-
-      <View style={styles.menuContainer}>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() =>
-            Linking.openURL("https://www.instagram.com/thapatechnical/")
-          }>
-          <Image
-            style={styles.iconStyle}
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png",
-            }}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() =>
-            Linking.openURL(
-              "https://www.youtube.com/channel/UCwfaAHy4zQUb2APNOGXUCCA"
-            )
-          }>
-          <Image
-            style={styles.iconStyle}
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/187/187210.png",
-            }}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => Linking.openURL("https://discord.gg/AN8ThRBXtY")}>
-          <Image
-            style={styles.iconStyle}
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/906/906361.png",
-            }}
-          />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };

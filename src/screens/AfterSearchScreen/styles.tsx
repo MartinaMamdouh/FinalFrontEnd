@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
    justifyContent: 'space-between',
    paddingVertical: 10,
    paddingHorizontal: 20,
-   backgroundColor: '#b3cccc',
+   backgroundColor: '#e0e0e0',
    width: '48%',
    marginBottom:3,
  
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
   filterContainer:{   
     marginTop:10,       
     borderBottomColor: 'grey',
+    justifyContent: 'space-between',
     backgroundColor: '#e0e0e0',
     position: 'absolute',
     right: 5,
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:15,
     marginBottom:10,
     marginRight:7,
+    width: '48%',
     
  },
  });

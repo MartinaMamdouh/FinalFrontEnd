@@ -157,11 +157,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#b3cccc',
+    backgroundColor: '#e0e0e0',
     width: '48%',
     marginBottom:3,
     marginRight:225,
-    
+ 
  },
  dropdownButtonText: {
  fontSize: 16,
@@ -184,17 +184,20 @@ const styles = StyleSheet.create({
     marginRight:203,
  },
  //filter
- filterContainer:{          
+ filterContainer:{    
+   justifyContent: 'space-between',      
     borderBottomColor: 'grey',
     backgroundColor: '#e0e0e0',
     position: 'absolute',
-    right: 5,
+    right: 2,
     flexDirection: 'row',
     alignItems: 'center',
     height: 45,
     paddingVertical: 5,
     paddingHorizontal:15,
     marginBottom:10,
+    width: '48%',
+   
     
  },
  });
