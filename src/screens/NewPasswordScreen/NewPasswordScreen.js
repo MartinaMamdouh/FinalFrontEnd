@@ -86,7 +86,7 @@ const NewPasswordScreen = ({route}) =>{
     <View  style={styles.container}>
 
         <TextInput  
-        placeholder="password" 
+        placeholder="Password" 
         value={values.password} 
         secureTextEntry={true}
         onChangeText={handleChange('password')}
