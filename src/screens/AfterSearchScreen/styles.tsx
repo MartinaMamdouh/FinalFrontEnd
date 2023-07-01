@@ -29,15 +29,19 @@ const styles = StyleSheet.create({
      height: '60%',
      resizeMode: 'contain',
      alignSelf: "center",
-     marginTop: 50,
+     marginTop:30,
    },
    axiosErr: {
      alignSelf: "center",
      fontSize: 18,
      fontWeight: 'light',
- 
- 
    },
+   axiosErr2: {
+    alignSelf: "center",
+    fontSize: 18,
+    fontWeight: 'light',
+
+  },
    butn: {
      marginTop: 10,
      backgroundColor: '#b2d8d8',
@@ -143,6 +147,22 @@ const styles = StyleSheet.create({
    fontSize: 36,
    fontWeight: 'bold',
    textAlign: 'center',
+ },
+  //filter
+  filterContainer:{   
+    marginTop:10,       
+    borderBottomColor: 'grey',
+    backgroundColor: '#e0e0e0',
+    position: 'absolute',
+    right: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 45,
+    paddingVertical: 5,
+    paddingHorizontal:15,
+    marginBottom:10,
+    marginRight:7,
+    
  },
  });
  export default styles;

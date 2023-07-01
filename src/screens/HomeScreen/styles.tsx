@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
        height: '60%',
        resizeMode: 'contain',
        alignSelf: "center",
-       marginTop: 50,
     },
     axiosErr: {
        alignSelf: "center",

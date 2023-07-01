@@ -1,13 +1,16 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, Image, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import {Modal, View, Image, StyleSheet, FlatList, Text, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import Feather from 'react-native-vector-icons/Feather';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import ax from '../../../assets/images/axios-net.png';
 import axios from 'axios';
 import styles from "./styles";
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import Drawer from '../../components/Drawer';
 
 const AfterSearchScreen = ({ route }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const flatListRef = useRef();
   const [sortOptionLabel, setSortOptionLabel] = useState('Sort By');
   const navigation = useNavigation();
@@ -26,6 +29,10 @@ const AfterSearchScreen = ({ route }) => {
   const [button, setButton] = useState(false);
   const [nodata, setNoData] = useState(false);
   let pageNumberLimit = 10;
+  const [filter, setFilter] = useState({
+		rating_eq: 0,
+		price_lt: 0
+   });
 
   const [postCompleted, setPostCompleted] = useState(false);
 
@@ -69,13 +76,15 @@ const AfterSearchScreen = ({ route }) => {
           page: currentPage,
           per_page: 10,
           'filter[name_i_cont]': searchValue,
+          'filter[rating_eq]':filter.rating_eq[0],
+            'filter[price_lteq]':filter.price_lt[1],
+            'filter[price_gteq]':filter.price_lt[0],
           sort_column: sortBy === 'price_asc' || sortBy === 'price_desc' ? 'price' : 'rating',
           sort_order: sortBy.includes('asc') ? 'asc' : 'desc',
 
         },
       }).then(response => {
         setProducts(response.data);
-        //console.log("getting data")
         // get X-Total-Count header from response and take ceil of 
         setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
         //  setLoading(false);
@@ -107,7 +116,7 @@ const AfterSearchScreen = ({ route }) => {
         setHasInternetConnection(false);
       });
     }
-  }, [currentPage, postCompleted]);
+  }, [currentPage, postCompleted,filter]);
   useFocusEffect(fetchData);
 
   const handleSortBy = (sortOption) => {
@@ -161,6 +170,17 @@ const AfterSearchScreen = ({ route }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleApplyFilter = (rating, price) => {
+    setFilter((oldFilter) => {
+      const newFilter = { ...oldFilter };
+      newFilter.rating_eq = rating;
+      newFilter.price_lt = price;
+      setIsModalOpen(false)
+      return newFilter;
+    });
+ };
+
+
   return (
     <View style={styles.page}>
 
@@ -207,12 +227,20 @@ const AfterSearchScreen = ({ route }) => {
           </TouchableOpacity>
       </ScrollView>
     )}
+      {/* filter  */}
+      <TouchableOpacity style={styles.filterContainer} onPress={() => setIsModalOpen(true)} >
+              <Text style={styles.dropdownButtonText}> Filter</Text>
+               <Ionicons name='options-sharp' color='grey' size={25}/>
+               {/* {isDrawerOpen &&  <Drawer navigation={navigation} />} */}
+               </TouchableOpacity>
+               <Modal visible={isModalOpen} animationType="slide"><Drawer navigation={navigation} handleApplyFilter={handleApplyFilter}/></Modal>
+
     {!hasInternetConnection && (
       <View>
         <Image source={ax} style={styles.axImg}
         />
-        <Text style={styles.axiosErr}>        Server can't be reached{"\n"}Please go back and try again later.</Text>
-
+        <Text style={styles.axiosErr}>Server can't be reached</Text>
+        <Text style={styles.axiosErr2}>Please go back and try again later.</Text>
         <TouchableOpacity
           style={styles.butn}
           onPress={() => navigation.navigate('HomeScreen')}

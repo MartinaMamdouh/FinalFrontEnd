@@ -30,7 +30,6 @@ BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
 const HomeScreen_API = ({navigation}) => {
    const [isModalOpen, setIsModalOpen] = useState(false);
-   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
    currentScreen='Home';
    let pageNumberLimit = 10;
    const flatListRef = useRef();
@@ -179,17 +178,12 @@ const HomeScreen_API = ({navigation}) => {
       setIsDropdownOpen(!isDropdownOpen);
    };
 
-      const toggleDrawer = () => {
-       setIsDrawerOpen(!isDrawerOpen);
-     };
      const handleApplyFilter = (rating, price) => {
       setFilter((oldFilter) => {
         const newFilter = { ...oldFilter };
         newFilter.rating_eq = rating;
         newFilter.price_lt = price;
         setIsModalOpen(false)
-      //   fetchData();
-      //   console.log(newFilter.price_lt[1])
         return newFilter;
       });
    };
@@ -282,7 +276,7 @@ const HomeScreen_API = ({navigation}) => {
 
                {!hasInternetConnection && (
                   <View>
-                     <View style={{ maxHeight: 0 }}>
+                     <View style={{marginTop:40,maxHeight: 0 }}>
                         {reload && (
                            <ActivityIndicator size="large" />
                         )}

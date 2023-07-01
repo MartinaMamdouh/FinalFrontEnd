@@ -1,18 +1,13 @@
 import React, { useState , useRef} from "react";
-import { SafeAreaView, View, Text, ScrollView, TextInput, TouchableOpacity} from "react-native";
+import { SafeAreaView, View, Text, ScrollView,TouchableOpacity} from "react-native";
 import styles from "./styles";
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import Slider from '@ptomasroos/react-native-multi-slider';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { values } from "lodash";
-import HomeScreen from "../../screens/HomeScreen";
-import AfterSearchScreen from "../../screens/AfterSearchScreen";
 
 
 type DrawerProps = {
   navigation: any;
-  handleApplyFilter: (name: any, rating: any, price: any, page: any, perPage: any, sortColumn: any, sortOrder: any) => void;
+  handleApplyFilter: (rating: any, price: any) => void;
 };
 
 
@@ -61,6 +56,7 @@ const Drawer:React.FC<DrawerProps> = ({navigation,handleApplyFilter}) => {
                     <Slider
                         min={0} 
                         max={5}
+                        step={0.1}
                     values={[rating]} // Pass an array with a single value
                      sliderLength={350}
                      onValuesChange={handleRatingChange}
