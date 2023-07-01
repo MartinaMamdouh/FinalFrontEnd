@@ -200,9 +200,11 @@ const HomeScreen_API = ({ navigation }) => {
       const navigation = useNavigation();
       const handleSearchResult = (result: string) => {
          console.log('Search result:', result);
-         setSearchValue(result);
-         // do something with the search result, such as filtering data or updating state
-         navigation.navigate('AfterSearchScreen', { searchValue: result });
+         if (result !=''){
+            setSearchValue(result);
+            navigation.navigate('AfterSearchScreen', { searchValue: result });
+         }
+         
       }
       return (
          <SafeAreaView style={{ backgroundColor: '#009999' }}>
