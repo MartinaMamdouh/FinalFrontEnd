@@ -1,31 +1,36 @@
 import React, { useState, useCallback, useRef, useEffect, useContext } from 'react';
-import { View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, BackHandler, Alert, SafeAreaView } from 'react-native';
+import { Modal, View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, BackHandler, Alert, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import { useFocusEffect } from '@react-navigation/native';
 import ax from '../../../assets/images/axios-net.png';
 import { useNavigation } from '@react-navigation/native';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import axios from 'axios';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Drawer from '../../components/Drawer';
+import styles from "./styles";
+
 let currentScreen = '';
 const handleBackPress = () => {
-   if(currentScreen==='Home'){
-   Alert.alert(
-      'Exit',
-      'Do you want to exit the app?',
-      [
-         { text: 'Yes', onPress: () => BackHandler.exitApp() },
-         { text: 'No', onPress: () => console.log('NO Pressed') }
-      ],
-      { cancelable: false }
-   );
-   return true; // Return true to enable back button override
-}
-return false;
+   if (currentScreen === 'Home') {
+      Alert.alert(
+         'Exit',
+         'Do you want to exit the app?',
+         [
+            { text: 'Yes', onPress: () => BackHandler.exitApp() },
+            { text: 'No', onPress: () => console.log('NO Pressed') }
+         ],
+         { cancelable: false }
+      );
+      return true; // Return true to enable back button override
+   }
+   return false;
 };
 BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-const HomeScreen_API = () => {
-   currentScreen='Home';
+const HomeScreen_API = ({ navigation }) => {
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   currentScreen = 'Home';
    let pageNumberLimit = 10;
    const flatListRef = useRef();
    const [currentPage, setCurrentPage] = useState(1);
@@ -42,6 +47,11 @@ const HomeScreen_API = () => {
    const [reload, setReload] = useState(false);
    const [button, setButton] = useState(false);
    const [nodata, setNoData] = useState(false);
+   const [filter, setFilter] = useState({
+      rating_eq: 0,
+      price_lt: 0
+   });
+
 
    const onPrevClick = () => {
       if ((currentPage - 1) % pageNumberLimit === 0) {
@@ -68,12 +78,15 @@ const HomeScreen_API = () => {
          params: {
             page: currentPage,
             per_page: 10,
+            'filter[rating_eq]': filter.rating_eq[0],
+            'filter[price_lteq]': filter.price_lt[1],
+            'filter[price_gteq]': filter.price_lt[0],
             sort_column: sortBy === 'price_asc' || sortBy === 'price_desc' ? 'price' : 'rating',
             sort_order: sortBy.includes('asc') ? 'asc' : 'desc',
          },
       }).then(response => {
          setProducts(response.data);
-         setTotalPages(response.data.totalPages);
+         setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
          setHasInternetConnection(true);
          let sortedProducts = response.data;
          if (sortBy === 'price_asc') {
@@ -91,7 +104,7 @@ const HomeScreen_API = () => {
             flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
             setButton(false);
          }
-         if(response.data.length === 0) {
+         if (response.data.length === 0) {
             setNoData(true);
             setShowButtons(false);
          }
@@ -99,40 +112,34 @@ const HomeScreen_API = () => {
          console.error(error);
          setHasInternetConnection(false);
       });
-   }, [currentPage]);
+   }, [currentPage, filter]);
    useFocusEffect(fetchData);
 
    //sort
    const handleSortBy = (sortOption) => {
-      setCurrentPage(1);
-      setSortBy(sortOption);
-      setIsDropdownOpen(false);
-
       let sortColumn = '';
       let sortOrder = '';
       let label = '';
-      
-
 
       if (sortOption === 'price_asc') {
          sortColumn = 'price';
          sortOrder = 'asc';
-         label  = 'Sorting by Price: Low to high';
+         label = 'Sorting by Price: Low to high';
 
       } else if (sortOption === 'price_desc') {
          sortColumn = 'price';
          sortOrder = 'desc';
-         label  = 'Sorting by Price: High to low';
+         label = 'Sorting by Price: High to low';
 
       } else if (sortOption === 'rating_asc') {
          sortColumn = 'rating';
          sortOrder = 'asc';
-         label  = 'Sorting by Rating: Low to high';
+         label = 'Sorting by Rating: Low to high';
 
       } else if (sortOption === 'rating_desc') {
          sortColumn = 'rating';
          sortOrder = 'desc';
-         label  = 'Sorting by Rating: High to low';
+         label = 'Sorting by Rating: High to low';
 
       }
       setSortBy(sortOption);
@@ -150,7 +157,7 @@ const HomeScreen_API = () => {
          })
          .then((response) => {
             setProducts(response.data);
-            setTotalPages(response.data.totalPages);
+            setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
          })
          .catch((error) => {
             console.error(error);
@@ -164,11 +171,22 @@ const HomeScreen_API = () => {
    const toggleDropdown = () => {
       setIsDropdownOpen(!isDropdownOpen);
    };
+
+   const handleApplyFilter = (rating, price) => {
+      setFilter((oldFilter) => {
+         const newFilter = { ...oldFilter };
+         newFilter.rating_eq = rating;
+         newFilter.price_lt = price;
+         setIsModalOpen(false)
+         return newFilter;
+      });
+   };
+
    useEffect(() => {
       if (reload) {
          fetchData();
          setReload(false);
-
+         // 
       }
    }, [reload]);
 
@@ -182,9 +200,11 @@ const HomeScreen_API = () => {
       const navigation = useNavigation();
       const handleSearchResult = (result: string) => {
          console.log('Search result:', result);
-         setSearchValue(result);
-         // do something with the search result, such as filtering data or updating state
-         navigation.navigate('AfterSearchScreen', { searchValue: result });
+         if (result !=''){
+            setSearchValue(result);
+            navigation.navigate('AfterSearchScreen', { searchValue: result });
+         }
+         
       }
       return (
          <SafeAreaView style={{ backgroundColor: '#009999' }}>
@@ -214,36 +234,45 @@ const HomeScreen_API = () => {
                   <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
                </TouchableOpacity>
                {isDropdownOpen && (
-                 <ScrollView style={styles.dropdownContainer}>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_asc')}
-          >
-            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_desc')}
-          >
-            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_asc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_desc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-          </TouchableOpacity>
-        </ScrollView>
+                  <ScrollView style={styles.dropdownContainer}>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('price') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('price_asc')}
+                     >
+                        <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('price_desc')}
+                     >
+                        <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('rating_asc')}
+                     >
+                        <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('rating_desc')}
+                     >
+                        <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+                     </TouchableOpacity>
+                  </ScrollView>
                )}
+
+               {/* filter  */}
+               <TouchableOpacity style={styles.filterContainer} onPress={() => setIsModalOpen(true)} >
+                  <Text style={styles.dropdownButtonText}> Filter</Text>
+                  <Ionicons name='options-sharp' color='grey' size={25} />
+                  {/* {isDrawerOpen &&  <Drawer navigation={navigation} />} */}
+               </TouchableOpacity>
+               <Modal visible={isModalOpen} animationType="slide"><Drawer navigation={navigation} handleApplyFilter={handleApplyFilter} /></Modal>
+
                {!hasInternetConnection && (
                   <View>
-                     <View style={{ maxHeight: 0 }}>
+                     <View style={{ marginTop: 40, maxHeight: 0 }}>
                         {reload && (
                            <ActivityIndicator size="large" />
                         )}
@@ -267,8 +296,8 @@ const HomeScreen_API = () => {
                      ref={flatListRef}
                      data={products} ListEmptyComponent={() => (
                         nodata ? <Text style={styles.nodata}>No data available</Text> : <ActivityIndicator size="large" />
-                      )}
-                      renderItem={({ item }) => <ProductItem item={item} />}
+                     )}
+                     renderItem={({ item }) => <ProductItem item={item} />}
                      showsVerticalScrollIndicator={true}
 
                      ListFooterComponent={() => (
@@ -303,189 +332,5 @@ const HomeScreen_API = () => {
    );
 };
 
-const styles = StyleSheet.create({
-   page: {
-      // width:'100%',
-      //flex:1,
-      padding: 10,
-   },
-   pageContent: {
-      // position: 'absolute',
-      zIndex: 0,
-      width: '100%',
-      height: '100%',
-   },
-   root: {
-      flexDirection: 'row',//one row and different columns 
-      borderWidth: 1,
-      borderColor: '#d1d1d1',
-      borderRadius: 10,// to make border sharper
-      backgroundColor: '#fff',
-      width: '100%',
-   },
-   ratingContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginVertical: 5,
-   },
-   starImgStyle: {
-      margin: 2,
-      width: 20,
-      height: 20,
-      resizeMode: 'cover',
-   },
-   image: {
-      flex: 2,
-      height: 150,
-      resizeMode: 'contain',//cover the whole image even the image will not cover the whole page
-      // width:150,
-      // height:150, 
-   },
-   axImg: {
-      width: '70%',
-      // maxWidth:215,
-      height: '60%',
-      resizeMode: 'contain',
-      alignSelf: "center",
-      marginTop: 50,
-   },
-   axiosErr: {
-      alignSelf: "center",
-      fontSize: 18,
-      fontWeight: 'light',
 
-   },
-   butn: {
-      marginTop: 10,
-      backgroundColor: '#b2d8d8',
-      padding: 9,
-      alignSelf: "center",
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: "#008080",
-      alignItems: 'center',
-   },
-   rightContainer: {
-      padding: 10,// blank distance between text and image 
-      // width:'100%',
-      flex: 3,
-   },
-   title: {
-      fontSize: 18,
-      fontWeight: 'bold',
-   },
-   price: {
-      fontSize: 18,
-      fontWeight: 'bold',
-   },
-   loadingcontainer: {
-      flex: 10,
-      justifyContent: 'center',
-   },
-   loadinghorizontal: {
-      flexDirection: 'column',
-      marginHorizontal: 30,
-      padding: 10,
-   },
-
-   //////pagination 
-   container: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
-   mainData: {
-      flex: 1,
-      padding: 10,
-   },
-   item: {
-      backgroundColor: '#f9c2ff',
-      padding: 20,
-      marginVertical: 8,
-      marginHorizontal: 16,
-   },
-   pagetitle: {
-      fontSize: 16,
-   },
-   pageNumbers: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 5,
-      marginBottom:135,
-      zIndex: 1,
-   },
-   button: {
-      backgroundColor: '#b2d8d8',
-      padding: 8,
-      marginHorizontal: 110,
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: "#008080",
-   },
-   text: {
-      color: "#008080",
-      fontSize: 15,
-   },
-   curPage:{
-      fontSize:17,
-      fontWeight:'bold',
-      color:'#008080',
-   },
-   nodata:{
-      color: "#008080",
-      fontSize: 20,
-      alignSelf:'center',
-      marginTop:20,
-   },
-  
-//sort
-sortButton: {
-   paddingHorizontal: 10,
-   paddingVertical: 5,
-   borderRadius: 5,
-   borderWidth: 1,
-   borderColor: '#ccc',
-   textcolor: 'white',
- },
-activeSortButton: {
-backgroundColor: '#fff',
-},
-sortButtonText: {
-fontSize: 16,
-textcolor: '#fff',
-},
-
-dropdownButton: {
-   flexDirection: 'row',
-   alignItems: 'center',
-   justifyContent: 'space-between',
-   paddingVertical: 10,
-   paddingHorizontal: 20,
-   backgroundColor: '#b3cccc',
-   width: '48%',
-   marginBottom:3,
-   marginRight:225,
-   
-},
-dropdownButtonText: {
-fontSize: 16,
-fontWeight: 'bold',
-marginRight: 10,
-color: '#476b6b',
-},
-dropdownButtonArrow: {
-fontSize: 18,
-color: '#476b6b',
-
-},
-dropdownContainer: {
-   backgroundColor: '#e6ffff',
-   position: 'absolute',
-   top: 55,
-   left: 0,
-   right: 0,
-   zIndex: 2,
-   marginRight:203,
-},
-});
 export default HomeScreen_API; 

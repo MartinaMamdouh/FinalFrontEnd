@@ -63,30 +63,30 @@ const SearchBar = ({ onResult }) => {
     <View style={styles.container}>
       <SafeAreaView>
         <View style={styles.textInputStyle}>
-        <Feather name="search"size={20}/>
+          <Feather name="search" size={20} />
           <TextInput
             value={result}
             placeholder="Search..."
             style={{ flex: 1 }}
-            onChangeText={text => setResult(text)} 
+            onChangeText={text => setResult(text)}
             // onSubmitEditing={(event) => handleTextSubmit(event.nativeEvent.text)}
             onSubmitEditing={(event) => debouncedHandleTextSubmit(event.nativeEvent.text)} // Use debounced handleTextSubmit function
-          
+
           />
           {isLoading ? <ActivityIndicator size="large" color="red" />
 
             :
-            
+
             <TouchableOpacity
               onPress={startRecording}
             >
               <Image
                 source={{ uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/microphone.png' }}
                 style={{ width: 25, height: 25 }}
-                
+
               />
             </TouchableOpacity>}
-           {/* <TouchableOpacity
+          {/* <TouchableOpacity
           style={{
             // alignSelf: 'center',
             // marginTop: 24,
@@ -100,7 +100,7 @@ const SearchBar = ({ onResult }) => {
         </TouchableOpacity> */}
         </View>
 
-        
+
       </SafeAreaView>
     </View>
   );
@@ -109,7 +109,7 @@ const SearchBar = ({ onResult }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
+
   },
   textInputStyle: {
     flexDirection: 'row',
