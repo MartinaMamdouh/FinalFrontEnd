@@ -56,7 +56,7 @@ const Drawer:React.FC<DrawerProps> = ({navigation,handleApplyFilter}) => {
                     <Slider
                         min={0} 
                         max={5}
-                        step={0.1}
+                        // step={0.1}
                     values={[rating]} // Pass an array with a single value
                      sliderLength={350}
                      onValuesChange={handleRatingChange}
