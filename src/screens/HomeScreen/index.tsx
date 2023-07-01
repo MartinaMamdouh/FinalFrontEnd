@@ -1,36 +1,36 @@
 import React, { useState, useCallback, useRef, useEffect, useContext } from 'react';
-import { Modal,View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, BackHandler, Alert, SafeAreaView } from 'react-native';
+import { Modal, View, StyleSheet, FlatList, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, BackHandler, Alert, SafeAreaView } from 'react-native';
 import ProductItem from '../../components/ProductItem';
 import { useFocusEffect } from '@react-navigation/native';
 import ax from '../../../assets/images/axios-net.png';
 import { useNavigation } from '@react-navigation/native';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import axios from 'axios';
-import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Drawer from '../../components/Drawer';
 import styles from "./styles";
 
 let currentScreen = '';
 const handleBackPress = () => {
-   if(currentScreen==='Home'){
-   Alert.alert(
-      'Exit',
-      'Do you want to exit the app?',
-      [
-         { text: 'Yes', onPress: () => BackHandler.exitApp() },
-         { text: 'No', onPress: () => console.log('NO Pressed') }
-      ],
-      { cancelable: false }
-   );
-   return true; // Return true to enable back button override
-}
-return false;
+   if (currentScreen === 'Home') {
+      Alert.alert(
+         'Exit',
+         'Do you want to exit the app?',
+         [
+            { text: 'Yes', onPress: () => BackHandler.exitApp() },
+            { text: 'No', onPress: () => console.log('NO Pressed') }
+         ],
+         { cancelable: false }
+      );
+      return true; // Return true to enable back button override
+   }
+   return false;
 };
 BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-const HomeScreen_API = ({navigation}) => {
+const HomeScreen_API = ({ navigation }) => {
    const [isModalOpen, setIsModalOpen] = useState(false);
-   currentScreen='Home';
+   currentScreen = 'Home';
    let pageNumberLimit = 10;
    const flatListRef = useRef();
    const [currentPage, setCurrentPage] = useState(1);
@@ -48,8 +48,8 @@ const HomeScreen_API = ({navigation}) => {
    const [button, setButton] = useState(false);
    const [nodata, setNoData] = useState(false);
    const [filter, setFilter] = useState({
-		rating_eq: 0,
-		price_lt: 0
+      rating_eq: 0,
+      price_lt: 0
    });
 
 
@@ -78,9 +78,9 @@ const HomeScreen_API = ({navigation}) => {
          params: {
             page: currentPage,
             per_page: 10,
-            'filter[rating_eq]':filter.rating_eq[0],
-            'filter[price_lteq]':filter.price_lt[1],
-            'filter[price_gteq]':filter.price_lt[0],
+            'filter[rating_eq]': filter.rating_eq[0],
+            'filter[price_lteq]': filter.price_lt[1],
+            'filter[price_gteq]': filter.price_lt[0],
             sort_column: sortBy === 'price_asc' || sortBy === 'price_desc' ? 'price' : 'rating',
             sort_order: sortBy.includes('asc') ? 'asc' : 'desc',
          },
@@ -104,7 +104,7 @@ const HomeScreen_API = ({navigation}) => {
             flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
             setButton(false);
          }
-         if(response.data.length === 0) {
+         if (response.data.length === 0) {
             setNoData(true);
             setShowButtons(false);
          }
@@ -120,26 +120,26 @@ const HomeScreen_API = ({navigation}) => {
       let sortColumn = '';
       let sortOrder = '';
       let label = '';
-   
+
       if (sortOption === 'price_asc') {
          sortColumn = 'price';
          sortOrder = 'asc';
-         label  = 'Sorting by Price: Low to high';
+         label = 'Sorting by Price: Low to high';
 
       } else if (sortOption === 'price_desc') {
          sortColumn = 'price';
          sortOrder = 'desc';
-         label  = 'Sorting by Price: High to low';
+         label = 'Sorting by Price: High to low';
 
       } else if (sortOption === 'rating_asc') {
          sortColumn = 'rating';
          sortOrder = 'asc';
-         label  = 'Sorting by Rating: Low to high';
+         label = 'Sorting by Rating: Low to high';
 
       } else if (sortOption === 'rating_desc') {
          sortColumn = 'rating';
          sortOrder = 'desc';
-         label  = 'Sorting by Rating: High to low';
+         label = 'Sorting by Rating: High to low';
 
       }
       setSortBy(sortOption);
@@ -172,13 +172,13 @@ const HomeScreen_API = ({navigation}) => {
       setIsDropdownOpen(!isDropdownOpen);
    };
 
-     const handleApplyFilter = (rating, price) => {
+   const handleApplyFilter = (rating, price) => {
       setFilter((oldFilter) => {
-        const newFilter = { ...oldFilter };
-        newFilter.rating_eq = rating;
-        newFilter.price_lt = price;
-        setIsModalOpen(false)
-        return newFilter;
+         const newFilter = { ...oldFilter };
+         newFilter.rating_eq = rating;
+         newFilter.price_lt = price;
+         setIsModalOpen(false)
+         return newFilter;
       });
    };
 
@@ -186,7 +186,7 @@ const HomeScreen_API = ({navigation}) => {
       if (reload) {
          fetchData();
          setReload(false);
-// 
+         // 
       }
    }, [reload]);
 
@@ -232,45 +232,45 @@ const HomeScreen_API = ({navigation}) => {
                   <Text style={styles.dropdownButtonArrow}>{isDropdownOpen ? '▲' : '▼'}</Text>
                </TouchableOpacity>
                {isDropdownOpen && (
-                 <ScrollView style={styles.dropdownContainer}>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_asc')}
-          >
-            <Text style={styles.sortButtonText}>Price (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('price_desc')}
-          >
-            <Text style={styles.sortButtonText}>Price (High to Low)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_asc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
-            onPress={() => handleSortBy('rating_desc')}
-          >
-            <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
-          </TouchableOpacity>
-        </ScrollView>
+                  <ScrollView style={styles.dropdownContainer}>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('price') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('price_asc')}
+                     >
+                        <Text style={styles.sortButtonText}>Price (Low to High)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('price_desc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('price_desc')}
+                     >
+                        <Text style={styles.sortButtonText}>Price (High to Low)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('rating_asc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('rating_asc')}
+                     >
+                        <Text style={styles.sortButtonText}>Rating (Low to High)</Text>
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        style={[styles.sortButton, isSortActive('rating_desc') && styles.activeSortButton]}
+                        onPress={() => handleSortBy('rating_desc')}
+                     >
+                        <Text style={styles.sortButtonText}>Rating (High to Low)</Text>
+                     </TouchableOpacity>
+                  </ScrollView>
                )}
 
-                {/* filter  */}
-              <TouchableOpacity style={styles.filterContainer} onPress={() => setIsModalOpen(true)} >
-              <Text style={styles.dropdownButtonText}> Filter</Text>
-               <Ionicons name='options-sharp' color='grey' size={25}/>
-               {/* {isDrawerOpen &&  <Drawer navigation={navigation} />} */}
+               {/* filter  */}
+               <TouchableOpacity style={styles.filterContainer} onPress={() => setIsModalOpen(true)} >
+                  <Text style={styles.dropdownButtonText}> Filter</Text>
+                  <Ionicons name='options-sharp' color='grey' size={25} />
+                  {/* {isDrawerOpen &&  <Drawer navigation={navigation} />} */}
                </TouchableOpacity>
-               <Modal visible={isModalOpen} animationType="slide"><Drawer navigation={navigation} handleApplyFilter={handleApplyFilter}/></Modal>
+               <Modal visible={isModalOpen} animationType="slide"><Drawer navigation={navigation} handleApplyFilter={handleApplyFilter} /></Modal>
 
                {!hasInternetConnection && (
                   <View>
-                     <View style={{marginTop:40,maxHeight: 0 }}>
+                     <View style={{ marginTop: 40, maxHeight: 0 }}>
                         {reload && (
                            <ActivityIndicator size="large" />
                         )}
@@ -294,8 +294,8 @@ const HomeScreen_API = ({navigation}) => {
                      ref={flatListRef}
                      data={products} ListEmptyComponent={() => (
                         nodata ? <Text style={styles.nodata}>No data available</Text> : <ActivityIndicator size="large" />
-                      )}
-                      renderItem={({ item }) => <ProductItem item={item} />}
+                     )}
+                     renderItem={({ item }) => <ProductItem item={item} />}
                      showsVerticalScrollIndicator={true}
 
                      ListFooterComponent={() => (

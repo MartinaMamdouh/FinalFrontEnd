@@ -7,7 +7,7 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 type DrawerProps = {
   navigation: any;
-  handleApplyFilter: (rating: any, price: any) => void;
+  handleApplyFilter: (rating: any, range: any) => void;
 };
 
 
