@@ -50,11 +50,11 @@ const AfterSearchScreen = ({ route }) => {
     //setLoading(true);
     axios.post('/products', { search_key: searchValue })
       .then(response => {
-        console.log(response)
+        // console.log(response)
         setPostCompleted(true);
       })
       .catch(error => {
-        console.log("in database")
+        // console.log("in database")
         setPostCompleted(true);
       });
   }, [searchValue]);
@@ -75,7 +75,8 @@ const AfterSearchScreen = ({ route }) => {
       }).then(response => {
         setProducts(response.data);
         //console.log("getting data")
-        setTotalPages(response.data.totalPages);
+        // get X-Total-Count header from response and take ceil of 
+        setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
         //  setLoading(false);
         setHasInternetConnection(true);
         let sortedProducts = response.data;
@@ -145,8 +146,7 @@ const AfterSearchScreen = ({ route }) => {
       })
       .then((response) => {
         setProducts(response.data);
-        setTotalPages(response.data.totalPages);
-      })
+        setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));      })
       .catch((error) => {
         console.error(error);
       });
@@ -376,7 +376,8 @@ dropdownButton: {
   paddingVertical: 10,
   paddingHorizontal: 20,
   backgroundColor: '#b3cccc',
-  width: '100%',
+  width: '48%',
+  marginBottom:3,
 
 },
 dropdownButtonText: {
@@ -392,12 +393,14 @@ color: '#476b6b',
 },
 dropdownContainer: {
 
-   backgroundColor: '#e0ffff',
+   backgroundColor: '#e6ffff',
    position: 'absolute',
    top: 55,
    left: 0,
    right: 0,
    zIndex: 2,
+   marginLeft:10,
+   marginRight:215,
 
 },
 container: {
