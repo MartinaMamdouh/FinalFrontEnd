@@ -180,7 +180,7 @@ const SignUpScreen = () => {
     </TouchableOpacity>
 
 
-    <SocialSigninButtons/>
+    {/* <SocialSigninButtons/> */}
 
 
       </View>
