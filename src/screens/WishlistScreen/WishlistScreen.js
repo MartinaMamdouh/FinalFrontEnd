@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from 'react-native';
 import Favorite from '../../components/Favorite/Favorite';
 import { useFocusEffect } from '@react-navigation/native';
@@ -37,49 +37,37 @@ const WishlistScreen = ({ navigation }) => {
                             );
                             // Step 3: Do something with the sorted product info
                             setProductInfo(sortedProductInfo);
-                        
+
                         })
                         .catch((error) => {
                             console.error(error);
                         });
 
-                        setNetERR(false)
+                    setNetERR(false)
                 })
                 .catch((error) => {
                     if (error.request) {
                         setNetERR(true)
-                      }
+                    }
                 });
 
         }, [navigation])
     );
 
-    
-    // useEffect(() => {
-    //     //Show "no wishlist" message after 10 seconds if productInfo is still empty
-    //     if (productInfo.length === 0 && netErr===0) {
-    //         const timer = setTimeout(() => {
-    //             setShowMessage(true);
-            
-    //         }, 1000);
-    //         return () => clearTimeout(timer);
-    //     }
-    // }, [productInfo]);
-
-        if(netErr){
-            return (
-                <View>
+    if (netErr) {
+        return (
+            <View>
                 <Text style={styles.network} >Please check your internet connection</Text>
-            </View> 
-            );
-    
-        }
+            </View>
+        );
 
-   else if (productInfo.length === 0) {
+    }
+
+    else if (productInfo.length === 0) {
         return (
             <View style={styles.empty}>
                 <Image source={emptyWishlist} />
-            </View> 
+            </View>
         );
     }
 
@@ -184,11 +172,11 @@ const styles = StyleSheet.create({
     empty: {
         flex: 1,
         marginTop: 50,
-        alignSelf:"center",
+        alignSelf: "center",
     },
-    network:{
+    network: {
         fontSize: 17,
-       alignSelf:"center",
+        alignSelf: "center",
         fontWeight: "normal",
         marginTop: 245,
     },

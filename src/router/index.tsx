@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ButtomTabNav from './buttomTabNav';
 import SigninScreen from '../screens/SigninScreen/SigninScreen';
 import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
-import TouchIDScreen from '../screens/TouchIDScreen/TouchIDScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { PRICE_SMART_JWT } from '../config';
 import axios from 'axios';
@@ -35,7 +34,6 @@ const Router = () => {
         <Root.Screen component={ButtomTabNav} name="Home" />
         <Root.Screen component={SigninScreen} name="Signin" />
         <Root.Screen component={SignUpScreen} name="Signup" />
-        <Root.Screen component={TouchIDScreen} name="touchID" />
         <Root.Screen component={ForgotPasswordScreen} name="forgotpassword" />
         <Root.Screen component={CodeScreen} name="CodeScreen" />
         <Root.Screen component={NewPasswordScreen} name="newpassword" />
